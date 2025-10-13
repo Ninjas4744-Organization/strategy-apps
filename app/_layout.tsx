@@ -1,19 +1,33 @@
-import { Stack } from 'expo-router';
-import { AuthProvider } from '../lib/context/auth';
-import { SplashScreenController } from '../components/splash';
+import {Stack} from 'expo-router';
+import {AuthProvider, useAuth} from '../lib/context/auth';
+import {SplashScreenController} from '../components/splash';
+import {LinearGradient} from "expo-linear-gradient";
+import {StackWrapper} from "../components/styles/StackWrapper";
 
 export default function Root() {
 	return (
 		<AuthProvider>
-			<SplashScreenController />
-			<RootNavigator />
+			<SplashScreenController/>
+			<RootNavigator/>
 		</AuthProvider>
 	);
 }
 
 function RootNavigator() {
-	return <Stack screenOptions={{
-		headerShown: false,
-		contentStyle: {backgroundImage: 'linear-gradient(rgb(26, 35, 126), rgb(13, 71, 161), rgb(21, 101, 192))'}
-	}} />;
+	const {user} = useAuth();
+
+	return (
+		<StackWrapper>
+			<Stack
+				screenOptions={{
+					headerShown: false,
+					contentStyle: {backgroundColor: 'transparent'}
+				}}>
+				<Stack.Screen name="index"/>
+				<Stack.Protected guard={!!user}>
+					<Stack.Screen name="(app)"/>
+				</Stack.Protected>
+			</Stack>
+		</StackWrapper>
+	);
 }

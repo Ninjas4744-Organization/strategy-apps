@@ -6,6 +6,8 @@ import {TextInput} from "react-native-paper";
 import {Text} from '../components/styles/Text';
 import {Icon} from "../components/Icon";
 import {useRouter} from "expo-router";
+import {LinearGradient} from "expo-linear-gradient";
+import {IconContainer} from "../components/styles/IconContainer";
 
 const Container = styled.SafeAreaView`
 	padding: 50px;
@@ -16,6 +18,7 @@ const Container = styled.SafeAreaView`
 
 const HeaderContainer = styled(Pulse)`
 	padding: 12px;
+	gap: 12px;
 	justify-content: center;
 	align-items: center;
 `;
@@ -30,11 +33,13 @@ const Subtitle = styled(Text)`
 	opacity: 0.8;
 `;
 
-export default function SignIn() {
+export default function Index() {
 	return (
 		<Container>
 			<HeaderContainer>
-				<Icon color='#e8e8e8' name="sports-esports" size={36}/>
+				<IconContainer>
+					<Icon color='#e8e8e8' name="sports-esports" size={36}/>
+				</IconContainer>
 				<Title>Ninjas Scouting App</Title>
 				<Subtitle>Team Performance Analytics</Subtitle>
 			</HeaderContainer>
@@ -44,20 +49,26 @@ export default function SignIn() {
 	);
 }
 
+const ButtonWrapper = ({children}: {children: React.ReactNode}) => <LinearGradient
+	colors={['#4CAF50FF', '#69F0AEFF']}
+	start={{x: 0, y: 0}}
+	end={{x: 1, y: 1}}
+	style={{borderRadius: 16}}>
+	{children}
+</LinearGradient>
+
 const Section = styled.View`
 	padding: 20px;
 	gap: 16px;
 `;
 
 const Button = styled.TouchableOpacity`
-	background-image: linear-gradient(90deg, #4CAF50FF, #69F0AEFF);
 	height: 48px;
 	justify-content: center;
 	align-items: center;
 	display: flex;
 	flex-direction: row;
 	gap: 12px;
-	border-radius: 16px;
 `;
 
 const StartButton = () => {
@@ -65,10 +76,12 @@ const StartButton = () => {
 	const nextRoute = useLoginRouter();
 	return user ? <Section>
 		<Text>Hi, {user.email}</Text>
-		<Button onPress={() => nextRoute()}>
-			<Icon name="play-arrow" size={16} />
-			<Text>Start game</Text>
-		</Button>
+		<ButtonWrapper>
+			<Button onPress={() => nextRoute()}>
+				<Icon name="play-arrow" size={16} />
+				<Text>Start game</Text>
+			</Button>
+		</ButtonWrapper>
 	</Section>: null;
 };
 
@@ -119,10 +132,12 @@ const LoginForm = () => {
 					onPress={() => setSeePassword(!seePassword)} />}
 				underlineStyle={{display: 'none'}}/>
 		</FormGroup>
-		<Button onPress={() => handleLogin()}>
-			<Icon name="login" size={16} />
-			<Text style={{fontSize: 16}}>Login</Text>
-		</Button>
+		<ButtonWrapper>
+			<Button onPress={() => handleLogin()}>
+				<Icon name="login" size={16} />
+				<Text style={{fontSize: 16}}>Login</Text>
+			</Button>
+		</ButtonWrapper>
 	</Section>;
 };
 
