@@ -1,0 +1,34 @@
+import {observer} from "mobx-react-lite";
+import styled from "styled-components/native";
+import {Icon} from "../Icon";
+import adminStore from "../../stores/admin_store";
+import {useAuth} from "../../lib/context/auth";
+import {useRouter} from "expo-router";
+
+const DashboardHeaderButtonsContainer = styled.View`
+	display: flex;
+	flex-direction: row;
+	background-color: transparent;
+`;
+
+const Button = styled.TouchableOpacity`
+	margin: 10px 15px;
+`;
+
+export const DashboardHeaderButtons = observer(function () {
+	const {signOut} = useAuth();
+	const router = useRouter();
+	const {loadTeams} = adminStore;
+
+	return <DashboardHeaderButtonsContainer>
+		<Button onPress={() => loadTeams()}>
+			<Icon name="refresh" />
+		</Button>
+		<Button>
+			<Icon name="settings" />
+		</Button>
+		<Button onPress={() => signOut().then(() => router.push('/'))}>
+			<Icon name="logout" />
+		</Button>
+	</DashboardHeaderButtonsContainer>;
+});

@@ -1,4 +1,4 @@
-import {Stack, useRouter} from 'expo-router';
+import {Stack} from 'expo-router';
 import {Header} from "../../../components/game/Header";
 import {StackWrapper} from "../../../components/styles/StackWrapper";
 
