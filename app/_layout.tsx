@@ -1,8 +1,10 @@
 import {Stack} from 'expo-router';
 import {AuthProvider, useAuth} from '../lib/context/auth';
 import {SplashScreenController} from '../components/splash';
-import {LinearGradient} from "expo-linear-gradient";
 import {StackWrapper} from "../components/styles/StackWrapper";
+import {LogBox} from "react-native";
+
+LogBox.ignoreLogs(['-1 < 0']);
 
 export default function Root() {
 	return (

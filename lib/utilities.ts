@@ -6,3 +6,10 @@ export function pick(obj: any, keys: Array<string>): object {
 	});
 	return res;
 }
+
+export function updateItemAtIndex<T>(index: number, newValue: T, arr: T[], setArr: (a: T[]) => void): void {
+	const updatedArray = arr.map((item, i) =>
+		i === index ? newValue : item
+	);
+	setArr(updatedArray);
+}

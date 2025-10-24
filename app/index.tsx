@@ -6,12 +6,13 @@ import {TextInput} from "react-native-paper";
 import {Text} from '../components/styles/Text';
 import {Icon} from "../components/Icon";
 import {useRouter} from "expo-router";
-import {LinearGradient} from "expo-linear-gradient";
 import {IconContainer} from "../components/styles/IconContainer";
+import {BeautifulButton} from "../components/styles/BeautifulButton";
 
 const Container = styled.SafeAreaView`
-	padding: 50px;
-	background-color: transparent;
+	padding: 12px;
+    padding-top: 50px;
+    background-color: transparent;
 	display: flex;
 	flex-direction: column;
 `;
@@ -49,14 +50,6 @@ export default function Index() {
 	);
 }
 
-const ButtonWrapper = ({children}: {children: React.ReactNode}) => <LinearGradient
-	colors={['#4CAF50FF', '#69F0AEFF']}
-	start={{x: 0, y: 0}}
-	end={{x: 1, y: 1}}
-	style={{borderRadius: 16}}>
-	{children}
-</LinearGradient>
-
 const Section = styled.View`
 	padding: 20px;
 	gap: 16px;
@@ -76,12 +69,7 @@ const StartButton = () => {
 	const nextRoute = useLoginRouter();
 	return user ? <Section>
 		<Text>Hi, {user.email}</Text>
-		<ButtonWrapper>
-			<Button onPress={() => nextRoute()}>
-				<Icon name="play-arrow" size={16} />
-				<Text>Start game</Text>
-			</Button>
-		</ButtonWrapper>
+		<BeautifulButton onPress={() => nextRoute()} icon="play-arrow" label="Start game" />
 	</Section>: null;
 };
 
@@ -127,17 +115,10 @@ const LoginForm = () => {
 				value={password}
 				onChangeText={setPassword}
 				left={<TextInput.Icon icon="lock" />}
-				right={<TextInput.Icon
-					icon={seePassword ? 'eye' : 'eye-off'}
-					onPress={() => setSeePassword(!seePassword)} />}
+				// right={<TextInput.Icon icon={seePassword ? 'eye' : 'eye-off'} onPress={() => setSeePassword(!seePassword)} />}
 				underlineStyle={{display: 'none'}}/>
 		</FormGroup>
-		<ButtonWrapper>
-			<Button onPress={() => handleLogin()}>
-				<Icon name="login" size={16} />
-				<Text style={{fontSize: 16}}>Login</Text>
-			</Button>
-		</ButtonWrapper>
+		<BeautifulButton onPress={() => handleLogin()} icon="login" label="Login" />
 	</Section>;
 };
 

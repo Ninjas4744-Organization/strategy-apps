@@ -1,4 +1,4 @@
-import styled, {css} from "styled-components/native";
+import styled from "styled-components/native";
 import {Icon} from "../Icon";
 import {Subtitle, TextSection, Title} from "../styles/Text";
 import {MaterialIcons} from '@expo/vector-icons';
@@ -40,8 +40,7 @@ const NextPageIcon = styled(Icon)`
 	color: #4CAF50;
 `;
 
-export const SectionTitle = ({title, subtitle, iconRight, iconLeft, onLeftClick}: SectionTitleProps) =>
-{
+export const SectionTitle = ({title, subtitle, iconRight, iconLeft, onLeftClick}: SectionTitleProps) => {
 	return <SectionTitleContainer>
 		{iconLeft && <IconContainer>
 			<PageIcon name={iconLeft}/>
@@ -53,5 +52,5 @@ export const SectionTitle = ({title, subtitle, iconRight, iconLeft, onLeftClick}
 		{iconRight && <NextPageIconContainer onPress={onLeftClick}>
 			<NextPageIcon name={iconRight}/>
 		</NextPageIconContainer>}
-	</SectionTitleContainer>
-}
+	</SectionTitleContainer>;
+};
