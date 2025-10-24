@@ -10,15 +10,14 @@ import {IconContainer} from "../components/styles/IconContainer";
 import {BeautifulButton} from "../components/styles/BeautifulButton";
 
 const Container = styled.SafeAreaView`
-	padding: 12px;
-    padding-top: 50px;
-    background-color: transparent;
+	padding: 50px 12px 12px;
+	background-color: transparent;
 	display: flex;
 	flex-direction: column;
 `;
 
 const HeaderContainer = styled(Pulse)`
-	padding: 12px;
+	padding: 16px;
 	gap: 12px;
 	justify-content: center;
 	align-items: center;

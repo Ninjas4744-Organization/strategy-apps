@@ -25,7 +25,7 @@ export const BeautifulButton = ({label, icon, onPress}: BeautifulButtonProps) =>
 	colors={['#4CAF50FF', '#69F0AEFF']}
 	start={{x: 0, y: 0}}
 	end={{x: 1, y: 1}}
-	style={{borderRadius: 16}}>
+	style={{borderRadius: 16, margin: 8}}>
 	<Button onPress={onPress}>
 		<Icon name={icon} size={16} />
 		<Text style={{fontSize: 16}}>{label}</Text>

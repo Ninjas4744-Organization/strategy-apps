@@ -21,7 +21,6 @@ const Container = styled.SafeAreaView`
     flex: 1;
 `;
 
-
 export default observer(function AutonomousPage() {
 	const router = useRouter();
 	const {

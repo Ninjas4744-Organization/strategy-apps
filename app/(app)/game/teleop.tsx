@@ -21,6 +21,7 @@ const Container = styled.SafeAreaView`
 	display: flex;
 	flex-direction: column;
 	flex: 1;
+	padding: 16px;
 `;
 
 const CageLevelContainer = styled.View<{isSelected: boolean}>`
@@ -43,10 +44,6 @@ const TeamInfoInput = styled(TextInput)`
 const TeamInfoInputIcon = styled(Icon)`
 	font-size: 24px;
 	color: #555;
-`;
-
-const BasicPadding = styled.View`
-	padding: 16px;
 `;
 
 export default observer(function AutonomousPage() {
@@ -121,12 +118,10 @@ export default observer(function AutonomousPage() {
 					left={<TextInput.Icon icon={() => <TeamInfoInputIcon name="sports-esports" />} />}
 					underlineStyle={{display: 'none'}}/>
 			</ScoringCategory>
-			<BasicPadding>
-				<BeautifulButton
-					label="Submit to Firebase"
-					icon="cloud-upload"
-					onPress={() => gameStore.submitToFirebase().then(() => router.push('/'))} />
-			</BasicPadding>
+			<BeautifulButton
+				label="Submit to Firebase"
+				icon="cloud-upload"
+				onPress={() => gameStore.submitToFirebase().then(() => router.push('/'))} />
 		</BodyScroll>
 	</Container>;
 });

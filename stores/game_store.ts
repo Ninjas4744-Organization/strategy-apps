@@ -37,6 +37,7 @@ class GameStore {
 			algae_processed_missed: observable,
 			algae_net_missed: observable,
 			corals_right: observable,
+			corals_left: observable,
 			cage_level: observable,
 			teamNumber: observable,
 			gameNumber: observable,
