@@ -8,6 +8,7 @@ import {Icon} from "../components/Icon";
 import {useRouter} from "expo-router";
 import {IconContainer} from "../components/styles/IconContainer";
 import {BeautifulButton} from "../components/styles/BeautifulButton";
+import {KeyboardAvoidingView, Platform, ScrollView} from "react-native";
 
 const Container = styled.SafeAreaView`
 	padding: 50px 12px 12px;
@@ -52,15 +53,6 @@ export default function Index() {
 const Section = styled.View`
 	padding: 20px;
 	gap: 16px;
-`;
-
-const Button = styled.TouchableOpacity`
-	height: 48px;
-	justify-content: center;
-	align-items: center;
-	display: flex;
-	flex-direction: row;
-	gap: 12px;
 `;
 
 const StartButton = () => {

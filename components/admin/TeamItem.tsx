@@ -69,8 +69,10 @@ export const TeamItem = ({index, teamNumber, games, averageTotalScore}: TeamItem
 			<Subtitle>{`${games.length} games • Avg: ${averageTotalScore} points`}</Subtitle>
 		</Details>
 		<NavigationButtons>
-			<Icon name="chevron-right" onPress={() => router.push('/admin/team/' + teamNumber)}/>
-			<Icon name="analytics" onPress={() => router.push('/admin/analytics/' + teamNumber)}/>
+			<Icon name="analytics" onPress={() => router.push(`/admin/analytics/${teamNumber}`)}/>
+			<Icon
+				name="chevron-right"
+				onPress={() => router.push(`/admin/team/${teamNumber}`)}/>
 		</NavigationButtons>
 	</TeamItemContainer>;
 };

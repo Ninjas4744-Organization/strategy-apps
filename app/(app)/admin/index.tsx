@@ -6,6 +6,10 @@ import {Icon} from "../../../components/Icon";
 import {Colors} from "../../../components/styles/colors";
 import {TeamItem} from "../../../components/admin/TeamItem";
 import {ScrollView, View} from "react-native";
+import {observer} from "mobx-react-lite";
+import {Loading} from "../../../components/Loading";
+import {Stack} from "expo-router";
+import {DashboardHeaderButtons} from "../../../components/admin/DashboardHeaderButtons";
 
 const IconsRow = styled.View`
 	display: flex;
@@ -13,15 +17,19 @@ const IconsRow = styled.View`
 	margin: 8px;
 `;
 
-export default function AdminIndex() {
-	const {teams} = adminStore;
-	const gamesCount = teams.reduce((v, cur) => v + cur.games.length, 0);
-	const [topTeam] = teams;
+export default observer(function AdminIndex() {
+	const {teamsRanked, isLoading, totalGamesCount} = adminStore;
+
+	if (isLoading)
+		return <Loading />;
+
+	const [topTeam] = teamsRanked;
 
 	return <ScrollView>
+		<Stack.Screen options={{title: 'Admin Dashboard', headerRight: () => <DashboardHeaderButtons />}}/>
 		<SectionTitle
 			title="Team Analytics Dashboard"
-			subtitle={`${teams.length} teams analyzed • ${gamesCount} total games`} />
+			subtitle={`${teamsRanked.length} teams analyzed • ${totalGamesCount} total games`} />
 		<IconsRow>
 			<StatCard>
 				<StatIcon name="emoji-events" color={Colors.amber}/>
@@ -35,20 +43,20 @@ export default function AdminIndex() {
 			</StatCard>
 			<StatCard>
 				<StatIcon name="sports-esports" color={Colors.blue}/>
-				<Title>{gamesCount}</Title>
+				<Title>{totalGamesCount}</Title>
 				<Subtitle>Total Games</Subtitle>
 			</StatCard>
 		</IconsRow>
 		<View style={{margin: 8}}>
 			<Title>Team Rankings</Title>
 		</View>
-		{teams.map((team, index) => <TeamItem
+		{teamsRanked.map((team, index) => <TeamItem
 			key={team.teamNumber}
 			{...team}
 			averageTotalScore={team.averageTotalScore.toFixed(2)}
 			index={index}/>)}
 	</ScrollView>;
-}
+})
 
 
 const StatCard = styled.View`

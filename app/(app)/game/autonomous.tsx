@@ -15,10 +15,10 @@ import {levelColors} from "../../../components/game/commons";
 import {action} from "mobx";
 
 const Container = styled.SafeAreaView`
-    background-color: transparent;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
+	background-color: transparent;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
 `;
 
 export default observer(function AutonomousPage() {
