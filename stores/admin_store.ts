@@ -39,7 +39,7 @@ class AdminStore {
 				this.teams[team.teamNumber] = new Team(
 					team.id,
 					team.teamNumber,
-					games
+					games.sort((a, b) => Number.parseInt(a.gameNumber) > Number.parseInt(b.gameNumber) ? 1 : -1)
 				);
 			}
 		} catch (e) {

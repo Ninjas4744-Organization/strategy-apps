@@ -5,3 +5,9 @@ export const Row = styled.View`
 	align-items: center;
 	gap: 8px;
 `;
+
+export const Col = styled.View`
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
+`;

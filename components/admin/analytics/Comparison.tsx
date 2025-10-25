@@ -2,16 +2,14 @@ import {Game} from "../../../models/Game";
 import styled from "styled-components/native";
 import {Subtitle} from "../../styles/Text";
 import {View} from "react-native";
-import {ChartWrapper} from "../ChartWrapper";
-import {Row} from "../../styles/Row";
+import {Card} from "../Card";
+import {Row} from "../../styles/FlexDir";
 import {Colors} from "../../styles/colors";
+import {AdminTabProps} from "../commons";
 
-type ComparisonProps = {
-	games: Game[];
-};
-export const Comparison = ({games}: ComparisonProps) => {
-	const bestGame = games.reduce((a, b) => a.totalScore > b.totalScore ? a : b);
-	const worstGame  = games.reduce((a, b) => a.totalScore > b.totalScore ? b : a);
+export const Comparison = ({team}: AdminTabProps) => {
+	const bestGame = team.games.reduce((a, b) => a.totalScore > b.totalScore ? a : b);
+	const worstGame  = team.games.reduce((a, b) => a.totalScore > b.totalScore ? b : a);
 
 	return <>
 		<ComparisonCard title="Best Game" game={bestGame} color={Colors.green} />
@@ -32,7 +30,7 @@ const ComparisonCardTitle = styled.Text<{color: string}>`
 `;
 
 const ComparisonCard = ({title, game, color}: ComparisonCardProps) => {
-	return <ChartWrapper>
+	return <Card>
 		<ComparisonCardTitle color={color}>{title}</ComparisonCardTitle>
 		<Row>
 			<Subtitle>Game {game.gameNumber}</Subtitle>
@@ -46,5 +44,5 @@ const ComparisonCard = ({title, game, color}: ComparisonCardProps) => {
 			<View style={{flexGrow: 1}} />
 			<Subtitle>Algae: {game.algaeScore}</Subtitle>
 		</Row>
-	</ChartWrapper>
+	</Card>
 }

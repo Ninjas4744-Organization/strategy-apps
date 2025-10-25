@@ -1,24 +1,17 @@
-import {Title} from "../../styles/Text";
 import {PieChart} from "react-native-chart-kit";
 import {Colors} from "../../styles/colors";
-import {ChartWrapper} from "../ChartWrapper";
+import {Card, CardTitle} from "../Card";
 import {useState} from "react";
-import {Team} from "../../../models/Team";
-import {AbstractChartConfig} from "react-native-chart-kit/dist/AbstractChart";
+import {AdminTabProps, chartConfig} from "../commons";
 
-type BreakdownProps = {
-	team: Team;
-	chartConfig: AbstractChartConfig;
-};
-
-export const Breakdown = ({team, chartConfig}: BreakdownProps) => {
+export const Breakdown = ({team}: AdminTabProps) => {
 	const [chartWidth, setChartWidth] = useState(0);
-	return <ChartWrapper
+	return <Card
 		onLayout={(e) => {
 			const { width } = e.nativeEvent.layout;
 			setChartWidth(width);
 		}}>
-		<Title>Score Breakdown</Title>
+		<CardTitle>Score Breakdown</CardTitle>
 		<PieChart
 			data={[
 				{
@@ -47,5 +40,5 @@ export const Breakdown = ({team, chartConfig}: BreakdownProps) => {
 			accessor="val"
 			backgroundColor="transparent"
 		/>
-	</ChartWrapper>;
+	</Card>;
 }
