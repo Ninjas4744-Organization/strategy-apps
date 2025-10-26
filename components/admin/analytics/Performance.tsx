@@ -1,16 +1,15 @@
 import styled from "styled-components/native";
 import {Subtitle} from "../../styles/Text";
-import {ProgressBar} from "react-native-paper";
+import {MD2Colors, ProgressBar} from "react-native-paper";
 import {Card, CardTitle} from "../Card";
-import {Colors} from "../../styles/colors";
 import {Row} from "../../styles/FlexDir";
 import {AdminTabProps} from "../commons";
 
 export const Performance = ({team}: AdminTabProps) => {
 	return <>
-		<PerformanceCard label="Autonomous Performance" score={team.averageAutonomousScore} color={Colors.orange} />
-		<PerformanceCard label="Teleop Performance" score={team.averageTeleopScore} color={Colors.green} />
-		<PerformanceCard label="Algae Handling" score={team.averageAlgaeScore} color={Colors.blue} />
+		<PerformanceCard label="Autonomous Performance" score={team.averageAutonomousScore} color={MD2Colors.orange500} />
+		<PerformanceCard label="Teleop Performance" score={team.averageTeleopScore} color={MD2Colors.green500} />
+		<PerformanceCard label="Algae Handling" score={team.averageAlgaeScore} color={MD2Colors.blue500} />
 	</>;
 };
 

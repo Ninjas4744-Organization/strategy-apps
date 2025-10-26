@@ -2,12 +2,11 @@ import styled from "styled-components/native";
 import {observer} from "mobx-react-lite";
 import {SectionTitle} from "../../../components/game/SectionTitle";
 import {useState} from "react";
-import {Button, Dialog} from "react-native-paper";
+import {Button, Dialog, MD2Colors} from "react-native-paper";
 import {Text as RNText} from "react-native";
 import {useRouter} from "expo-router";
 import {ScoringCategory} from "../../../components/game/ScoringCategory";
 import {ScoringElement} from "../../../components/game/ScoringElement";
-import {Colors} from "../../../components/styles/colors";
 import {updateItemAtIndex} from "../../../lib/utilities";
 import gameStore from "../../../stores/game_store";
 import {BodyScroll} from "../../../components/styles/misc";
@@ -43,26 +42,26 @@ export default observer(function AutonomousPage() {
 				onLeftClick={() => setShowAutoEndDialog(true)}/>
 			<BodyScroll>
 				<ScoringCategory
-					color="#FF9800"
+					color={MD2Colors.orange500}
 					title="Algae Collection"
 					icon="grass">
 					<ScoringElement
 						title="Net"
-						color={Colors.blue}
+						color={MD2Colors.blue500}
 						missed={autonomous_net_missed}
 						setMissed={action(missed => gameStore.autonomous_net_missed = missed)}
 						scored={autonomous_algae_net}
 						setScored={action(scored => gameStore.autonomous_algae_net = scored)}/>
 					<ScoringElement
 						title="Processor"
-						color={Colors.green}
+						color={MD2Colors.green500}
 						missed={autonomous_processed_missed}
 						setMissed={action(missed => gameStore.autonomous_processed_missed = missed)}
 						scored={autonomous_algae_processed}
 						setScored={action(scored => gameStore.autonomous_algae_processed = scored)}/>
 				</ScoringCategory>
 				<ScoringCategory
-					color="#FFFFFF"
+					color={MD2Colors.white}
 					title="Coral Scoring"
 					icon="sports-volleyball">
 					{levelColors.map((color, level) => <ScoringElement

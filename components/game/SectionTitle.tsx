@@ -3,6 +3,7 @@ import {Icon} from "../Icon";
 import {Subtitle, TextSection, Title} from "../styles/Text";
 import {MaterialIcons} from '@expo/vector-icons';
 import {IconContainer, iconContainerStyle} from "../styles/IconContainer";
+import {MD2Colors} from "react-native-paper";
 
 type MaterialIcon = keyof typeof MaterialIcons.glyphMap;
 
@@ -18,8 +19,9 @@ type SectionTitleProps = {
 const SectionTitleContainer = styled.View`
 	margin: 16px;
 	padding: 20px;
-	background-color: #FFFFFF20;
+	background-color: ${MD2Colors.white}10;
 	gap: 16px;
+	border: ${MD2Colors.white}20;
 	border-radius: 16px;
 	display: flex;
 	flex-direction: row;
@@ -28,7 +30,7 @@ const SectionTitleContainer = styled.View`
 
 const PageIcon = styled(Icon)`
 	font-size: 24px;
-	color: #2196F3;
+	color: ${MD2Colors.blue500};
 `;
 
 const NextPageIconContainer = styled.TouchableOpacity`
@@ -37,7 +39,7 @@ const NextPageIconContainer = styled.TouchableOpacity`
 
 const NextPageIcon = styled(Icon)`
 	font-size: 24px;
-	color: #4CAF50;
+	color: ${MD2Colors.green500};
 `;
 
 export const SectionTitle = ({title, subtitle, iconRight, iconLeft, onLeftClick}: SectionTitleProps) => {

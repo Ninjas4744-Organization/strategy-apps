@@ -4,18 +4,18 @@ import {Subtitle} from "../../styles/Text";
 import {View} from "react-native";
 import {Card} from "../Card";
 import {Row} from "../../styles/FlexDir";
-import {Colors} from "../../styles/colors";
 import {AdminTabProps} from "../commons";
+import {MD2Colors} from "react-native-paper";
 
 export const Comparison = ({team}: AdminTabProps) => {
 	const bestGame = team.games.reduce((a, b) => a.totalScore > b.totalScore ? a : b);
 	const worstGame  = team.games.reduce((a, b) => a.totalScore > b.totalScore ? b : a);
 
 	return <>
-		<ComparisonCard title="Best Game" game={bestGame} color={Colors.green} />
-		<ComparisonCard title="Worst Game" game={worstGame} color={Colors.red} />
+		<ComparisonCard title="Best Game" game={bestGame} color={MD2Colors.green500} />
+		<ComparisonCard title="Worst Game" game={worstGame} color={MD2Colors.red500} />
 	</>;
-}
+};
 
 type ComparisonCardProps = {
 	title: string,
@@ -44,5 +44,5 @@ const ComparisonCard = ({title, game, color}: ComparisonCardProps) => {
 			<View style={{flexGrow: 1}} />
 			<Subtitle>Algae: {game.algaeScore}</Subtitle>
 		</Row>
-	</Card>
-}
+	</Card>;
+};

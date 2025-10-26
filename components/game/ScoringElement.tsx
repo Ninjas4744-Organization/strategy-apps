@@ -1,6 +1,7 @@
 import styled from "styled-components/native";
 import {Subtitle} from "../styles/Text";
 import {Icon} from "../Icon";
+import {MD2Colors} from "react-native-paper";
 
 type ScoringElementProps = {
 	title: string;
@@ -41,14 +42,14 @@ const ScoringElementValuesRow = styled.View`
 `;
 
 export const ScoringElement = ({title, color, missed, setMissed, scored, setScored}: ScoringElementProps) => {
-	return <ScoringElementContainer color="#FFFFFF" themeColor={color}>
+	return <ScoringElementContainer color={MD2Colors.white} themeColor={color}>
 		<SectionElementHeader>
 			<StarIcon name="star" color={color} size={24} />
 			<Subtitle>{title}</Subtitle>
 		</SectionElementHeader>
 		<ScoringElementValuesRow>
-			<ScoringElementValue color="#F44336" title="Missed" value={missed} onChange={setMissed} />
-			<ScoringElementValue color="#4CAF50" title="Scored" value={scored} onChange={setScored} />
+			<ScoringElementValue color={MD2Colors.red500} title="Missed" value={missed} onChange={setMissed} />
+			<ScoringElementValue color={MD2Colors.green500} title="Scored" value={scored} onChange={setScored} />
 		</ScoringElementValuesRow>
 	</ScoringElementContainer>;
 };
@@ -81,8 +82,9 @@ const CounterContainer = styled.View`
 const CounterButton = styled.TouchableOpacity`
 	padding: 8px;
 	margin: 4px;
+	background-color: ${MD2Colors.white}10;
+	border: ${MD2Colors.white}20;
 	border-radius: 8px;
-	background-color: #FFFFFF20;
 `;
 
 const ScoringElementValue = ({color, title, value, onChange}: ScoringElementValueProps) => {

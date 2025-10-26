@@ -8,6 +8,7 @@ import {Breakdown} from "../../../../components/admin/analytics/Breakdown";
 import {Comparison} from "../../../../components/admin/analytics/Comparison";
 import {StatItem} from "../../../../components/admin/StatItem";
 import {Tabs} from "../../../../components/admin/Tabs";
+import {MD2Colors} from "react-native-paper";
 
 const Container = styled.SafeAreaView`
 	background-color: transparent;
@@ -19,8 +20,9 @@ const Container = styled.SafeAreaView`
 const PageHeader = styled.View`
 	margin: 16px;
 	padding: 20px;
-	background-color: #FFFFFF20;
+	background-color: ${MD2Colors.white}10;
 	gap: 16px;
+	border: ${MD2Colors.white}20;
 	border-radius: 16px;
 	display: flex;
 	flex-direction: row;

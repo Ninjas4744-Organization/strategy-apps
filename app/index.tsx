@@ -2,13 +2,12 @@ import { useAuth } from '../lib/context/auth';
 import {useState} from "react";
 import {Pulse} from "../components/animations/pulse";
 import styled from 'styled-components/native';
-import {TextInput} from "react-native-paper";
+import {MD2Colors, TextInput} from "react-native-paper";
 import {Text} from '../components/styles/Text';
 import {Icon} from "../components/Icon";
 import {useRouter} from "expo-router";
 import {IconContainer} from "../components/styles/IconContainer";
 import {BeautifulButton} from "../components/styles/BeautifulButton";
-import {KeyboardAvoidingView, Platform, ScrollView} from "react-native";
 
 const Container = styled.SafeAreaView`
 	padding: 50px 12px 12px;
@@ -39,7 +38,7 @@ export default function Index() {
 		<Container>
 			<HeaderContainer>
 				<IconContainer>
-					<Icon color='#e8e8e8' name="sports-esports" size={36}/>
+					<Icon color={MD2Colors.grey500} name="sports-esports" size={36}/>
 				</IconContainer>
 				<Title>Ninjas Scouting App</Title>
 				<Subtitle>Team Performance Analytics</Subtitle>
@@ -66,13 +65,14 @@ const StartButton = () => {
 
 const FormGroup = styled.View`
 	padding: 20px;
-	background-color: #FFFFFF20;
+	background-color: ${MD2Colors.white}10;
 	gap: 16px;
+	border: ${MD2Colors.white}20;
 	border-radius: 16px;
 `;
 
 const LoginTextInput = styled(TextInput)`
-	background-color: #FFFFFF70;
+	background-color: ${MD2Colors.white}70;
 	border-radius: 16px;
 `;
 
@@ -80,7 +80,6 @@ const LoginForm = () => {
 	const {signIn, user, signOut} = useAuth();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [seePassword, setSeePassword] = useState(false);
 	const nextRoute = useLoginRouter();
 
 	const handleLogin = async () => {
@@ -102,11 +101,10 @@ const LoginForm = () => {
 				underlineStyle={{display: 'none'}}/>
 			<LoginTextInput
 				label="Password"
-				secureTextEntry={!seePassword}
+				secureTextEntry
 				value={password}
 				onChangeText={setPassword}
 				left={<TextInput.Icon icon="lock" />}
-				// right={<TextInput.Icon icon={seePassword ? 'eye' : 'eye-off'} onPress={() => setSeePassword(!seePassword)} />}
 				underlineStyle={{display: 'none'}}/>
 		</FormGroup>
 		<BeautifulButton onPress={() => handleLogin()} icon="login" label="Login" />

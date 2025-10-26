@@ -1,7 +1,8 @@
 import styled, {css} from "styled-components/native";
+import {MD2Colors} from "react-native-paper";
 
 export const TextStyle = css`
-	color: #eee;
+	color: ${MD2Colors.white};
 	font-size: 18px;
 `;
 

@@ -1,11 +1,12 @@
 import styled from "styled-components/native";
-import {Colors} from "../styles/colors";
+import {MD2Colors} from "react-native-paper";
 
 export const Card = styled.View`
 	margin: 16px;
-	padding: 20px;
-	background-color: #FFFFFF20;
+	padding: 16px;
+	background-color: ${MD2Colors.white}10;
 	gap: 16px;
+	border: ${MD2Colors.white}20;
 	border-radius: 16px;
 	display: flex;
 	flex-direction: column;
@@ -13,7 +14,7 @@ export const Card = styled.View`
 `;
 
 export const CardTitle = styled.Text`
-	color: ${Colors.white};
+	color: ${MD2Colors.white};
 	font-size: 18px;
 	font-weight: bold;
 `;

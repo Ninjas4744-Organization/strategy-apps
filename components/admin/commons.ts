@@ -1,8 +1,8 @@
-import {Colors} from "../styles/colors";
 import {Team} from "../../models/Team";
+import {MD2Colors} from "react-native-paper";
 
 export const chartConfig = {
-	color: () => Colors.white,
+	color: () => MD2Colors.white,
 	backgroundGradientFromOpacity: 0,
 	backgroundGradientToOpacity: 0,
 };

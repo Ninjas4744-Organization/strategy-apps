@@ -1,4 +1,4 @@
-import {Stack, useLocalSearchParams} from "expo-router";
+import {Href, Stack, useLocalSearchParams, useRouter} from "expo-router";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components/native";
 import {Subtitle, Title} from "../../../../components/styles/Text";
@@ -6,13 +6,14 @@ import {Row} from "../../../../components/styles/FlexDir";
 import {StatItem} from "../../../../components/admin/StatItem";
 import adminStore from "../../../../stores/admin_store";
 import {Icon} from "../../../../components/Icon";
-import {Colors} from "../../../../components/styles/colors";
 import {Insight} from "../../../../interfaces/Insight";
 import {Tabs} from "../../../../components/admin/Tabs";
 import {OverviewTab} from "../../../../components/admin/team/OverviewTab";
 import {GamesList} from "../../../../components/admin/team/GamesList";
 import {ScoreTrend} from "../../../../components/admin/analytics/ScoreTrend";
 import {AnalysisTab} from "../../../../components/admin/team/AnalysisTab";
+import {MD2Colors} from "react-native-paper";
+import {SimpleButton} from "../../../../components/styles/SimpleButton";
 
 const Container = styled.SafeAreaView`
 	background-color: transparent;
@@ -24,33 +25,44 @@ const Container = styled.SafeAreaView`
 const PageHeader = styled.View`
 	margin: 8px;
 	padding: 16px 10px;
-	background-color: #FFFFFF20;
+	background-color: ${MD2Colors.white}10;
 	gap: 16px;
+	border: ${MD2Colors.white}20;
 	border-radius: 16px;
 	display: flex;
 	flex-direction: column;
 `;
 
 const AmberIcon = styled(Icon)`
-	color: ${Colors.amber};
+	color: ${MD2Colors.amber500};
 `;
 
 const OrangeIcon = styled(Icon)`
-	color: ${Colors.orange};
+	color: ${MD2Colors.orange500};
 `;
 
 const GreenIcon = styled(Icon)`
-	color: ${Colors.green};
+	color: ${MD2Colors.green500};
 `;
 
 export default observer(function () {
 	const {id} = useLocalSearchParams();
+	const router = useRouter();
 	const {teams} = adminStore;
 	const team = teams[Number.parseInt(id as string)];
 	const bestGame = team.games.reduce((a, b) => a.totalScore > b.totalScore ? a : b);
 
 	return <Container>
-		<Stack.Screen options={{ title: `Team ${id}` }} />
+		<Stack.Screen
+			options={{
+				title: `Team ${id}`,
+				headerRight: () => (
+					<SimpleButton onPress={() => router.push(`/admin/detailed/${id}` as Href)}>
+						<Icon name="analytics" />
+						<Subtitle>Detailed View</Subtitle>
+					</SimpleButton>
+				)
+			}} />
 		<PageHeader>
 			<Row>
 				<Title>Team {id}</Title>
@@ -94,5 +106,5 @@ const PerformanceInsight = ({message, isPositive}: Insight) => {
 	return <Row>
 		{isPositive ? <GreenIcon name="trending-up"/> : <OrangeIcon name="trending-down"/>}
 		<Subtitle>{message}</Subtitle>
-	</Row>
-}
+	</Row>;
+};

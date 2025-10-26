@@ -5,7 +5,7 @@ import {Subtitle, Title} from "../../styles/Text";
 import {Col, Row} from "../../styles/FlexDir";
 import styled from "styled-components/native";
 import {Icon} from "../../Icon";
-import {Colors} from "../../styles/colors";
+import {MD2Colors} from "react-native-paper";
 
 export const OverviewTab = ({team}: AdminTabProps) => {
 	return <>
@@ -13,25 +13,25 @@ export const OverviewTab = ({team}: AdminTabProps) => {
 		<PerformanceComparisonCard team={team}/>
 		<CurrentStreak team={team} />
 	</>;
-}
+};
 
 const RedIcon = styled(Icon)`
-	color: ${Colors.red};
+	color: ${MD2Colors.red500};
 	font-size: 32px;
 `;
 
 const GreenIcon = styled(Icon)`
-	color: ${Colors.green};
+	color: ${MD2Colors.green500};
 	font-size: 32px;
 `;
 
 const RedText = styled.Text`
-	color: ${Colors.red};
+	color: ${MD2Colors.red500};
 	font-size: 16px;
 `;
 
 const GreenText = styled.Text`
-	color: ${Colors.green};
+	color: ${MD2Colors.green500};
 	font-size: 16px;
 `;
 
@@ -71,10 +71,10 @@ const PerformanceComparisonCard = ({team}: AdminTabProps) => {
 			</Col>
 		</Row>
 	</Card>;
-}
+};
 
 const OrangeIcon = styled(Icon)`
-	color: ${Colors.orange};
+	color: ${MD2Colors.orange500};
 	font-size: 32px;
 `;
 
@@ -95,5 +95,5 @@ const CurrentStreak = ({team}: AdminTabProps) => {
 				<Subtitle>{streak.description}</Subtitle>
 			</StreakDetails>
 		</Row>
-	</Card>
-}
+	</Card>;
+};

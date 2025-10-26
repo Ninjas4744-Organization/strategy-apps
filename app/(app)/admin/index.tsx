@@ -3,13 +3,13 @@ import adminStore from "../../../stores/admin_store";
 import {SectionTitle} from "../../../components/game/SectionTitle";
 import {Subtitle, Title} from "../../../components/styles/Text";
 import {Icon} from "../../../components/Icon";
-import {Colors} from "../../../components/styles/colors";
 import {TeamItem} from "../../../components/admin/TeamItem";
 import {ScrollView, View} from "react-native";
 import {observer} from "mobx-react-lite";
 import {Loading} from "../../../components/Loading";
 import {Stack} from "expo-router";
 import {DashboardHeaderButtons} from "../../../components/admin/DashboardHeaderButtons";
+import {MD2Colors} from "react-native-paper";
 
 const IconsRow = styled.View`
 	display: flex;
@@ -32,17 +32,17 @@ export default observer(function AdminIndex() {
 			subtitle={`${teamsRanked.length} teams analyzed • ${totalGamesCount} total games`} />
 		<IconsRow>
 			<StatCard>
-				<StatIcon name="emoji-events" color={Colors.amber}/>
+				<StatIcon name="emoji-events" color={MD2Colors.amber500}/>
 				<Title>{topTeam.teamNumber}</Title>
 				<Subtitle>Top Team</Subtitle>
 			</StatCard>
 			<StatCard>
-				<StatIcon name="trending-up" color={Colors.green}/>
+				<StatIcon name="trending-up" color={MD2Colors.green500}/>
 				<Title>{topTeam.averageTotalScore.toFixed(2)}</Title>
 				<Subtitle>Avg Score</Subtitle>
 			</StatCard>
 			<StatCard>
-				<StatIcon name="sports-esports" color={Colors.blue}/>
+				<StatIcon name="sports-esports" color={MD2Colors.blue500}/>
 				<Title>{totalGamesCount}</Title>
 				<Subtitle>Total Games</Subtitle>
 			</StatCard>
@@ -56,7 +56,7 @@ export default observer(function AdminIndex() {
 			averageTotalScore={team.averageTotalScore.toFixed(2)}
 			index={index}/>)}
 	</ScrollView>;
-})
+});
 
 
 const StatCard = styled.View`
@@ -65,8 +65,9 @@ const StatCard = styled.View`
 	flex-direction: column;
 	margin: 8px;
 	padding: 10px;
-	background-color: #FFFFFF20;
+	background-color: ${MD2Colors.white}10;
 	gap: 16px;
+	border: ${MD2Colors.white}20;
 	border-radius: 16px;
 	align-items: center;
 `;

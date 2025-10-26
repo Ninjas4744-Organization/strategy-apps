@@ -3,8 +3,8 @@ import {Card, CardTitle} from "../Card";
 import {Col, Row} from "../../styles/FlexDir";
 import styled from "styled-components/native";
 import {Icon} from "../../Icon";
-import {Colors} from "../../styles/colors";
 import {Subtitle} from "../../styles/Text";
+import {MD2Colors} from "react-native-paper";
 
 export const AnalysisTab = ({team}: AdminTabProps) => {
 	return <>
@@ -14,23 +14,23 @@ export const AnalysisTab = ({team}: AdminTabProps) => {
 };
 
 const GreenIcon = styled(Icon)`
-	color: ${Colors.green};
+	color: ${MD2Colors.green500};
 	font-size: 20px;
 `;
 
 const GreenText = styled.Text`
-	color: ${Colors.green};
+	color: ${MD2Colors.green500};
 	font-size: 16px;
 	font-weight: bold;
 `;
 
 const RedIcon = styled(Icon)`
-	color: ${Colors.red};
+	color: ${MD2Colors.red500};
 	font-size: 20px;
 `;
 
 const RedText = styled.Text`
-	color: ${Colors.red};
+	color: ${MD2Colors.red500};
 	font-size: 16px;
 	font-weight: bold;
 `;
@@ -72,12 +72,12 @@ const StrengthsWeaknessesCard = ({team}: AdminTabProps) => {
 };
 
 const BlueTitleIcon = styled(Icon)`
-	color: ${Colors.blue};
+	color: ${MD2Colors.blue500};
 	font-size: 20px;
 `;
 
 const AmberIcon = styled(Icon)`
-	color: ${Colors.amber};
+	color: ${MD2Colors.amber500};
 	font-size: 16px;
 `;
 
@@ -98,4 +98,4 @@ const StrategicRecommendations = ({team}: AdminTabProps) => {
 			</Recommendation>)}
 		</ColStart>
 	</Card>;
-}
+};

@@ -23,6 +23,6 @@ export const StatItem = ({icon, value, title}: StatItemProps) => {
 		<Icon name={icon} />
 		<Title>{value}</Title>
 		<Subtitle>{title}</Subtitle>
-	</StatItemContainer>
-}
+	</StatItemContainer>;
+};
 

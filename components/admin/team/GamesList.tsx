@@ -3,15 +3,15 @@ import {Game} from "../../../models/Game";
 import {Card, CardTitle} from "../Card";
 import {Col, Row} from "../../styles/FlexDir";
 import styled from "styled-components/native";
-import {Colors} from "../../styles/colors";
 import {CageLevel} from "../../../interfaces/CageLevel";
 import {Subtitle} from "../../styles/Text";
+import {MD2Colors} from "react-native-paper";
 
 export const GamesList = ({team}: AdminTabProps) => {
 	return <>
 		{team.games.map(game => <GameItem key={'game ' + game.gameNumber} game={game} />)}
-	</>
-}
+	</>;
+};
 
 type GameItemProps = {
 	game: Game;
@@ -30,11 +30,11 @@ const GameItem = ({game}: GameItemProps) => {
 		</Row>
 		<Row>
 			<FlexGrow />
-			<GameStat label="Auto" value={game.autonomousScore} color={Colors.orange}/>
+			<GameStat label="Auto" value={game.autonomousScore} color={MD2Colors.orange500}/>
 			<FlexGrow />
-			<GameStat label="Teleop" value={game.teleopScore} color={Colors.green}/>
+			<GameStat label="Teleop" value={game.teleopScore} color={MD2Colors.green500}/>
 			<FlexGrow />
-			<GameStat label="Cage Level" value={game.cageLevel || CageLevel.NONE} color={Colors.blue}/>
+			<GameStat label="Cage Level" value={game.cageLevel || CageLevel.NONE} color={MD2Colors.blue500}/>
 			<FlexGrow />
 		</Row>
 		<Row>
@@ -42,7 +42,7 @@ const GameItem = ({game}: GameItemProps) => {
 			<FlexGrow />
 		</Row>
 	</Card>;
-}
+};
 
 type GameStatProps = {
 	label: string;
@@ -59,7 +59,7 @@ const Label = styled.Text<{color: string}>`
 const Value = styled.Text`
 	font-size: 16px;
 	font-weight: bold;
-	color: ${Colors.white};
+	color: ${MD2Colors.white};
 `;
 
 const GameStat = ({label, value, color}: GameStatProps) => {
@@ -67,4 +67,4 @@ const GameStat = ({label, value, color}: GameStatProps) => {
 		<Label color={color}>{label}</Label>
 		<Value>{value}</Value>
 	</Col>;
-}
+};

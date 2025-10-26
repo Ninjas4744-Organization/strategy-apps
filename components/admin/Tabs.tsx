@@ -1,8 +1,8 @@
 import styled from "styled-components/native";
-import {Colors} from "../styles/colors";
 import {useState} from "react";
 import {ScrollView} from "react-native";
 import {BodyScroll} from "../styles/misc";
+import {MD2Colors} from "react-native-paper";
 
 type Tab = {
 	label: string;
@@ -27,13 +27,13 @@ const TabButton = styled.TouchableOpacity<{ active: boolean }>`
 	padding: 8px;
 	align-items: center;
 	justify-content: center;
-	background-color: ${Colors.white}${({ active }) => (active ? '' : "10")};
+	background-color: ${MD2Colors.white}${({ active }) => (active ? '' : "10")};
 	border-radius: 20px;
-	border: ${Colors.white}20;
+	border: ${MD2Colors.white}20;
 `;
 
 const TabText = styled.Text<{ active: boolean }>`
-	color: ${props => props.active ? Colors.black : Colors.white};
+	color: ${props => props.active ? MD2Colors.black : MD2Colors.white};
 	font-weight: 600;
 `;
 
@@ -69,4 +69,4 @@ export const Tabs = ({tabs}: TabsProps) => {
 			</BodyScroll>
 		</>
 	);
-}
+};

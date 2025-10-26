@@ -1,9 +1,9 @@
 import styled from "styled-components/native";
 import {Subtitle, Title} from "../styles/Text";
-import {Colors} from "../styles/colors";
 import {Game} from "../../models/Game";
 import {Icon} from "../Icon";
 import {useRouter} from "expo-router";
+import {MD2Colors} from "react-native-paper";
 
 type TeamItemProps = {
 	index: number,
@@ -15,8 +15,9 @@ type TeamItemProps = {
 const TeamItemContainer = styled.View`
 	margin: 8px;
 	padding: 20px;
-	background-color: #FFFFFF20;
+	background-color: ${MD2Colors.white}10;
 	gap: 16px;
+	border: ${MD2Colors.white}20;
 	border-radius: 16px;
 	display: flex;
 	flex-direction: row;
@@ -26,15 +27,15 @@ const TeamItemContainer = styled.View`
 const getRankColor = (rank: number) => {
 	switch (rank) {
 		case 1:
-			return Colors.amber;
+			return MD2Colors.amber500;
 		case 2:
-			return Colors.silver;
+			return MD2Colors.grey400;
 		case 3:
-			return Colors.bronze;
+			return MD2Colors.brown300;
 		default:
-			return Colors.blue;
+			return MD2Colors.blue500;
 	}
-}
+};
 
 const Rank = styled.View<{color: string}>`
 	height: 40px;

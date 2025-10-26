@@ -5,6 +5,7 @@ import {useAuth} from "../../lib/context/auth";
 import {usePathname} from "expo-router";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import type {EdgeInsets} from "react-native-safe-area-context";
+import {MD2Colors} from "react-native-paper";
 
 const HeaderContainer = styled.View<{insets: EdgeInsets}>`
 	padding-top: ${props => props.insets.top}px;
@@ -14,19 +15,8 @@ const HeaderContainer = styled.View<{insets: EdgeInsets}>`
 	align-items: center;
 `;
 
-const SectionTitleContainer = styled.View`
-	margin: 16px;
-	padding: 20px;
-	background-color: #FFFFFF20;
-	gap: 16px;
-	border-radius: 16px;
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-`;
-
 const iconContainerStyle = css`
-	background-color: #4CAF5020;
+	background-color: ${MD2Colors.green500}20;
 	border-radius: 16px;
 	padding: 12px;
 `;
@@ -35,23 +25,13 @@ const IconContainer = styled.View`
 	${iconContainerStyle};
 `;
 
-const PageIcon = styled(Icon)`
-	font-size: 24px;
-	color: #2196F3;
-`;
-
 const NextPageIconContainer = styled.TouchableOpacity`
 	${iconContainerStyle};
 `;
 
-const NextPageIcon = styled(Icon)`
-	font-size: 24px;
-	color: #4CAF50;
-`;
-
 const AppBarIcon = styled(Icon)`
 	font-size: 24px;
-	color: #eee;
+	color: ${MD2Colors.white};
 `;
 
 export const Header = () => {
