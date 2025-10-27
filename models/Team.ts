@@ -1,8 +1,8 @@
 import {Game} from './Game';
-import {Model} from '../interfaces/Model';
-import {Insight} from "../interfaces/Insight";
-import {StreakInfo} from "../interfaces/StreakInfo";
-import {CageLevel} from "../interfaces/CageLevel";
+import {Model} from '@/interfaces/Model';
+import {Insight} from "@/interfaces/Insight";
+import {StreakInfo} from "@/interfaces/StreakInfo";
+import {CageLevel} from "@/interfaces/CageLevel";
 
 export class Team implements Model {
 	constructor(

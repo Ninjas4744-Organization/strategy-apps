@@ -1,8 +1,8 @@
 import styled from "styled-components/native";
-import {Title} from "../styles/Text";
+import {Title} from "@/components/styles/Text";
 import {MaterialIcons} from "@expo/vector-icons";
-import {IconContainer} from "../styles/IconContainer";
-import {Icon} from "../Icon";
+import {IconContainer} from "@/components/styles/IconContainer";
+import {Icon} from "@/components/Icon";
 
 type MaterialIcon = keyof typeof MaterialIcons.glyphMap;
 

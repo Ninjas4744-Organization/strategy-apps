@@ -1,6 +1,6 @@
 import {Timestamp} from 'firebase/firestore';
-import {CageLevel} from "../interfaces/CageLevel";
-import {Model} from "../interfaces/Model";
+import {CageLevel} from "@/interfaces/CageLevel";
+import {Model} from "@/interfaces/Model";
 
 export class Game implements Model {
 	constructor(

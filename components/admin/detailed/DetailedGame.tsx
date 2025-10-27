@@ -1,14 +1,14 @@
-import {Game} from "../../../models/Game";
+import {Game} from "@/models/Game";
 import styled from "styled-components/native";
 import {useState} from "react";
-import {Card, CardTitle} from "../Card";
-import {Row} from "../../styles/FlexDir";
+import {Card, CardTitle} from "@/components/admin/Card";
+import {Row} from "@/components/styles/FlexDir";
 import {TouchableOpacity} from "react-native";
-import {Icon} from "../../Icon";
-import {Subtitle} from "../../styles/Text";
+import {Icon} from "@/components/Icon";
+import {Subtitle} from "@/components/styles/Text";
 import {MD2Colors} from "react-native-paper";
-import {CageLevel} from "../../../interfaces/CageLevel";
-import {ExtraBreakdownStat} from "../../../interfaces/BreakdownStats";
+import {CageLevel} from "@/interfaces/CageLevel";
+import {ExtraBreakdownStat} from "@/interfaces/BreakdownStats";
 import {BreakdownSection, ScoreItem} from "./Breakdown";
 
 type DetailedGameProps = {

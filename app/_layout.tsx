@@ -1,7 +1,7 @@
 import {Stack} from 'expo-router';
-import {AuthProvider, useAuth} from '../lib/context/auth';
-import {SplashScreenController} from '../components/splash';
-import {StackWrapper} from "../components/styles/StackWrapper";
+import {AuthProvider, useAuth} from '@/lib/context/auth';
+import {SplashScreenController} from '@/components/splash';
+import {StackWrapper} from "@/components/styles/StackWrapper";
 
 export default function Root() {
 	return (

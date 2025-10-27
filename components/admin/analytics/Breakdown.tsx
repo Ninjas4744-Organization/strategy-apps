@@ -1,7 +1,7 @@
 import {PieChart} from "react-native-chart-kit";
-import {Card, CardTitle} from "../Card";
+import {Card, CardTitle} from "@/components/admin/Card";
 import {useState} from "react";
-import {AdminTabProps, chartConfig} from "../commons";
+import {AdminTabProps, chartConfig} from "@/components/admin/commons";
 import {MD2Colors} from "react-native-paper";
 
 export const Breakdown = ({team}: AdminTabProps) => {

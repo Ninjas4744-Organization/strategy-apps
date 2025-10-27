@@ -1,7 +1,7 @@
 import {LineChart} from "react-native-chart-kit";
-import {Card, CardTitle} from "../Card";
+import {Card, CardTitle} from "@/components/admin/Card";
 import {useState} from "react";
-import {AdminTabProps, chartConfig} from "../commons";
+import {AdminTabProps, chartConfig} from "@/components/admin/commons";
 
 export const ScoreTrend = ({team}: AdminTabProps) => {
 	const [chartWidth, setChartWidth] = useState(0);

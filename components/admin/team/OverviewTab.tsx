@@ -1,10 +1,10 @@
-import {AdminTabProps} from "../commons";
-import {Breakdown} from "../analytics/Breakdown";
-import {Card, CardTitle} from "../Card";
-import {Subtitle, Title} from "../../styles/Text";
-import {Col, Row} from "../../styles/FlexDir";
+import {AdminTabProps} from "@/components/admin/commons";
+import {Breakdown} from "@/components/admin/analytics/Breakdown";
+import {Card, CardTitle} from "@/components/admin/Card";
+import {Subtitle, Title} from "@/components/styles/Text";
+import {Col, Row} from "@/components/styles/FlexDir";
 import styled from "styled-components/native";
-import {Icon} from "../../Icon";
+import {Icon} from "@/components/Icon";
 import {MD2Colors} from "react-native-paper";
 
 export const OverviewTab = ({team}: AdminTabProps) => {

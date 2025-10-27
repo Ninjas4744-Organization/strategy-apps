@@ -1,8 +1,8 @@
 import {observer} from "mobx-react-lite";
 import styled from "styled-components/native";
-import {Icon} from "../Icon";
-import adminStore from "../../stores/admin_store";
-import {useAuth} from "../../lib/context/auth";
+import {Icon} from "@/components/Icon";
+import adminStore from "@/stores/adminStore";
+import {useAuth} from "@/lib/context/auth";
 import {useRouter} from "expo-router";
 
 const DashboardHeaderButtonsContainer = styled.View`

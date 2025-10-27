@@ -1,7 +1,7 @@
 import styled from "styled-components/native";
-import {Subtitle, Title} from "../styles/Text";
-import {Game} from "../../models/Game";
-import {Icon} from "../Icon";
+import {Subtitle, Title} from "@/components/styles/Text";
+import {Game} from "@/models/Game";
+import {Icon} from "@/components/Icon";
 import {useRouter} from "expo-router";
 import {MD2Colors} from "react-native-paper";
 

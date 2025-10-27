@@ -1,8 +1,8 @@
 import {action, computed, makeObservable, observable} from "mobx";
-import {Team} from "../models/Team";
+import {Team} from "@/models/Team";
 import {collection, getDocs} from "firebase/firestore";
-import {db} from "../lib/firebase/firestore";
-import {Game} from "../models/Game";
+import {db} from "@/lib/firebase/firestore";
+import {Game} from "@/models/Game";
 
 type Teams = {
 	[id: number]: Team,

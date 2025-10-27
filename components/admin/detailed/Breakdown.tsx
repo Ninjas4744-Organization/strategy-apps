@@ -1,11 +1,11 @@
 import styled from "styled-components/native";
-import {Col, Row} from "../../styles/FlexDir";
-import {BreakdownStat, ExtraBreakdownStat} from "../../../interfaces/BreakdownStats";
+import {Col, Row} from "@/components/styles/FlexDir";
+import {BreakdownStat, ExtraBreakdownStat} from "@/interfaces/BreakdownStats";
 import {useState} from "react";
 import {LayoutChangeEvent} from "react-native/Libraries/Types/CoreEventTypes";
-import {Card, CardTitle} from "../Card";
-import {Icon} from "../../Icon";
-import {chunkArray} from "../../../lib/utilities";
+import {Card, CardTitle} from "@/components/admin/Card";
+import {Icon} from "@/components/Icon";
+import {chunkArray} from "@/lib/utilities";
 
 const BreakdownStatContainer = styled.View<{color: string}>`
 	flex: 1;

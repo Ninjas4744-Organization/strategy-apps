@@ -1,8 +1,8 @@
 import {action, computed, makeObservable, observable} from "mobx";
-import {db} from "../lib/firebase/firestore";
+import {db} from "@/lib/firebase/firestore";
 import {doc, getDoc, setDoc, serverTimestamp} from "firebase/firestore";
-import {pick} from "../lib/utilities";
-import {CageLevel} from "../interfaces/CageLevel";
+import {pick} from "@/lib/utilities";
+import {CageLevel} from "@/interfaces/CageLevel";
 
 class GameStore {
 	@observable autonomous_algae_processed: number = 0;

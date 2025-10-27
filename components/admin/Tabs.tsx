@@ -1,7 +1,7 @@
 import styled from "styled-components/native";
 import {useState} from "react";
 import {ScrollView} from "react-native";
-import {BodyScroll} from "../styles/misc";
+import {BodyScroll} from "@/components/styles/misc";
 import {MD2Colors} from "react-native-paper";
 
 type Tab = {

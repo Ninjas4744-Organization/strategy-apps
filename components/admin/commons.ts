@@ -1,4 +1,4 @@
-import {Team} from "../../models/Team";
+import {Team} from "@/models/Team";
 import {MD2Colors} from "react-native-paper";
 
 export const chartConfig = {

@@ -1,10 +1,10 @@
-import {Game} from "../../../models/Game";
+import {Game} from "@/models/Game";
 import styled from "styled-components/native";
-import {Subtitle} from "../../styles/Text";
+import {Subtitle} from "@/components/styles/Text";
 import {View} from "react-native";
-import {Card} from "../Card";
-import {Row} from "../../styles/FlexDir";
-import {AdminTabProps} from "../commons";
+import {Card} from "@/components/admin/Card";
+import {Row} from "@/components/styles/FlexDir";
+import {AdminTabProps} from "@/components/admin/commons";
 import {MD2Colors} from "react-native-paper";
 
 export const Comparison = ({team}: AdminTabProps) => {

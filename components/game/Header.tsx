@@ -1,7 +1,7 @@
 import styled, {css} from "styled-components/native";
-import {TextSection, Title, Subtitle} from "../styles/Text";
-import {Icon} from "../Icon";
-import {useAuth} from "../../lib/context/auth";
+import {TextSection, Title, Subtitle} from "@/components/styles/Text";
+import {Icon} from "@/components/Icon";
+import {useAuth} from "@/lib/context/auth";
 import {usePathname} from "expo-router";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import type {EdgeInsets} from "react-native-safe-area-context";

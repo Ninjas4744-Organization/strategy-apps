@@ -1,19 +1,19 @@
 import {Href, Stack, useLocalSearchParams, useRouter} from "expo-router";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components/native";
-import {Subtitle, Title} from "../../../../components/styles/Text";
-import {Row} from "../../../../components/styles/FlexDir";
-import {StatItem} from "../../../../components/admin/StatItem";
-import adminStore from "../../../../stores/admin_store";
-import {Icon} from "../../../../components/Icon";
-import {Insight} from "../../../../interfaces/Insight";
-import {Tabs} from "../../../../components/admin/Tabs";
-import {OverviewTab} from "../../../../components/admin/team/OverviewTab";
-import {GamesList} from "../../../../components/admin/team/GamesList";
-import {ScoreTrend} from "../../../../components/admin/analytics/ScoreTrend";
-import {AnalysisTab} from "../../../../components/admin/team/AnalysisTab";
+import {Subtitle, Title} from "@/components/styles/Text";
+import {Row} from "@/components/styles/FlexDir";
+import {StatItem} from "@/components/admin/StatItem";
+import adminStore from "@/stores/adminStore";
+import {Icon} from "@/components/Icon";
+import {Insight} from "@/interfaces/Insight";
+import {Tabs} from "@/components/admin/Tabs";
+import {OverviewTab} from "@/components/admin/team/OverviewTab";
+import {GamesList} from "@/components/admin/team/GamesList";
+import {ScoreTrend} from "@/components/admin/analytics/ScoreTrend";
+import {AnalysisTab} from "@/components/admin/team/AnalysisTab";
 import {MD2Colors} from "react-native-paper";
-import {SimpleButton} from "../../../../components/styles/SimpleButton";
+import {SimpleButton} from "@/components/styles/SimpleButton";
 
 const Container = styled.SafeAreaView`
 	background-color: transparent;

@@ -1,12 +1,12 @@
 import {observer} from "mobx-react-lite";
-import {BreakdownRow, BreakdownSection} from '../../../../../../components/admin/detailed/Breakdown';
+import {BreakdownRow, BreakdownSection} from '@/components/admin/detailed/Breakdown';
 import {useGlobalSearchParams} from "expo-router";
-import adminStore from "../../../../../../stores/admin_store";
+import adminStore from "@/stores/adminStore";
 import {MD2Colors} from "react-native-paper";
-import {ScoreTrend} from '../../../../../../components/admin/analytics/ScoreTrend';
-import {BodyScroll} from '../../../../../../components/styles/misc';
-import {Card, CardTitle} from "../../../../../../components/admin/Card";
-import {Subtitle} from "../../../../../../components/styles/Text";
+import {ScoreTrend} from '@/components/admin/analytics/ScoreTrend';
+import {BodyScroll} from '@/components/styles/misc';
+import {Card, CardTitle} from "@/components/admin/Card";
+import {Subtitle} from "@/components/styles/Text";
 
 export default observer(function () {
 	const {id} = useGlobalSearchParams();

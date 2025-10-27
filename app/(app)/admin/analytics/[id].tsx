@@ -1,13 +1,13 @@
 import {Stack, useLocalSearchParams} from "expo-router";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components/native";
-import adminStore from "../../../../stores/admin_store";
-import {ScoreTrend} from "../../../../components/admin/analytics/ScoreTrend";
-import {Performance} from "../../../../components/admin/analytics/Performance";
-import {Breakdown} from "../../../../components/admin/analytics/Breakdown";
-import {Comparison} from "../../../../components/admin/analytics/Comparison";
-import {StatItem} from "../../../../components/admin/StatItem";
-import {Tabs} from "../../../../components/admin/Tabs";
+import adminStore from "@/stores/adminStore";
+import {ScoreTrend} from "@/components/admin/analytics/ScoreTrend";
+import {Performance} from "@/components/admin/analytics/Performance";
+import {Breakdown} from "@/components/admin/analytics/Breakdown";
+import {Comparison} from "@/components/admin/analytics/Comparison";
+import {StatItem} from "@/components/admin/StatItem";
+import {Tabs} from "@/components/admin/Tabs";
 import {MD2Colors} from "react-native-paper";
 
 const Container = styled.SafeAreaView`
