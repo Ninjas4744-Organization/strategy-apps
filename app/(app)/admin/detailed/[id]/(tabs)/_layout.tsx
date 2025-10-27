@@ -13,7 +13,7 @@ export default function TabLayout() {
 				title: `Team ${id} Games`,
 				sceneStyle: {backgroundColor: 'transparent'},
 				tabBarPosition: 'top',
-				tabBarStyle: {backgroundColor: 'transparent', paddingTop: 0},
+				tabBarStyle: {backgroundColor: MD2Colors.indigo900, paddingTop: 0},
 				tabBarActiveBackgroundColor: MD2Colors.white + '20',
 				tabBarVariant: 'uikit'
 			}}>

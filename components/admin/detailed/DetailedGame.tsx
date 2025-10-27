@@ -2,14 +2,14 @@ import {Game} from "../../../models/Game";
 import styled from "styled-components/native";
 import {useState} from "react";
 import {Card, CardTitle} from "../Card";
-import {Col, Row} from "../../styles/FlexDir";
+import {Row} from "../../styles/FlexDir";
 import {TouchableOpacity} from "react-native";
 import {Icon} from "../../Icon";
 import {Subtitle} from "../../styles/Text";
 import {MD2Colors} from "react-native-paper";
 import {CageLevel} from "../../../interfaces/CageLevel";
-import {LayoutChangeEvent} from "react-native/Libraries/Types/CoreEventTypes";
-import {MaterialIcons} from "@expo/vector-icons";
+import {ExtraBreakdownStat} from "../../../interfaces/BreakdownStats";
+import {BreakdownSection, ScoreItem} from "./Breakdown";
 
 type DetailedGameProps = {
 	game: Game;
@@ -40,30 +40,52 @@ export const DetailedGame = ({game}: DetailedGameProps) => {
 const ExpandedGameView = ({game}: DetailedGameProps) => {
 	return <>
 		<ScoreSummary game={game}/>
-		<ScoringBreakdown
+		<BreakdownSection
 			title="Algae Scoring Breakdown"
-			values={[game.coralsScoredL1, game.coralsScoredL2, game.coralsScoredL2, game.coralsScoredL4]}
-			labels={['L1', 'L2', 'L3', 'L4']}
-			colors={[MD2Colors.red500, MD2Colors.orange500, MD2Colors.yellow500, MD2Colors.green500]}
-			points={[game.coralsScoredL1 + ' pts', game.coralsScoredL2 * 2 + ' pts', game.coralsScoredL3 * 3 + ' pts', game.coralsScoredL4 * 5 + ' pts']}
+			stats={[
+				{
+					label: 'L1',
+					value: game.coralsScoredL1,
+					note: game.coralsScoredL1 + ' pts',
+					color: MD2Colors.red500,
+				},
+				{
+					label: 'L2',
+					value: game.coralsScoredL2,
+					note: (game.coralsScoredL2 * 2) + ' pts',
+					color: MD2Colors.orange500,
+				},
+				{
+					label: 'L3',
+					value: game.coralsScoredL3,
+					note: (game.coralsScoredL3 * 3) + ' pts',
+					color: MD2Colors.yellow500,
+				},
+				{
+					label: 'L4',
+					value: game.coralsScoredL4,
+					note: (game.coralsScoredL4 * 5) + ' pts',
+					color: MD2Colors.green500,
+				}
+			]}
 			extraStats={[
 				{icon: 'close', text: `Missed: ${game.coralsMissed}`, color: MD2Colors.red500},
 			]}/>
-		<ScoringBreakdown
+		<BreakdownSection
 			title="Coral Scoring Breakdown"
-			values={[game.algaeProcessed, game.algaeNet]}
-			labels={['Processed', 'Net']}
-			colors={[MD2Colors.blue500, MD2Colors.cyan500]}
-			points={[game.algaeProcessed + ' pts', game.algaeNet * 2 + ' pts']}
+			stats={[
+				{label: 'Processed', value: game.algaeProcessed, note: game.algaeProcessed + ' pts', color: MD2Colors.blue500,},
+				{label: 'Net', value: game.algaeNet, note: (game.algaeNet * 2) + ' pts', color: MD2Colors.cyan500,},
+			]}
 			extraStats={[
 				{icon: 'close', text: `Missed: Processed: ${game.algaeProcessedMissed}, Net: ${game.algaeNetMissed}`, color: MD2Colors.red500},
 			]}/>
-		<ScoringBreakdown
+		<BreakdownSection
 			title="Autonomous Performance"
-			values={[game.autonomousCoralScore, game.autonomousAlgaeScore]}
-			labels={['Corals', 'Algae']}
-			points={['', '']}
-			colors={[MD2Colors.purple500, MD2Colors.teal500]}
+			stats={[
+				{label: 'Corals', value: game.autonomousCoralScore, color: MD2Colors.purple500,},
+				{label: 'Algae', value: game.autonomousAlgaeScore, color: MD2Colors.teal500,},
+			]}
 			extraStats={[
 				{
 					icon: 'auto-awesome',
@@ -80,7 +102,7 @@ const ExpandedGameView = ({game}: DetailedGameProps) => {
 					text: `Cage Level: ${game.cageLevel?.toUpperCase() ?? 'N/A'} (+${game.parkingScore} points)`,
 					color: MD2Colors.amber500
 				},
-			].filter(Boolean) as BreakdownStat[]} />
+			].filter(Boolean) as ExtraBreakdownStat[]} />
 		<Card>
 			<CardTitle>Autonomous Performance</CardTitle>
 			<Row>
@@ -105,120 +127,3 @@ const ScoreSummary = ({game}: DetailedGameProps) => {
 	</Card>;
 };
 
-type ScoreItemProps = {
-	label: string;
-	score: number;
-	color: string;
-};
-
-const ScoreItemContainer = styled.View<{color: string}>`
-	flex: 1;
-	padding: 12px;
-	background-color: ${props => props.color}20;
-	border: ${props => props.color}50;
-	border-radius: 8px;
-`;
-
-const Score = styled.Text<{color: string}>`
-	color: ${props => props.color};
-	font-size: 20px;
-	font-weight: bold;
-`;
-
-const Label = styled.Text<{color: string}>`
-	color: ${props => props.color};
-	font-size: 12px;
-`;
-
-const ScoreItemPoints = styled.Text<{color: string}>`
-	color: ${props => props.color};
-	font-size: 8px;
-`;
-
-const ScoreItem = ({color, score, label}: ScoreItemProps) => {
-	return <ScoreItemContainer color={color}>
-		<Col>
-			<Score color={color}>{score}</Score>
-			<Label color={color}>{label}</Label>
-		</Col>
-	</ScoreItemContainer>;
-};
-
-type ScoringBreakdownProps = {
-	title: string;
-	values: number[];
-	labels: string[];
-	points: string[];
-	colors: string[];
-	extraStats: BreakdownStat[];
-};
-
-const ScoringBreakdown = ({title, values, colors, labels, points, extraStats = []}: ScoringBreakdownProps) => {
-	const [scoreItemsWidth, setScoreItemsWidth] = useState(0);
-
-	const handleLayout = (event: LayoutChangeEvent) => {
-		const {width} = event.nativeEvent.layout;
-		setScoreItemsWidth(width);
-	};
-
-	return <Card>
-		<CardTitle>{title}</CardTitle>
-		<Row onLayout={handleLayout}>
-			{values.map((value, index) => (
-				<ScoreItemContainer
-					key={title + '_' + value + '_' + index}
-					color={colors[index]}>
-					<Col>
-						<Score color={colors[index]}>{value}</Score>
-						<Label color={colors[index]}>{labels[index]}</Label>
-						{points[index] && <ScoreItemPoints color={colors[index]}>{points[index]}</ScoreItemPoints>}
-					</Col>
-				</ScoreItemContainer>
-			))}
-		</Row>
-		<Col>
-			{extraStats.filter(Boolean).map((stat, index) => <ExtraBreakdownStat key={title + '-stat-' + index} width={scoreItemsWidth} {...stat}/>)}
-		</Col>
-	</Card>;
-};
-
-type MaterialIcon = keyof typeof MaterialIcons.glyphMap;
-
-type BreakdownStat = {
-	color: string;
-	icon: MaterialIcon;
-	text: string;
-};
-
-const ExtraBreakdownStatContainer = styled.View<{color: string, width: number}>`
-	width: ${props => props.width}px;
-	padding: 12px;
-	background-color: ${props => props.color}20;
-	border: ${props => props.color}50;
-	border-radius: 8px;
-	flex-direction: row;
-	align-items: start;
-	gap: 8px;
-`;
-
-const ExtraBreakdownStatIcon = styled(Icon)<{color: string}>`
-	font-size: 16px;
-	color: ${props => props.color};
-`;
-
-const ExtraBreakdownStatText = styled.Text<{color: string}>`
-	color: ${props => props.color};
-	font-size: 14px;
-	flex-wrap: wrap;
-`;
-
-type ExtraBreakdownStatProps = BreakdownStat & {
-	width: number;
-};
-
-const ExtraBreakdownStat = ({color, icon, text, width}: ExtraBreakdownStatProps) => {
-	return <ExtraBreakdownStatContainer color={color} width={width}>
-		<ExtraBreakdownStatIcon color={color} name={icon} />
-		<ExtraBreakdownStatText color={color}>{text}</ExtraBreakdownStatText>
-	</ExtraBreakdownStatContainer>;
-};
