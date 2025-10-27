@@ -1,7 +1,8 @@
-import { Game } from './Game';
-import { Model } from '../interfaces/Model';
+import {Game} from './Game';
+import {Model} from '../interfaces/Model';
 import {Insight} from "../interfaces/Insight";
 import {StreakInfo} from "../interfaces/StreakInfo";
+import {CageLevel} from "../interfaces/CageLevel";
 
 export class Team implements Model {
 	constructor(
@@ -50,9 +51,51 @@ export class Team implements Model {
 		return total / this.games.length;
 	}
 
+	get averageCageScore(): number {
+		if (this.games.length === 0) return 0;
+		const total = this.games.reduce((sum, game) => sum + game.parkingScore, 0);
+		return total / this.games.length;
+	}
+
 	get averageTotalScore(): number {
 		if (this.games.length === 0) return 0;
 		const total = this.games.reduce((sum, game) => sum + game.totalScore, 0);
+		return total / this.games.length;
+	}
+
+	get averageL1(): number {
+		if (this.games.length === 0) return 0;
+		const total = this.games.reduce((sum, game) => sum + game.coralsScoredL1, 0);
+		return total / this.games.length;
+	}
+
+	get averageL2(): number {
+		if (this.games.length === 0) return 0;
+		const total = this.games.reduce((sum, game) => sum + game.coralsScoredL2, 0);
+		return total / this.games.length;
+	}
+
+	get averageL3(): number {
+		if (this.games.length === 0) return 0;
+		const total = this.games.reduce((sum, game) => sum + game.coralsScoredL3, 0);
+		return total / this.games.length;
+	}
+
+	get averageL4(): number {
+		if (this.games.length === 0) return 0;
+		const total = this.games.reduce((sum, game) => sum + game.coralsScoredL4, 0);
+		return total / this.games.length;
+	}
+
+	get averageAlgaeNet(): number {
+		if (this.games.length === 0) return 0;
+		const total = this.games.reduce((sum, game) => sum + game.algaeNet, 0);
+		return total / this.games.length;
+	}
+
+	get averageAlgaeProcessed(): number {
+		if (this.games.length === 0) return 0;
+		const total = this.games.reduce((sum, game) => sum + game.algaeProcessed, 0);
 		return total / this.games.length;
 	}
 
@@ -65,6 +108,11 @@ export class Team implements Model {
 				.map((s) => (s - mean) * (s - mean))
 				.reduce((a, b) => a + b, 0) / scores.length;
 		return 1 / (1 + variance); // Higher consistency = higher score
+	}
+
+	get cageGames(): number {
+		if (this.games.length === 0) return 0;
+		return this.games.filter(game => game.cageLevel !== CageLevel.NONE).length;
 	}
 
 	get bestScore(): number {

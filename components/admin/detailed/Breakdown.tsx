@@ -5,6 +5,7 @@ import {useState} from "react";
 import {LayoutChangeEvent} from "react-native/Libraries/Types/CoreEventTypes";
 import {Card, CardTitle} from "../Card";
 import {Icon} from "../../Icon";
+import {chunkArray} from "../../../lib/utilities";
 
 const BreakdownStatContainer = styled.View<{color: string}>`
 	flex: 1;
@@ -12,6 +13,11 @@ const BreakdownStatContainer = styled.View<{color: string}>`
 	background-color: ${props => props.color}20;
 	border: ${props => props.color}50;
 	border-radius: 8px;
+`;
+
+const BreakdownStatIcon = styled(Icon)<{color: string}>`
+	color: ${props => props.color};
+	font-size: 24px;
 `;
 
 const BreakdownStatValue = styled.Text<{color: string}>`
@@ -34,9 +40,10 @@ type BreakdownSectionProps = {
 	title: string;
 	stats: BreakdownStat[];
 	extraStats?: ExtraBreakdownStat[];
+	itemsPerRow?: number;
 };
 
-export const BreakdownSection = ({title, stats, extraStats = []}: BreakdownSectionProps) => {
+export const BreakdownSection = ({title, stats, extraStats = [], itemsPerRow = 0}: BreakdownSectionProps) => {
 	const [breakdownItemsWidth, setBreakdownItemsWidth] = useState(0);
 
 	const handleLayout = (event: LayoutChangeEvent) => {
@@ -44,27 +51,39 @@ export const BreakdownSection = ({title, stats, extraStats = []}: BreakdownSecti
 		setBreakdownItemsWidth(width);
 	};
 
+	const rows = chunkArray(stats, itemsPerRow);
+
 	return <Card>
 		<CardTitle>{title}</CardTitle>
-		<Row onLayout={handleLayout}>
-			{stats.map((stat, index) => (
-				<BreakdownStatContainer
-					key={title + '_' + stat.value + '_' + index}
-					color={stat.color}>
-					<Col>
-						<BreakdownStatValue color={stat.color}>{stat.value}</BreakdownStatValue>
-						<BreakdownStatLabel color={stat.color}>{stat.label}</BreakdownStatLabel>
-						{stat.note && <BreakdownStatNote color={stat.color}>{stat.note}</BreakdownStatNote>}
-					</Col>
-				</BreakdownStatContainer>
-			))}
-		</Row>
+		<Col onLayout={handleLayout}>
+			{rows.map((row, index) => <BreakdownRow key={'row-' + index} stats={row} />)}
+		</Col>
 		<Col>
 			{extraStats.filter(Boolean).map((stat, index) => <ExtraBreakdownStatView key={title + '-stat-' + index} width={breakdownItemsWidth} {...stat}/>)}
 		</Col>
 	</Card>;
 };
 
+type BreakdownRowProps = {
+	stats: BreakdownStat[];
+};
+
+export const BreakdownRow = ({stats}: BreakdownRowProps) => (
+	<Row>
+		{stats.map((stat, index) => (
+			<BreakdownStatContainer
+				key={stat.label + '_' + stat.value + '_' + index}
+				color={stat.color}>
+				<Col>
+					{stat.icon && <BreakdownStatIcon name={stat.icon} color={stat.color}/>}
+					<BreakdownStatValue color={stat.color}>{stat.value}</BreakdownStatValue>
+					<BreakdownStatLabel color={stat.color}>{stat.label}</BreakdownStatLabel>
+					{stat.note && <BreakdownStatNote color={stat.color}>{stat.note}</BreakdownStatNote>}
+				</Col>
+			</BreakdownStatContainer>
+		))}
+	</Row>
+);
 
 const ExtraBreakdownStatContainer = styled.View<{color: string, width: number}>`
 	width: ${props => props.width}px;

@@ -3,6 +3,7 @@ import {MaterialIcons} from "@expo/vector-icons";
 type MaterialIcon = keyof typeof MaterialIcons.glyphMap;
 
 export type BreakdownStat = {
+	icon?: MaterialIcon;
 	label: string;
 	value: number|string;
 	note?: string;

@@ -1,4 +1,4 @@
-export function pick(obj: any, keys: Array<string>): object {
+export function pick(obj: any, keys: string[]): object {
 	const res: any = {};
 	keys.forEach(k => {
 		if (k in obj)
@@ -12,4 +12,14 @@ export function updateItemAtIndex<T>(index: number, newValue: T, arr: T[], setAr
 		i === index ? newValue : item
 	);
 	setArr(updatedArray);
+}
+
+export function chunkArray<T>(array: T[], chunkSize: number): T[][] {
+	if (chunkSize === 0)
+		return [array];
+	const result = [];
+	for (let i = 0; i < array.length; i += chunkSize) {
+		result.push(array.slice(i, i + chunkSize));
+	}
+	return result;
 }
