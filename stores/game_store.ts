@@ -1,4 +1,4 @@
-import {action, computed, makeAutoObservable, makeObservable, observable} from "mobx";
+import {action, computed, makeObservable, observable} from "mobx";
 import {db} from "../lib/firebase/firestore";
 import {doc, getDoc, setDoc, serverTimestamp} from "firebase/firestore";
 import {pick} from "../lib/utilities";

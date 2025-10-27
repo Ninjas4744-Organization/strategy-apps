@@ -51,7 +51,7 @@ const StrengthsWeaknessesCard = ({team}: AdminTabProps) => {
 					<GreenText>Strengths</GreenText>
 				</Row>
 				<ColStart>
-					{team.strenghts.map((strength, index) => <Subtitle key={"strength-" + index}>
+					{team.strengths.map((strength, index) => <Subtitle key={"strength-" + index}>
 						* {strength}
 					</Subtitle>)}
 				</ColStart>

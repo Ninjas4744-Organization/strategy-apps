@@ -204,7 +204,7 @@ export class Team implements Model {
 		return insights;
 	}
 
-	get strenghts(): string[] {
+	get strengths(): string[] {
 		const strengths: string[] = [];
 
 		if (this.averageAutonomousScore > 20) {
