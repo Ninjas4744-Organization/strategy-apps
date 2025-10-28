@@ -7,7 +7,9 @@
 				"./node_modules/@firebase/auth/dist/index.rn.d.ts"
 			],
 			"@/*": ["./*"]
-		}
+		},
+		"experimentalDecorators": true,
+		"useDefineForClassFields": false
 	},
 	"include": [
 		"**/*.ts",
