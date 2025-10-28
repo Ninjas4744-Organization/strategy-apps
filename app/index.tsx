@@ -57,9 +57,13 @@ const Section = styled.View`
 const StartButton = () => {
 	const {user} = useAuth();
 	const nextRoute = useLoginRouter();
+
+	const label = user?.email === 'admin@gmail.com' ? 'To admin panel' : 'Start game';
+	const icon = user?.email === 'admin@gmail.com' ? 'admin-panel-settings' : 'play-arrow';
+
 	return user ? <Section>
 		<Text>Hi, {user.email}</Text>
-		<BeautifulButton onPress={() => nextRoute()} icon="play-arrow" label="Start game" />
+		<BeautifulButton onPress={() => nextRoute()} icon={icon} label={label} />
 	</Section>: null;
 };
 
