@@ -94,7 +94,6 @@ class GameStore {
 				...this.gameData,
 				team_number: +this.teamNumber,
 				game_number: +this.gameNumber,
-				timestamp: serverTimestamp(),
 			});
 			snackbar.show('No internet. Data will be sent automatically when online.');
 		} finally {

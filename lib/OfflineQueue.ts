@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
-import {doc, setDoc, collection} from 'firebase/firestore';
+import {doc, setDoc, collection, serverTimestamp} from 'firebase/firestore';
 import {db} from "@/lib/firebase/firestore";
 import snackbar from "@/stores/snackbar";
 
@@ -38,7 +38,10 @@ export class OfflineQueue {
 					const teamDoc = doc(collection(db, 'teams'), data.team_number.toString());
 					const gameDoc = doc(collection(teamDoc, 'games'), data.game_number.toString());
 
-					await setDoc(gameDoc, data);
+					await setDoc(gameDoc, {
+						...data,
+						timestamp: serverTimestamp()
+					});
 					sentAny = true;
 				} catch (e) {
 					console.warn('Failed to resend item:', e);
