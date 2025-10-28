@@ -1,16 +1,16 @@
 import styled from "styled-components/native";
 import {observer} from "mobx-react-lite";
-import {SectionTitle} from "@/components/game/SectionTitle";
+import {SectionTitle} from "@/lib/components/game/SectionTitle";
 import {useState} from "react";
 import {Button, Dialog, MD2Colors} from "react-native-paper";
 import {Text as RNText} from "react-native";
 import {useRouter} from "expo-router";
-import {ScoringCategory} from "@/components/game/ScoringCategory";
-import {ScoringElement} from "@/components/game/ScoringElement";
+import {ScoringCategory} from "@/lib/components/game/ScoringCategory";
+import {ScoringElement} from "@/lib/components/game/ScoringElement";
 import {updateItemAtIndex} from "@/lib/utilities";
-import gameStore from "@/stores/gameStore";
-import {BodyScroll} from "@/components/styles/misc";
-import {levelColors} from "@/components/game/commons";
+import gameStore from "@/lib/stores/gameStore";
+import {BodyScroll} from "@/lib/components/styles/misc";
+import {levelColors} from "@/lib/components/game/commons";
 import {action} from "mobx";
 
 const Container = styled.SafeAreaView`

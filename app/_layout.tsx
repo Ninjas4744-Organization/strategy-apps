@@ -1,8 +1,8 @@
 import {Stack} from 'expo-router';
 import {AuthProvider, useAuth} from '@/lib/context/auth';
-import {SplashScreenController} from '@/components/splash';
-import {StackWrapper} from "@/components/styles/StackWrapper";
-import {GlobalSnackbar} from "@/components/GlobalSnackbar";
+import {SplashScreenController} from '@/lib/components/splash';
+import {StackWrapper} from "@/lib/components/styles/StackWrapper";
+import {GlobalSnackbar} from "@/lib/components/GlobalSnackbar";
 import {observer} from "mobx-react-lite";
 import {useEffect} from "react";
 import {OfflineQueue} from "@/lib/OfflineQueue";

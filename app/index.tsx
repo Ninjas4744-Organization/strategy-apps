@@ -1,13 +1,13 @@
 import {useAuth} from '@/lib/context/auth';
 import {useState} from "react";
-import {Pulse} from "@/components/animations/pulse";
+import {Pulse} from "@/lib/components/animations/pulse";
 import styled from 'styled-components/native';
 import {MD2Colors, TextInput} from "react-native-paper";
-import {Text} from '@/components/styles/Text';
-import {Icon} from "@/components/Icon";
+import {Text} from '@/lib/components/styles/Text';
+import {Icon} from "@/lib/components/Icon";
 import {useRouter} from "expo-router";
-import {IconContainer} from "@/components/styles/IconContainer";
-import {BeautifulButton} from "@/components/styles/BeautifulButton";
+import {IconContainer} from "@/lib/components/styles/IconContainer";
+import {BeautifulButton} from "@/lib/components/styles/BeautifulButton";
 
 const Container = styled.SafeAreaView`
 	padding: 50px 12px 12px;

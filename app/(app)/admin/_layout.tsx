@@ -1,8 +1,8 @@
 import {Stack, useGlobalSearchParams} from 'expo-router';
-import {StackWrapper} from "@/components/styles/StackWrapper";
+import {StackWrapper} from "@/lib/components/styles/StackWrapper";
 import {observer} from "mobx-react-lite";
-import adminStore from "@/stores/adminStore";
-import {Loading} from "@/components/Loading";
+import adminStore from "@/lib/stores/adminStore";
+import {Loading} from "@/lib/components/Loading";
 import {useEffect} from "react";
 import {MD2Colors} from "react-native-paper";
 

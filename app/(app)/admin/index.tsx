@@ -1,17 +1,17 @@
 import styled from "styled-components/native";
-import adminStore from "@/stores/adminStore";
-import {SectionTitle} from "@/components/game/SectionTitle";
-import {Subtitle, Title} from "@/components/styles/Text";
-import {Icon} from "@/components/Icon";
-import {TeamItem} from "@/components/admin/TeamItem";
+import adminStore from "@/lib/stores/adminStore";
+import {SectionTitle} from "@/lib/components/game/SectionTitle";
+import {Subtitle, Title} from "@/lib/components/styles/Text";
+import {Icon} from "@/lib/components/Icon";
+import {TeamItem} from "@/lib/components/admin/TeamItem";
 import {ScrollView, View, Text as RNText} from "react-native";
 import {observer} from "mobx-react-lite";
-import {Loading} from "@/components/Loading";
+import {Loading} from "@/lib/components/Loading";
 import {Stack} from "expo-router";
-import {DashboardHeaderButtons} from "@/components/admin/DashboardHeaderButtons";
+import {DashboardHeaderButtons} from "@/lib/components/admin/DashboardHeaderButtons";
 import {Button, Dialog, MD2Colors} from "react-native-paper";
-import {Row} from "@/components/styles/FlexDir";
-import snackbar from "@/stores/snackbar";
+import {Row} from "@/lib/components/styles/FlexDir";
+import snackbar from "@/lib/stores/snackbar";
 
 const IconsRow = styled.View`
 	display: flex;

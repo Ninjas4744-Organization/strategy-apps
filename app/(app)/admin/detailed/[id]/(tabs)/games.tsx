@@ -1,8 +1,8 @@
 import {observer} from "mobx-react-lite";
 import {useGlobalSearchParams} from "expo-router";
-import adminStore from "@/stores/adminStore";
+import adminStore from "@/lib/stores/adminStore";
 import {FlatList} from "react-native";
-import {DetailedGame} from "@/components/admin/detailed/DetailedGame";
+import {DetailedGame} from "@/lib/components/admin/detailed/DetailedGame";
 
 export default observer(function () {
 	const {id} = useGlobalSearchParams();

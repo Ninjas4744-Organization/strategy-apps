@@ -1,6 +1,6 @@
 import {Stack} from 'expo-router';
-import {Header} from "@/components/game/Header";
-import {StackWrapper} from "@/components/styles/StackWrapper";
+import {Header} from "@/lib/components/game/Header";
+import {StackWrapper} from "@/lib/components/styles/StackWrapper";
 
 export default function AppLayout() {
 	return <StackWrapper>

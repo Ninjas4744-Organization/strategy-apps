@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 import {doc, setDoc, collection, serverTimestamp} from 'firebase/firestore';
 import {db} from "@/lib/firebase/firestore";
-import snackbar from "@/stores/snackbar";
+import snackbar from "@/lib/stores/snackbar";
 
 type GameData = {
 	team_number: number;
