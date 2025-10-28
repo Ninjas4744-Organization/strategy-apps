@@ -1,8 +1,9 @@
 import {action, computed, makeObservable, observable} from "mobx";
 import {Team} from "@/models/Team";
-import {collection, getDocs} from "firebase/firestore";
+import {collection, doc, getDocs, serverTimestamp, setDoc} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {Game} from "@/models/Game";
+import snackbar from "@/stores/snackbar";
 
 type Teams = {
 	[id: number]: Team,
@@ -13,9 +14,26 @@ class AdminStore {
 	@observable teams: Teams = {};
 	@observable isLoading: boolean = true;
 	@observable error?: string;
+	@observable showAppSettings: boolean = false;
 
 	constructor() {
 		makeObservable(this);
+	}
+
+	updateRegistrationSetting = async (enabled: boolean) => {
+		try {
+			await setDoc(doc(db, 'app_settings', 'registration'), {
+				enabled,
+				updated_at: serverTimestamp(),
+			});
+		} catch (e) {
+			snackbar.show('Failed to updated registration setting: ' + e);
+		}
+	}
+
+	@action.bound
+	setShowAppSettings(show: boolean) {
+		this.showAppSettings = show;
 	}
 
 	@action.bound

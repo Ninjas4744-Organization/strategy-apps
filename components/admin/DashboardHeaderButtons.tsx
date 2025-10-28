@@ -18,13 +18,13 @@ const Button = styled.TouchableOpacity`
 export const DashboardHeaderButtons = observer(function () {
 	const {signOut} = useAuth();
 	const router = useRouter();
-	const {loadTeams} = adminStore;
+	const {loadTeams, setShowAppSettings} = adminStore;
 
 	return <DashboardHeaderButtonsContainer>
 		<Button onPress={() => loadTeams()}>
 			<Icon name="refresh" />
 		</Button>
-		<Button>
+		<Button onPress={() => setShowAppSettings(true)}>
 			<Icon name="settings" />
 		</Button>
 		<Button onPress={() => signOut().then(() => router.push('/'))}>
