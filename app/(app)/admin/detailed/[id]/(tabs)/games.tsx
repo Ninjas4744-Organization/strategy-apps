@@ -3,6 +3,7 @@ import {useGlobalSearchParams} from "expo-router";
 import adminStore from "@/lib/stores/adminStore";
 import {FlatList} from "react-native";
 import {DetailedGame} from "@/lib/components/admin/detailed/DetailedGame";
+import {FocusWrapper} from "@/lib/components/styles/misc";
 
 export default observer(function () {
 	const {id} = useGlobalSearchParams();
@@ -13,9 +14,11 @@ export default observer(function () {
 		return null;
 
 	return (
-		<FlatList
-			data={team.games}
-			renderItem={({item}) => <DetailedGame game={item} />}
-			keyExtractor={item => item.gameNumber}/>
+		<FocusWrapper>
+			<FlatList
+				data={team.games}
+				renderItem={({item}) => <DetailedGame game={item} />}
+				keyExtractor={item => item.gameNumber}/>
+		</FocusWrapper>
 	);
 });

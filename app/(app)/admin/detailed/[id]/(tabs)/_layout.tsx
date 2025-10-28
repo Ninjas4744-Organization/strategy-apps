@@ -15,7 +15,8 @@ export default function TabLayout() {
 				tabBarPosition: 'top',
 				tabBarStyle: {backgroundColor: MD2Colors.indigo900, paddingTop: 0},
 				tabBarActiveBackgroundColor: MD2Colors.white + '20',
-				tabBarVariant: 'uikit'
+				tabBarVariant: 'uikit',
+				freezeOnBlur: true,
 			}}>
 			<Tabs.Screen
 				name="games"
