@@ -9,6 +9,9 @@ export default observer(function () {
 	const {teams} = adminStore;
 	const team = teams[Number.parseInt(id as string)];
 
+	if (!team)
+		return null;
+
 	return (
 		<FlatList
 			data={team.games}

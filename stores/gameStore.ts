@@ -3,6 +3,11 @@ import {db} from "@/lib/firebase/firestore";
 import {doc, getDoc, setDoc, serverTimestamp} from "firebase/firestore";
 import {pick} from "@/lib/utilities";
 import {CageLevel} from "@/interfaces/CageLevel";
+import snackbar from "@/stores/snackbar";
+import {OfflineQueue} from "@/lib/OfflineQueue";
+
+const MAX_TEAM_NUMBER = 20000;
+const MAX_QUALIFICATION_MATCH_NUMBER = 150;
 
 class GameStore {
 	@observable autonomous_algae_processed: number = 0;
@@ -61,22 +66,40 @@ class GameStore {
 
 	@action.bound
 	async submitToFirebase() {
-		if (+this.teamNumber! <= 0 || +this.gameNumber! <= 0)
+		if (+this.teamNumber! <= 0 || +this.gameNumber! <= 0) {
+			snackbar.show('Team or game number is missing.');
 			return;
-		const teamRef = doc(db, 'teams', this.teamNumber!);
-		const teamSnap = await getDoc(teamRef);
-		if (!teamSnap.exists())
-			await setDoc(teamRef, {
-				team_number: +this.teamNumber!
+		}
+		if (+this.teamNumber < 0 || +this.gameNumber < 0 || +this.teamNumber > MAX_TEAM_NUMBER || +this.gameNumber > MAX_QUALIFICATION_MATCH_NUMBER) {
+			snackbar.show('Invalid game of team number.');
+			return;
+		}
+		try {
+			const teamRef = doc(db, 'teams', this.teamNumber!);
+			const teamSnap = await getDoc(teamRef);
+			if (!teamSnap.exists())
+				await setDoc(teamRef, {
+					team_number: +this.teamNumber!
+				});
+			const gameRef = doc(teamRef, 'games', this.gameNumber!);
+			await setDoc(gameRef, {
+				...this.gameData,
+				team_number: this.teamNumber,
+				game_number: this.gameNumber,
+				timestamp: serverTimestamp()
 			});
-		const gameRef = doc(teamRef, 'games', this.gameNumber!);
-		await setDoc(gameRef, {
-			...this.gameData,
-			team_number: this.teamNumber,
-			game_number: this.gameNumber,
-			timestamp: serverTimestamp()
-		});
-		this.reset();
+			snackbar.show('Data sent! Starting new match...');
+		} catch (e) {
+			OfflineQueue.saveUnsentGameData({
+				...this.gameData,
+				team_number: +this.teamNumber,
+				game_number: +this.gameNumber,
+				timestamp: serverTimestamp(),
+			});
+			snackbar.show('No internet. Data will be sent automatically when online.');
+		} finally {
+			this.reset();
+		}
 	}
 }
 

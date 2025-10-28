@@ -126,7 +126,7 @@ export default observer(function AutonomousPage() {
 				<BeautifulButton
 					label="Submit to Firebase"
 					icon="cloud-upload"
-					onPress={() => gameStore.submitToFirebase().then(() => router.push('/'))} />
+					onPress={() => gameStore.submitToFirebase().then(() => router.push('/game/autonomous'))} />
 			</BodyScroll>
 		</Container>
 	</KeyboardAvoidingView>;

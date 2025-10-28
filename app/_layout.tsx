@@ -2,15 +2,24 @@ import {Stack} from 'expo-router';
 import {AuthProvider, useAuth} from '@/lib/context/auth';
 import {SplashScreenController} from '@/components/splash';
 import {StackWrapper} from "@/components/styles/StackWrapper";
+import {GlobalSnackbar} from "@/components/GlobalSnackbar";
+import {observer} from "mobx-react-lite";
+import {useEffect} from "react";
+import {OfflineQueue} from "@/lib/OfflineQueue";
 
-export default function Root() {
+export default observer(function Root() {
+	useEffect(() => {
+		OfflineQueue.listenForConnectivityAndResend();
+	}, []);
+
 	return (
 		<AuthProvider>
 			<SplashScreenController/>
 			<RootNavigator/>
+			<GlobalSnackbar/>
 		</AuthProvider>
 	);
-}
+});
 
 function RootNavigator() {
 	const {user} = useAuth();
@@ -24,7 +33,7 @@ function RootNavigator() {
 				}}>
 				<Stack.Screen name="index"/>
 				<Stack.Protected guard={!!user}>
-					<Stack.Screen name="(app)"/>
+					<Stack.Screen name="(app)" options={{gestureEnabled: false}}/>
 				</Stack.Protected>
 			</Stack>
 		</StackWrapper>

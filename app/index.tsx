@@ -86,7 +86,7 @@ const LoginForm = () => {
 		if (user)
 			await signOut();
 		await signIn(email, password);
-		nextRoute();
+		nextRoute(email);
 	};
 
 	return <Section>
@@ -115,10 +115,14 @@ const useLoginRouter = () => {
 	const {user} = useAuth();
 	const router = useRouter();
 
-	return () => {
-		if (!user)
-			return;
-		if (user.email === 'admin@gmail.com')
+	return (email?: string | null) => {
+		if (!email) {
+			if (!user) {
+				return;
+			}
+			email = user.email;
+		}
+		if (email === 'admin@gmail.com')
 			return router.push('/admin');
 		router.push('/game/autonomous');
 	};

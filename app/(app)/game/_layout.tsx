@@ -9,6 +9,7 @@ export default function AppLayout() {
 				header: () => <Header />,
 				contentStyle: {backgroundColor: 'transparent'},
 				headerBlurEffect: 'light',
+				gestureEnabled: false
 			}}
 		/>
 	</StackWrapper>;

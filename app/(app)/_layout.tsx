@@ -7,6 +7,7 @@ export default function AppLayout() {
 			screenOptions={{
 				headerShown: false,
 				contentStyle: {backgroundColor: 'transparent'},
+				gestureEnabled: false,
 			}}
 		/>
 	</StackWrapper>;
