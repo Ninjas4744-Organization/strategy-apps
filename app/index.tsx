@@ -1,5 +1,5 @@
 import {useAuth} from '@/lib/context/auth';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Pulse} from "@/lib/components/animations/pulse";
 import styled from 'styled-components/native';
 import {Button, MD2Colors, TextInput} from "react-native-paper";
@@ -10,6 +10,8 @@ import {IconContainer} from "@/lib/components/styles/IconContainer";
 import {BeautifulButton} from "@/lib/components/styles/BeautifulButton";
 import {z} from "zod";
 import snackbar from "@/lib/stores/snackbar";
+import {doc, onSnapshot} from "firebase/firestore";
+import {db} from "@/lib/firebase/firestore";
 
 const userSchema = z.object({
 	email: z.string().email({ message: "Invalid email address" }),
@@ -101,7 +103,20 @@ const LoginForm = () => {
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const nextRoute = useLoginRouter();
+	const [registrationEnabled, setRegistrationEnabled] = useState(false);
 	const [registerMode, setRegisterMode] = useState(false);
+
+	useEffect(() =>
+	{
+		const registrationDocRef = doc(db, 'app_settings', 'registration');
+
+		const unsubscribe = onSnapshot(registrationDocRef, (docSnap) => {
+			const data = docSnap.data();
+			setRegistrationEnabled(data?.enabled);
+		});
+
+		return () => unsubscribe();
+	}, []);
 
 	const handleLogin = async () => {
 		try {
@@ -170,9 +185,9 @@ const LoginForm = () => {
 				underlineStyle={{display: 'none'}}/>}
 		</FormGroup>
 		<BeautifulButton onPress={registerMode ? handleRegister : handleLogin} icon={registerMode ? "person-add" : "login"} label={registerMode ? "Register" : "Login"} />
-		<Button onPress={() => setRegisterMode(!registerMode)} mode="elevated">
+		{registrationEnabled && <Button onPress={() => setRegisterMode(!registerMode)} mode="elevated">
 			{registerMode ? 'Already have an account? Login' : 'Need an account? Register'}
-		</Button>
+		</Button>}
 	</Section>;
 };
 
