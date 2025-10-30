@@ -6,8 +6,8 @@
 		"start": "expo start",
 		"android": "expo start --android",
 		"ios": "expo start --ios",
-		"web": "BABEL_ENV=web expo start --web",
-		"export-web": "BABEL_ENV=web expo export --platform web",
+		"web": "IS_WEB=true expo start --web",
+		"export-web": "IS_WEB=true expo export --platform web",
 		"lint": "expo lint"
 	},
 	"dependencies": {
