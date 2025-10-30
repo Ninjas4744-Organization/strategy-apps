@@ -34,7 +34,7 @@ const GameItem = ({game}: GameItemProps) => {
 			<FlexGrow />
 			<GameStat label="Teleop" value={game.teleopScore} color={MD2Colors.green500}/>
 			<FlexGrow />
-			<GameStat label="Cage Level" value={game.cageLevel || CageLevel.NONE} color={MD2Colors.blue500}/>
+			<GameStat label="Cage Level" value={game.cageLevel} color={MD2Colors.blue500}/>
 			<FlexGrow />
 		</Row>
 		<Row>

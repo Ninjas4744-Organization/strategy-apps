@@ -158,7 +158,7 @@ export class Game implements Model {
 		switch (this.cageLevel) {
 			case CageLevel.PARK:
 				return 2;
-			case CageLevel.SHALOW:
+			case CageLevel.SHALLOW:
 				return 6;
 			case CageLevel.DEEP:
 				return 12;

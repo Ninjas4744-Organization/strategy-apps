@@ -2,12 +2,27 @@ import {useAuth} from '@/lib/context/auth';
 import {useState} from "react";
 import {Pulse} from "@/lib/components/animations/pulse";
 import styled from 'styled-components/native';
-import {MD2Colors, TextInput} from "react-native-paper";
+import {Button, MD2Colors, TextInput} from "react-native-paper";
 import {Text} from '@/lib/components/styles/Text';
 import {Icon} from "@/lib/components/Icon";
 import {useRouter} from "expo-router";
 import {IconContainer} from "@/lib/components/styles/IconContainer";
 import {BeautifulButton} from "@/lib/components/styles/BeautifulButton";
+import {z} from "zod";
+import snackbar from "@/lib/stores/snackbar";
+
+const userSchema = z.object({
+	email: z.string().email({ message: "Invalid email address" }),
+	password: z.string().min(8, { message: "Password must be at least 8 characters long" })
+		.regex(/[A-Z]/, { message: "Password must contain at least one uppercase letter" })
+		.regex(/[a-z]/, { message: "Password must contain at least one lowercase letter" })
+		.regex(/[0-9]/, { message: "Password must contain at least one number" })
+		.regex(/[^A-Za-z0-9]/, { message: "Password must contain at least one special character" }),
+	confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+	message: "Passwords do not match",
+	path: ["confirmPassword"],
+});
 
 const Container = styled.SafeAreaView`
 	padding: 50px 12px 12px;
@@ -81,17 +96,53 @@ const LoginTextInput = styled(TextInput)`
 `;
 
 const LoginForm = () => {
-	const {signIn, user, signOut} = useAuth();
+	const {signIn, user, signOut, signUp} = useAuth();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [confirmPassword, setConfirmPassword] = useState('');
 	const nextRoute = useLoginRouter();
+	const [registerMode, setRegisterMode] = useState(false);
 
 	const handleLogin = async () => {
-		if (user)
-			await signOut();
-		await signIn(email, password);
-		nextRoute(email);
+		try {
+			if (user)
+				await signOut();
+			await signIn(email, password);
+			setEmail('');
+			setPassword('');
+			nextRoute(email);
+		} catch (e: any) {
+			if (e.code === 'auth/invalid-email')
+				snackbar.show('Invalid email');
+			else if (e.code === 'auth/missing-password')
+				snackbar.show('Please type a password');
+			else if (e.code === 'auth/invalid-credential')
+				snackbar.show('Incorrect password');
+			else
+				snackbar.show(e.message);
+		}
 	};
+
+	const handleRegister = async () => {
+		try {
+			userSchema.parse({email, password, confirmPassword});
+			await signUp(email, password);
+			snackbar.show('Registration successful!');
+			setRegisterMode(false);
+			setEmail('');
+			setPassword('');
+			setConfirmPassword('');
+		} catch (e: any) {
+			if (e instanceof z.ZodError) {
+				snackbar.show(e.issues[0].message);
+			} else {	//firebase errors
+				if (e.code === 'auth/email-already-in-use')
+					snackbar.show('Email already in use');
+				else
+					snackbar.show(e.message);
+			}
+		}
+	}
 
 	return <Section>
 		{user && <Text>Login as someone else</Text>}
@@ -110,8 +161,18 @@ const LoginForm = () => {
 				onChangeText={setPassword}
 				left={<TextInput.Icon icon="lock" />}
 				underlineStyle={{display: 'none'}}/>
+			{registerMode && <LoginTextInput
+				label="Confirm Password"
+				secureTextEntry
+				value={confirmPassword}
+				onChangeText={setConfirmPassword}
+				left={<TextInput.Icon icon="lock"/>}
+				underlineStyle={{display: 'none'}}/>}
 		</FormGroup>
-		<BeautifulButton onPress={() => handleLogin()} icon="login" label="Login" />
+		<BeautifulButton onPress={registerMode ? handleRegister : handleLogin} icon={registerMode ? "person-add" : "login"} label={registerMode ? "Register" : "Login"} />
+		<Button onPress={() => setRegisterMode(!registerMode)} mode="elevated">
+			{registerMode ? 'Already have an account? Login' : 'Need an account? Register'}
+		</Button>
 	</Section>;
 };
 

@@ -1,6 +1,6 @@
 export enum CageLevel {
 	NONE = 'none',
 	PARK = 'park',
-	SHALOW = 'shallow',
+	SHALLOW = 'shallow',
 	DEEP = 'deep',
 }

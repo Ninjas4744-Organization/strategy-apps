@@ -7,7 +7,7 @@ import {observer} from "mobx-react-lite";
 import {useEffect} from "react";
 import {OfflineQueue} from "@/lib/OfflineQueue";
 import {StatusBar} from "expo-status-bar";
-import {useTheme} from "@react-navigation/native";
+import 'react-native-reanimated';
 
 export default observer(function Root() {
 	useEffect(() => {
@@ -25,9 +25,9 @@ export default observer(function Root() {
 
 function RootNavigator() {
 	const {user} = useAuth();
-	let {colors} = useTheme();
+	// let {colors} = useTheme();
 
-	colors.background = 'transparent';
+	// colors.background = 'transparent';
 
 	return <>
 		<StackWrapper>
