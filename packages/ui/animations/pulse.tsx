@@ -1,4 +1,4 @@
-import {Animated, Easing} from "react-native";
+import {Animated, Easing, type StyleProp, type ViewStyle} from "react-native";
 import {useEffect, useRef} from "react";
 import type {AnimationProps} from "@/interfaces/AnimationProps";
 
@@ -28,7 +28,7 @@ export const Pulse = ({children, style}: AnimationProps) => {
 		style={{
 			...style,
 			transform: [{scale: pulseValue.current}],
-		}}>
+		} as StyleProp<ViewStyle>}>
 		{children}
 	</Animated.View>;
 };
