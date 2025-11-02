@@ -1,10 +1,8 @@
 import {AdminTabProps} from "@/lib/components/admin/commons";
 import {Breakdown} from "@/lib/components/admin/analytics/Breakdown";
 import {Card, CardTitle} from "@/lib/components/admin/Card";
-import {Subtitle, Title} from "@ninjas-strategy/ui/styles/Text";
-import {Col, Row} from "@ninjas-strategy/ui/styles/FlexDir";
+import {Subtitle, Title, Col, Row, Icon} from "@ninjas-strategy/ui";
 import styled from "styled-components/native";
-import {Icon} from "@ninjas-strategy/ui/components/Icon";
 import {MD2Colors} from "react-native-paper";
 
 export const OverviewTab = ({team}: AdminTabProps) => {

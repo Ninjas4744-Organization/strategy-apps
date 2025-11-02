@@ -1,6 +1,5 @@
 import styled, {css} from "styled-components/native";
-import {TextSection, Title, Subtitle} from "@ninjas-strategy/ui/styles/Text";
-import {Icon} from "@ninjas-strategy/ui/components/Icon";
+import {TextSection, Title, Subtitle, Icon} from "@ninjas-strategy/ui";
 import {useAuth} from "@/lib/context/auth";
 import {usePathname} from "expo-router";
 import {useSafeAreaInsets} from "react-native-safe-area-context";

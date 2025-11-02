@@ -1,7 +1,6 @@
 import styled from "styled-components/native";
 import {observer} from "mobx-react-lite";
 import {SectionTitle} from "@/lib/components/game/SectionTitle";
-import {BodyScroll} from "@ninjas-strategy/ui/styles/misc";
 import {ScoringCategory} from "@/lib/components/game/ScoringCategory";
 import {ScoringElement} from "@/lib/components/game/ScoringElement";
 import gameStore from "@/lib/stores/gameStore";
@@ -9,9 +8,7 @@ import {updateItemAtIndex} from "@/lib/utilities";
 import {levelColors} from "@/lib/components/game/commons";
 import {CageLevel} from "@/lib/interfaces/CageLevel";
 import {MD2Colors, RadioButton, TextInput} from "react-native-paper";
-import {Subtitle} from "@ninjas-strategy/ui/styles/Text";
-import {Icon} from "@ninjas-strategy/ui/components/Icon";
-import {BeautifulButton} from "@ninjas-strategy/ui/styles/BeautifulButton";
+import {BodyScroll, Subtitle, Icon, BeautifulButton} from "@ninjas-strategy/ui";
 import {useRouter} from "expo-router";
 import {action} from "mobx";
 import {KeyboardAvoidingView, Platform} from "react-native";

@@ -1,6 +1,5 @@
 import styled from "styled-components/native";
-import {Icon} from "@ninjas-strategy/ui/components/Icon";
-import {Subtitle, TextSection, Title} from "@ninjas-strategy/ui/styles/Text";
+import {Icon, Subtitle, TextSection, Title} from "@ninjas-strategy/ui";
 import {IconContainer, iconContainerStyle} from "@ninjas-strategy/ui/styles/IconContainer";
 import {MD2Colors} from "react-native-paper";
 import {MaterialIcon} from "@ninjas-strategy/ui/interfaces/MaterialIcon";

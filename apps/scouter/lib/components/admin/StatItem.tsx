@@ -1,6 +1,5 @@
 import styled from "styled-components/native";
-import {Icon} from "@ninjas-strategy/ui/components/Icon";
-import {Subtitle, Title} from "@ninjas-strategy/ui/styles/Text";
+import {Icon, Subtitle, Title} from "@ninjas-strategy/ui";
 import {MaterialIcon} from "@ninjas-strategy/ui/interfaces/MaterialIcon";
 
 type StatItemProps = {

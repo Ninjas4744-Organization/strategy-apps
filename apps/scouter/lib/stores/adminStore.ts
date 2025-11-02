@@ -3,7 +3,7 @@ import {Team} from "@/lib/models/Team";
 import {collection, doc, getDocs, serverTimestamp, setDoc} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {Game} from "@/lib/models/Game";
-import {showSnackbar} from "@ninjas-strategy/ui/components/Snackbar";
+import {showSnackbar} from "@ninjas-strategy/ui";
 
 type Teams = {
 	[id: number]: Team,

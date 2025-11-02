@@ -1,6 +1,6 @@
 import {observer} from "mobx-react-lite";
 import styled from "styled-components/native";
-import {Icon} from "@ninjas-strategy/ui/components/Icon";
+import {Icon} from "@ninjas-strategy/ui";
 import adminStore from "@/lib/stores/adminStore";
 import {useAuth} from "@/lib/context/auth";
 import {useRouter} from "expo-router";

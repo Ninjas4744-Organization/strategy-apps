@@ -2,14 +2,11 @@ import {useAuth} from '@/lib/context/auth';
 import {useEffect, useState} from "react";
 import styled from 'styled-components/native';
 import {Button, MD2Colors, TextInput} from "react-native-paper";
-import {Text} from '@ninjas-strategy/ui/styles/Text';
 import {useRouter} from "expo-router";
-import {BeautifulButton} from "@ninjas-strategy/ui/styles/BeautifulButton";
 import {z} from "zod";
 import {doc, onSnapshot} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
-import {showSnackbar} from "@ninjas-strategy/ui/components/Snackbar";
-import {AppHeader} from "@ninjas-strategy/ui/components/AppHeader";
+import {BeautifulButton, Text, showSnackbar, AppHeader} from "@ninjas-strategy/ui";
 
 const userSchema = z.object({
 	email: z.string().email({ message: "Invalid email address" }),

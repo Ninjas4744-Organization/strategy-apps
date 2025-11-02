@@ -1,9 +1,8 @@
 import {Game} from "@/lib/models/Game";
 import styled from "styled-components/native";
-import {Subtitle} from "@ninjas-strategy/ui/styles/Text";
 import {View} from "react-native";
 import {Card} from "@/lib/components/admin/Card";
-import {Row} from "@ninjas-strategy/ui/styles/FlexDir";
+import {Row, Subtitle} from "@ninjas-strategy/ui";
 import {AdminTabProps} from "@/lib/components/admin/commons";
 import {MD2Colors} from "react-native-paper";
 

@@ -9,7 +9,7 @@ import {ScoringCategory} from "@/lib/components/game/ScoringCategory";
 import {ScoringElement} from "@/lib/components/game/ScoringElement";
 import {updateItemAtIndex} from "@/lib/utilities";
 import gameStore from "@/lib/stores/gameStore";
-import {BodyScroll} from "@ninjas-strategy/ui/styles/misc";
+import {BodyScroll} from "@ninjas-strategy/ui";
 import {levelColors} from "@/lib/components/game/commons";
 import {action} from "mobx";
 

@@ -1,8 +1,7 @@
 import styled from "styled-components/native";
-import {Subtitle} from "@ninjas-strategy/ui/styles/Text";
 import {MD2Colors, ProgressBar} from "react-native-paper";
 import {Card, CardTitle} from "@/lib/components/admin/Card";
-import {Row} from "@ninjas-strategy/ui/styles/FlexDir";
+import {Row, Subtitle} from "@ninjas-strategy/ui";
 import {AdminTabProps} from "@/lib/components/admin/commons";
 
 export const Performance = ({team}: AdminTabProps) => {

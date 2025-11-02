@@ -1,10 +1,8 @@
 import {AdminTabProps} from "@/lib/components/admin/commons";
 import {Game} from "@/lib/models/Game";
 import {Card, CardTitle} from "@/lib/components/admin/Card";
-import {Col, Row} from "@ninjas-strategy/ui/styles/FlexDir";
+import {Col, Row, Subtitle} from "@ninjas-strategy/ui";
 import styled from "styled-components/native";
-import {CageLevel} from "@/lib/interfaces/CageLevel";
-import {Subtitle} from "@ninjas-strategy/ui/styles/Text";
 import {MD2Colors} from "react-native-paper";
 
 export const GamesList = ({team}: AdminTabProps) => {

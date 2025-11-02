@@ -1,17 +1,13 @@
 import styled from "styled-components/native";
 import adminStore from "@/lib/stores/adminStore";
 import {SectionTitle} from "@/lib/components/game/SectionTitle";
-import {Subtitle, Title} from "@ninjas-strategy/ui/styles/Text";
-import {Icon} from "@ninjas-strategy/ui/components/Icon";
+import {Subtitle, Title, Icon, Loading, showSnackbar, Row} from "@ninjas-strategy/ui";
 import {TeamItem} from "@/lib/components/admin/TeamItem";
 import {ScrollView, View, Text as RNText} from "react-native";
 import {observer} from "mobx-react-lite";
-import {Loading} from "@ninjas-strategy/ui/components/Loading";
 import {Stack} from "expo-router";
 import {DashboardHeaderButtons} from "@/lib/components/admin/DashboardHeaderButtons";
 import {Button, Dialog, MD2Colors} from "react-native-paper";
-import {Row} from "@ninjas-strategy/ui/styles/FlexDir";
-import {showSnackbar} from "@ninjas-strategy/ui/components/Snackbar";
 
 const IconsRow = styled.View`
 	display: flex;

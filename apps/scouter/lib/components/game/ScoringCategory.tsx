@@ -1,7 +1,5 @@
 import styled from "styled-components/native";
-import {Title} from "@ninjas-strategy/ui/styles/Text";
-import {IconContainer} from "@ninjas-strategy/ui/styles/IconContainer";
-import {Icon} from "@ninjas-strategy/ui/components/Icon";
+import {IconContainer, Title, Icon} from "@ninjas-strategy/ui";
 import {MaterialIcon} from "@ninjas-strategy/ui/interfaces/MaterialIcon";
 
 type ScoringCategoryProps = {

@@ -1,10 +1,10 @@
 import styled from "styled-components/native";
-import {Pulse} from "@/animations/pulse.tsx";
-import {Text} from "@/styles/Text.tsx";
-import {IconContainer} from "@/styles/IconContainer.tsx";
-import {Icon} from "@/components/Icon.tsx";
+import {Pulse} from "@/animations/pulse";
+import {Text} from "@/styles/Text";
+import {IconContainer} from "@/styles/IconContainer";
+import {Icon} from "@/components/Icon";
 import {MD2Colors} from "react-native-paper";
-import type {MaterialIcon} from "@/interfaces/MaterialIcon.ts";
+import type {MaterialIcon} from "@/interfaces/MaterialIcon";
 
 type AppHeaderProps = {
 	icon: MaterialIcon;
