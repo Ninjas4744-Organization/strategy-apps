@@ -57,12 +57,30 @@
         "typescript": "~5.9.2",
       },
     },
+    "apps/trainee": {
+      "name": "trainee",
+      "version": "1.0.0",
+      "dependencies": {
+        "@ninjas-strategy/ui": "workspace:*",
+        "expo": "~54.0.20",
+        "expo-router": "~6.0.14",
+        "expo-status-bar": "~3.0.8",
+        "react": "19.1.0",
+        "react-native": "0.81.5",
+      },
+      "devDependencies": {
+        "@types/react": "~19.1.0",
+        "typescript": "~5.9.2",
+      },
+    },
     "packages/ui": {
       "name": "@ninjas-strategy/ui",
       "version": "1.0.0",
       "dependencies": {
         "@expo/vector-icons": "^15.0.3",
         "expo-linear-gradient": "~15.0.7",
+        "mobx": "^6.15.0",
+        "mobx-react-lite": "^4.1.1",
         "react-native-paper": "^5.14.5",
         "styled-components": "^6.1.19",
       },
@@ -275,6 +293,8 @@
     "@bcoe/v8-coverage": ["@bcoe/v8-coverage@0.2.3", "", {}, "sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw=="],
 
     "@callstack/react-theme-provider": ["@callstack/react-theme-provider@3.0.9", "", { "dependencies": { "deepmerge": "^3.2.0", "hoist-non-react-statics": "^3.3.0" }, "peerDependencies": { "react": ">=16.3.0" } }, "sha512-tTQ0uDSCL0ypeMa8T/E9wAZRGKWj8kXP7+6RYgPTfOPs9N07C9xM8P02GJ3feETap4Ux5S69D9nteq9mEj86NA=="],
+
+    "@egjs/hammerjs": ["@egjs/hammerjs@2.0.17", "", { "dependencies": { "@types/hammerjs": "^2.0.36" } }, "sha512-XQsZgjm2EcVUiZQf11UBJQfmZeEmOW8DpI1gsFeln6w0ae0ii4dMQEQ0kjl6DspdWX1aGY1/loyXnP0JS06e/A=="],
 
     "@emnapi/core": ["@emnapi/core@1.6.0", "", { "dependencies": { "@emnapi/wasi-threads": "1.1.0", "tslib": "^2.4.0" } }, "sha512-zq/ay+9fNIJJtJiZxdTnXS20PllcYMX3OE23ESc4HK/bdYu3cOWYVhsOhVnXALfU/uqJIxn5NBPd9z4v+SfoSg=="],
 
@@ -663,6 +683,8 @@
     "@types/estree": ["@types/estree@1.0.8", "", {}, "sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w=="],
 
     "@types/graceful-fs": ["@types/graceful-fs@4.1.9", "", { "dependencies": { "@types/node": "*" } }, "sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ=="],
+
+    "@types/hammerjs": ["@types/hammerjs@2.0.46", "", {}, "sha512-ynRvcq6wvqexJ9brDMS4BnBLzmr0e14d6ZJTEShTBWKymQiHwlAyGu0ZPEFI2Fh1U53F7tN9ufClWM5KvqkKOw=="],
 
     "@types/istanbul-lib-coverage": ["@types/istanbul-lib-coverage@2.0.6", "", {}, "sha512-2QF/t/auWm0lsy8XtKVPG19v3sSOQlJe/YHZgfjb/KBBHOGSV+J2q/S671rcq9uTBrLAXmZpqJiaQbMT+zNU1w=="],
 
@@ -1812,6 +1834,8 @@
 
     "react-native-chart-kit": ["react-native-chart-kit@6.12.0", "", { "dependencies": { "lodash": "^4.17.13", "paths-js": "^0.4.10", "point-in-polygon": "^1.0.1" }, "peerDependencies": { "react": "> 16.7.0", "react-native": ">= 0.50.0", "react-native-svg": "> 6.4.1" } }, "sha512-nZLGyCFzZ7zmX0KjYeeSV1HKuPhl1wOMlTAqa0JhlyW62qV/1ZPXHgT8o9s8mkFaGxdqbspOeuaa6I9jUQDgnA=="],
 
+    "react-native-gesture-handler": ["react-native-gesture-handler@2.28.0", "", { "dependencies": { "@egjs/hammerjs": "^2.0.17", "hoist-non-react-statics": "^3.3.0", "invariant": "^2.2.4" }, "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-0msfJ1vRxXKVgTgvL+1ZOoYw3/0z1R+Ked0+udoJhyplC2jbVKIJ8Z1bzWdpQRCV3QcQ87Op0zJVE5DhKK2A0A=="],
+
     "react-native-is-edge-to-edge": ["react-native-is-edge-to-edge@1.2.1", "", { "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-FLbPWl/MyYQWz+KwqOZsSyj2JmLKglHatd3xLZWskXOpRaio4LfEDEz8E/A6uD8QoTHW6Aobw1jbEwK7KMgR7Q=="],
 
     "react-native-pager-view": ["react-native-pager-view@6.9.1", "", { "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-uUT0MMMbNtoSbxe9pRvdJJKEi9snjuJ3fXlZhG8F2vVMOBJVt/AFtqMPUHu9yMflmqOr08PewKzj9EPl/Yj+Gw=="],
@@ -2061,6 +2085,8 @@
     "toidentifier": ["toidentifier@1.0.1", "", {}, "sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA=="],
 
     "tr46": ["tr46@0.0.3", "", {}, "sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw=="],
+
+    "trainee": ["trainee@workspace:apps/trainee"],
 
     "ts-api-utils": ["ts-api-utils@2.1.0", "", { "peerDependencies": { "typescript": ">=4.8.4" } }, "sha512-CUgTZL1irw8u29bzrOD/nH85jqyc74D6SshFgujOIA7osm2Rz7dYH77agkx7H4FBNxDq7Cjf+IjaX/8zwFW+ZQ=="],
 

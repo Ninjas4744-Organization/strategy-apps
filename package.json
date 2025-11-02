@@ -1,5 +1,5 @@
 {
-	"name": "@ninjas-strategy",
+	"name": "ninjas-strategy-apps",
 	"private": true,
 	"workspaces": [
 		"apps/*",

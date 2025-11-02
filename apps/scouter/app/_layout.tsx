@@ -24,9 +24,6 @@ export default observer(function Root() {
 
 function RootNavigator() {
 	const {user} = useAuth();
-	// let {colors} = useTheme();
-
-	// colors.background = 'transparent';
 
 	return (
 		<>

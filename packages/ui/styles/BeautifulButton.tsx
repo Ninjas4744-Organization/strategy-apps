@@ -1,9 +1,9 @@
 import {LinearGradient} from "expo-linear-gradient";
 import styled from "styled-components/native";
-import {Icon} from "@/components/Icon.tsx";
+import {Icon} from "../";
 import {Text} from "./Text";
 import {MD2Colors} from "react-native-paper";
-import type {MaterialIcon} from "@/interfaces/MaterialIcon";
+import type {MaterialIcon} from "../interfaces/MaterialIcon";
 
 type BeautifulButtonProps = {
 	label: string;
