@@ -4,7 +4,7 @@ import {doc, getDoc, setDoc, serverTimestamp} from "firebase/firestore";
 import {pick} from "@/lib/utilities";
 import {CageLevel} from "@/lib/interfaces/CageLevel";
 import {OfflineQueue} from "@/lib/OfflineQueue";
-import {showSnackbar} from "@ninjas-strategy/ui/Snackbar";
+import {showSnackbar} from "@ninjas-strategy/ui/components/Snackbar";
 
 const MAX_TEAM_NUMBER = 20000;
 const MAX_QUALIFICATION_MATCH_NUMBER = 150;

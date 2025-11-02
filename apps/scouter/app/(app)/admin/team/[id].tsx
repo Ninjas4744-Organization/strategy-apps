@@ -5,7 +5,7 @@ import {Subtitle, Title} from "@ninjas-strategy/ui/styles/Text";
 import {Row} from "@ninjas-strategy/ui/styles/FlexDir";
 import {StatItem} from "@/lib/components/admin/StatItem";
 import adminStore from "@/lib/stores/adminStore";
-import {Icon} from "@ninjas-strategy/ui/Icon";
+import {Icon} from "@ninjas-strategy/ui/components/Icon";
 import {Insight} from "@/lib/interfaces/Insight";
 import {Tabs} from "@/lib/components/admin/Tabs";
 import {OverviewTab} from "@/lib/components/admin/team/OverviewTab";

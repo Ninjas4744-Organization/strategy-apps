@@ -10,7 +10,7 @@ import {levelColors} from "@/lib/components/game/commons";
 import {CageLevel} from "@/lib/interfaces/CageLevel";
 import {MD2Colors, RadioButton, TextInput} from "react-native-paper";
 import {Subtitle} from "@ninjas-strategy/ui/styles/Text";
-import {Icon} from "@ninjas-strategy/ui/Icon";
+import {Icon} from "@ninjas-strategy/ui/components/Icon";
 import {BeautifulButton} from "@ninjas-strategy/ui/styles/BeautifulButton";
 import {useRouter} from "expo-router";
 import {action} from "mobx";

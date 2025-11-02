@@ -2,7 +2,7 @@ import {Stack, useGlobalSearchParams} from 'expo-router';
 import {StackWrapper} from "@ninjas-strategy/ui/styles/StackWrapper";
 import {observer} from "mobx-react-lite";
 import adminStore from "@/lib/stores/adminStore";
-import {Loading} from "@ninjas-strategy/ui/Loading";
+import {Loading} from "@ninjas-strategy/ui/components/Loading";
 import {useEffect} from "react";
 import {MD2Colors} from "react-native-paper";
 

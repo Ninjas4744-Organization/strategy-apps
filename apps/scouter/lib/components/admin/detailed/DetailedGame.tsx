@@ -4,7 +4,7 @@ import {useState} from "react";
 import {Card, CardTitle} from "@/lib/components/admin/Card";
 import {Row} from "@ninjas-strategy/ui/styles/FlexDir";
 import {TouchableOpacity} from "react-native";
-import {Icon} from "@ninjas-strategy/ui/Icon";
+import {Icon} from "@ninjas-strategy/ui/components/Icon";
 import {Subtitle} from "@ninjas-strategy/ui/styles/Text";
 import {MD2Colors} from "react-native-paper";
 import {CageLevel} from "@/lib/interfaces/CageLevel";

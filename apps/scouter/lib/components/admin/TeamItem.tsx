@@ -1,7 +1,7 @@
 import styled from "styled-components/native";
 import {Subtitle, Title} from "@ninjas-strategy/ui/styles/Text";
 import {Game} from "@/lib/models/Game";
-import {Icon} from "@ninjas-strategy/ui/Icon";
+import {Icon} from "@ninjas-strategy/ui/components/Icon";
 import {useRouter} from "expo-router";
 import {MD2Colors} from "react-native-paper";
 

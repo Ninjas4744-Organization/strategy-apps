@@ -1,17 +1,15 @@
 import {useAuth} from '@/lib/context/auth';
 import {useEffect, useState} from "react";
-import {Pulse} from "@ninjas-strategy/ui/animations/pulse";
 import styled from 'styled-components/native';
 import {Button, MD2Colors, TextInput} from "react-native-paper";
 import {Text} from '@ninjas-strategy/ui/styles/Text';
-import {Icon} from "@ninjas-strategy/ui/Icon";
 import {useRouter} from "expo-router";
-import {IconContainer} from "@ninjas-strategy/ui/styles/IconContainer";
 import {BeautifulButton} from "@ninjas-strategy/ui/styles/BeautifulButton";
 import {z} from "zod";
 import {doc, onSnapshot} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
-import {showSnackbar} from "@ninjas-strategy/ui/Snackbar";
+import {showSnackbar} from "@ninjas-strategy/ui/components/Snackbar";
+import {AppHeader} from "@ninjas-strategy/ui/components/AppHeader";
 
 const userSchema = z.object({
 	email: z.string().email({ message: "Invalid email address" }),
@@ -33,33 +31,13 @@ const Container = styled.SafeAreaView`
 	flex-direction: column;
 `;
 
-const HeaderContainer = styled(Pulse)`
-	padding: 16px;
-	gap: 12px;
-	justify-content: center;
-	align-items: center;
-`;
-
-const Title = styled(Text)`
-	font-size: 24px;
-	font-weight: bold;
-`;
-
-const Subtitle = styled(Text)`
-	font-size: 14px;
-	opacity: 0.8;
-`;
-
 export default function Index() {
 	return (
 		<Container>
-			<HeaderContainer>
-				<IconContainer>
-					<Icon color={MD2Colors.grey500} name="sports-esports" size={36}/>
-				</IconContainer>
-				<Title>Ninjas Scouting App</Title>
-				<Subtitle>Team Performance Analytics</Subtitle>
-			</HeaderContainer>
+			<AppHeader
+				icon="sports-esports"
+				title="The Ninja Scouter"
+				description="Team Performance Analytics" />
 			<StartButton />
 			<LoginForm />
 		</Container>

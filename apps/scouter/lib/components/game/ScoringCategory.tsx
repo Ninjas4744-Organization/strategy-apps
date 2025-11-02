@@ -1,10 +1,8 @@
 import styled from "styled-components/native";
 import {Title} from "@ninjas-strategy/ui/styles/Text";
-import {MaterialIcons} from "@expo/vector-icons";
 import {IconContainer} from "@ninjas-strategy/ui/styles/IconContainer";
-import {Icon} from "@ninjas-strategy/ui/Icon";
-
-type MaterialIcon = keyof typeof MaterialIcons.glyphMap;
+import {Icon} from "@ninjas-strategy/ui/components/Icon";
+import {MaterialIcon} from "@ninjas-strategy/ui/interfaces/MaterialIcon";
 
 type ScoringCategoryProps = {
 	color: string;

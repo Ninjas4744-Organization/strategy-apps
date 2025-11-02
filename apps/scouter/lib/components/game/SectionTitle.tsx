@@ -1,12 +1,9 @@
 import styled from "styled-components/native";
-import {Icon} from "@ninjas-strategy/ui/Icon";
+import {Icon} from "@ninjas-strategy/ui/components/Icon";
 import {Subtitle, TextSection, Title} from "@ninjas-strategy/ui/styles/Text";
-import {MaterialIcons} from '@expo/vector-icons';
 import {IconContainer, iconContainerStyle} from "@ninjas-strategy/ui/styles/IconContainer";
 import {MD2Colors} from "react-native-paper";
-
-type MaterialIcon = keyof typeof MaterialIcons.glyphMap;
-
+import {MaterialIcon} from "@ninjas-strategy/ui/interfaces/MaterialIcon";
 
 type SectionTitleProps = {
 	title: string;

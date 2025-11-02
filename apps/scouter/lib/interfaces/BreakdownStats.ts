@@ -1,6 +1,4 @@
-import {MaterialIcons} from "@expo/vector-icons";
-
-type MaterialIcon = keyof typeof MaterialIcons.glyphMap;
+import {MaterialIcon} from "@ninjas-strategy/ui/interfaces/MaterialIcon";
 
 export type BreakdownStat = {
 	icon?: MaterialIcon;
