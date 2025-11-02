@@ -1,10 +1,10 @@
 import styled from "styled-components/native";
-import {Col, Row} from "@/lib/components/styles/FlexDir";
+import {Col, Row} from "@ninjas-strategy/ui/styles/FlexDir";
 import {BreakdownStat, ExtraBreakdownStat} from "@/lib/interfaces/BreakdownStats";
 import {useState} from "react";
 import {LayoutChangeEvent} from "react-native/Libraries/Types/CoreEventTypes";
 import {Card, CardTitle} from "@/lib/components/admin/Card";
-import {Icon} from "@/lib/components/Icon";
+import {Icon} from "@ninjas-strategy/ui/Icon";
 import {chunkArray} from "@/lib/utilities";
 
 const BreakdownStatContainer = styled.View<{color: string}>`

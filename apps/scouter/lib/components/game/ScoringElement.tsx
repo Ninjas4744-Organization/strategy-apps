@@ -1,6 +1,6 @@
 import styled from "styled-components/native";
-import {Subtitle} from "@/lib/components/styles/Text";
-import {Icon} from "@/lib/components/Icon";
+import {Subtitle} from "@ninjas-strategy/ui/styles/Text";
+import {Icon} from "@ninjas-strategy/ui/Icon";
 import {MD2Colors} from "react-native-paper";
 
 type ScoringElementProps = {

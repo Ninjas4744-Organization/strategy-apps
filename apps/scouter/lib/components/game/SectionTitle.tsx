@@ -1,8 +1,8 @@
 import styled from "styled-components/native";
-import {Icon} from "@/lib/components/Icon";
-import {Subtitle, TextSection, Title} from "@/lib/components/styles/Text";
+import {Icon} from "@ninjas-strategy/ui/Icon";
+import {Subtitle, TextSection, Title} from "@ninjas-strategy/ui/styles/Text";
 import {MaterialIcons} from '@expo/vector-icons';
-import {IconContainer, iconContainerStyle} from "@/lib/components/styles/IconContainer";
+import {IconContainer, iconContainerStyle} from "@ninjas-strategy/ui/styles/IconContainer";
 import {MD2Colors} from "react-native-paper";
 
 type MaterialIcon = keyof typeof MaterialIcons.glyphMap;

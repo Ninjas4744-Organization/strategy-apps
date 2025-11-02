@@ -1,8 +1,8 @@
 import styled from "styled-components/native";
-import {Title} from "@/lib/components/styles/Text";
+import {Title} from "@ninjas-strategy/ui/styles/Text";
 import {MaterialIcons} from "@expo/vector-icons";
-import {IconContainer} from "@/lib/components/styles/IconContainer";
-import {Icon} from "@/lib/components/Icon";
+import {IconContainer} from "@ninjas-strategy/ui/styles/IconContainer";
+import {Icon} from "@ninjas-strategy/ui/Icon";
 
 type MaterialIcon = keyof typeof MaterialIcons.glyphMap;
 

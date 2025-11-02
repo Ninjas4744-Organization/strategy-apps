@@ -1,17 +1,17 @@
 import {useAuth} from '@/lib/context/auth';
 import {useEffect, useState} from "react";
-import {Pulse} from "@/lib/components/animations/pulse";
+import {Pulse} from "@ninjas-strategy/ui/animations/pulse";
 import styled from 'styled-components/native';
 import {Button, MD2Colors, TextInput} from "react-native-paper";
-import {Text} from '@/lib/components/styles/Text';
-import {Icon} from "@/lib/components/Icon";
+import {Text} from '@ninjas-strategy/ui/styles/Text';
+import {Icon} from "@ninjas-strategy/ui/Icon";
 import {useRouter} from "expo-router";
-import {IconContainer} from "@/lib/components/styles/IconContainer";
-import {BeautifulButton} from "@/lib/components/styles/BeautifulButton";
+import {IconContainer} from "@ninjas-strategy/ui/styles/IconContainer";
+import {BeautifulButton} from "@ninjas-strategy/ui/styles/BeautifulButton";
 import {z} from "zod";
-import snackbar from "@/lib/stores/snackbar";
 import {doc, onSnapshot} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
+import {showSnackbar} from "@ninjas-strategy/ui/Snackbar";
 
 const userSchema = z.object({
 	email: z.string().email({ message: "Invalid email address" }),
@@ -128,13 +128,13 @@ const LoginForm = () => {
 			nextRoute(email);
 		} catch (e: any) {
 			if (e.code === 'auth/invalid-email')
-				snackbar.show('Invalid email');
+				showSnackbar('Invalid email');
 			else if (e.code === 'auth/missing-password')
-				snackbar.show('Please type a password');
+				showSnackbar('Please type a password');
 			else if (e.code === 'auth/invalid-credential')
-				snackbar.show('Incorrect password');
+				showSnackbar('Incorrect password');
 			else
-				snackbar.show(e.message);
+				showSnackbar(e.message);
 		}
 	};
 
@@ -142,19 +142,19 @@ const LoginForm = () => {
 		try {
 			userSchema.parse({email, password, confirmPassword});
 			await signUp(email, password);
-			snackbar.show('Registration successful!');
+			showSnackbar('Registration successful!');
 			setRegisterMode(false);
 			setEmail('');
 			setPassword('');
 			setConfirmPassword('');
 		} catch (e: any) {
 			if (e instanceof z.ZodError) {
-				snackbar.show(e.issues[0].message);
+				showSnackbar(e.issues[0].message);
 			} else {	//firebase errors
 				if (e.code === 'auth/email-already-in-use')
-					snackbar.show('Email already in use');
+					showSnackbar('Email already in use');
 				else
-					snackbar.show(e.message);
+					showSnackbar(e.message);
 			}
 		}
 	}

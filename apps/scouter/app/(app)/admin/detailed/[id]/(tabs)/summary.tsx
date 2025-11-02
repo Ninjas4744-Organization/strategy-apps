@@ -4,9 +4,9 @@ import {useGlobalSearchParams} from "expo-router";
 import adminStore from "@/lib/stores/adminStore";
 import {MD2Colors} from "react-native-paper";
 import {ScoreTrend} from '@/lib/components/admin/analytics/ScoreTrend';
-import {BodyScroll, FocusWrapper} from '@/lib/components/styles/misc';
+import {BodyScroll, FocusWrapper} from '@ninjas-strategy/ui/styles/misc';
 import {Card, CardTitle} from "@/lib/components/admin/Card";
-import {Subtitle} from "@/lib/components/styles/Text";
+import {Subtitle} from "@ninjas-strategy/ui/styles/Text";
 
 export default observer(function () {
 	const {id} = useGlobalSearchParams();

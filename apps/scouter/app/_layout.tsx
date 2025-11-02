@@ -1,13 +1,13 @@
 import {Stack} from 'expo-router';
 import {AuthProvider, useAuth} from '@/lib/context/auth';
-import {SplashScreenController} from '@/lib/components/splash';
-import {StackWrapper} from "@/lib/components/styles/StackWrapper";
-import {GlobalSnackbar} from "@/lib/components/GlobalSnackbar";
+import {SplashScreenController} from '@/lib/components/SplashScreenController';
+import {StackWrapper} from "@ninjas-strategy/ui/styles/StackWrapper";
 import {observer} from "mobx-react-lite";
 import {useEffect} from "react";
 import {OfflineQueue} from "@/lib/OfflineQueue";
 import {StatusBar} from "expo-status-bar";
 import 'react-native-reanimated';
+import {Snackbar} from "@ninjas-strategy/ui/Snackbar";
 
 export default observer(function Root() {
 	useEffect(() => {
@@ -18,7 +18,7 @@ export default observer(function Root() {
 		<AuthProvider>
 			<SplashScreenController/>
 			<RootNavigator/>
-			<GlobalSnackbar/>
+			<Snackbar/>
 		</AuthProvider>
 	);
 });

@@ -1,0 +1,22 @@
+{
+	"name": "@ninjas-strategy/ui",
+	"private": true,
+	"version": "1.0.0",
+	"dependencies": {
+		"@expo/vector-icons": "^15.0.3",
+		"expo-linear-gradient": "~15.0.7",
+		"mobx": "^6.15.0",
+		"mobx-react-lite": "^4.1.1",
+		"react-native-paper": "^5.14.5",
+		"styled-components": "^6.1.19"
+	},
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"expo": "*",
+		"react": "*",
+		"react-native": "*",
+		"react-native-web": "*"
+	}
+}

@@ -3,7 +3,7 @@ import {Team} from "@/lib/models/Team";
 import {collection, doc, getDocs, serverTimestamp, setDoc} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {Game} from "@/lib/models/Game";
-import snackbar from "@/lib/stores/snackbar";
+import {showSnackbar} from "@ninjas-strategy/ui/Snackbar";
 
 type Teams = {
 	[id: number]: Team,
@@ -27,7 +27,7 @@ class AdminStore {
 				updated_at: serverTimestamp(),
 			});
 		} catch (e) {
-			snackbar.show('Failed to updated registration setting: ' + e);
+			showSnackbar('Failed to updated registration setting: ' + e);
 		}
 	}
 

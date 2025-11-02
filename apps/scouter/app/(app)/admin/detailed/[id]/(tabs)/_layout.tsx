@@ -1,5 +1,5 @@
 import {Tabs, useLocalSearchParams} from 'expo-router';
-import {Icon} from "@/lib/components/Icon";
+import {Icon} from "@ninjas-strategy/ui/Icon";
 import {MD2Colors} from "react-native-paper";
 
 export default function TabLayout() {

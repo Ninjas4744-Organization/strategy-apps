@@ -1,9 +1,9 @@
 import {AdminTabProps} from "@/lib/components/admin/commons";
 import {Card, CardTitle} from "@/lib/components/admin/Card";
-import {Col, Row} from "@/lib/components/styles/FlexDir";
+import {Col, Row} from "@ninjas-strategy/ui/styles/FlexDir";
 import styled from "styled-components/native";
-import {Icon} from "@/lib/components/Icon";
-import {Subtitle} from "@/lib/components/styles/Text";
+import {Icon} from "@ninjas-strategy/ui/Icon";
+import {Subtitle} from "@ninjas-strategy/ui/styles/Text";
 import {MD2Colors} from "react-native-paper";
 
 export const AnalysisTab = ({team}: AdminTabProps) => {

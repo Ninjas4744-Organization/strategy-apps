@@ -3,7 +3,7 @@ import {useGlobalSearchParams} from "expo-router";
 import adminStore from "@/lib/stores/adminStore";
 import {FlatList} from "react-native";
 import {DetailedGame} from "@/lib/components/admin/detailed/DetailedGame";
-import {FocusWrapper} from "@/lib/components/styles/misc";
+import {FocusWrapper} from "@ninjas-strategy/ui/styles/misc";
 
 export default observer(function () {
 	const {id} = useGlobalSearchParams();

@@ -1,17 +1,17 @@
 import styled from "styled-components/native";
 import adminStore from "@/lib/stores/adminStore";
 import {SectionTitle} from "@/lib/components/game/SectionTitle";
-import {Subtitle, Title} from "@/lib/components/styles/Text";
-import {Icon} from "@/lib/components/Icon";
+import {Subtitle, Title} from "@ninjas-strategy/ui/styles/Text";
+import {Icon} from "@ninjas-strategy/ui/Icon";
 import {TeamItem} from "@/lib/components/admin/TeamItem";
 import {ScrollView, View, Text as RNText} from "react-native";
 import {observer} from "mobx-react-lite";
-import {Loading} from "@/lib/components/Loading";
+import {Loading} from "@ninjas-strategy/ui/Loading";
 import {Stack} from "expo-router";
 import {DashboardHeaderButtons} from "@/lib/components/admin/DashboardHeaderButtons";
 import {Button, Dialog, MD2Colors} from "react-native-paper";
-import {Row} from "@/lib/components/styles/FlexDir";
-import snackbar from "@/lib/stores/snackbar";
+import {Row} from "@ninjas-strategy/ui/styles/FlexDir";
+import {showSnackbar} from "@ninjas-strategy/ui/Snackbar";
 
 const IconsRow = styled.View`
 	display: flex;
@@ -67,14 +67,14 @@ export default observer(function AdminIndex() {
 						<Button mode="elevated" buttonColor={MD2Colors.green500} onPress={async () => {
 							await updateRegistrationSetting(true);
 							setShowAppSettings(false);
-							snackbar.show('Registration enabled! New users can now register.');
+							showSnackbar('Registration enabled! New users can now register.');
 						}}>
 							Enable
 						</Button>
 						<Button mode="elevated" buttonColor={MD2Colors.orange500} onPress={async () => {
 							await updateRegistrationSetting(false);
 							setShowAppSettings(false);
-							snackbar.show('Registration disabled! New users cannot register.');
+							showSnackbar('Registration disabled! New users cannot register.');
 						}}>
 							Disable
 						</Button>

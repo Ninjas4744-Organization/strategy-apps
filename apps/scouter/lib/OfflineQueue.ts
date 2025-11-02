@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 import {doc, setDoc, collection, serverTimestamp} from 'firebase/firestore';
 import {db} from "@/lib/firebase/firestore";
-import snackbar from "@/lib/stores/snackbar";
+import {showSnackbar} from "@ninjas-strategy/ui/Snackbar";
 
 type GameData = {
 	team_number: number;
@@ -52,7 +52,7 @@ export class OfflineQueue {
 			await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(remaining));
 
 			if (sentAny) {
-				snackbar.show('Offline data sent to Firebase!');
+				showSnackbar('Offline data sent to Firebase!');
 			}
 		} catch (err) {
 			console.error('Failed to resend unsent data', err);

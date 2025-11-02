@@ -1,11 +1,11 @@
 import {Href, Stack, useLocalSearchParams, useRouter} from "expo-router";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components/native";
-import {Subtitle, Title} from "@/lib/components/styles/Text";
-import {Row} from "@/lib/components/styles/FlexDir";
+import {Subtitle, Title} from "@ninjas-strategy/ui/styles/Text";
+import {Row} from "@ninjas-strategy/ui/styles/FlexDir";
 import {StatItem} from "@/lib/components/admin/StatItem";
 import adminStore from "@/lib/stores/adminStore";
-import {Icon} from "@/lib/components/Icon";
+import {Icon} from "@ninjas-strategy/ui/Icon";
 import {Insight} from "@/lib/interfaces/Insight";
 import {Tabs} from "@/lib/components/admin/Tabs";
 import {OverviewTab} from "@/lib/components/admin/team/OverviewTab";
@@ -13,7 +13,7 @@ import {GamesList} from "@/lib/components/admin/team/GamesList";
 import {ScoreTrend} from "@/lib/components/admin/analytics/ScoreTrend";
 import {AnalysisTab} from "@/lib/components/admin/team/AnalysisTab";
 import {MD2Colors} from "react-native-paper";
-import {SimpleButton} from "@/lib/components/styles/SimpleButton";
+import {SimpleButton} from "@ninjas-strategy/ui/styles/SimpleButton";
 
 const Container = styled.SafeAreaView`
 	background-color: transparent;
