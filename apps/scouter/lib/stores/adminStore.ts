@@ -66,10 +66,11 @@ class AdminStore {
 			const eventRef = await addDoc(eventsRef, {eventName: name, ...eventData});
 			const teamsRes = await TBA(`/event/${eventData.key}/teams/keys`);
 			for (const team of teamsRes.data) {
-				const [, teamNumber] = team.split('frc');
-				await setDoc(doc(db, eventRef.path + '/teams', teamNumber), {
-					memberRegistrationCode: getRandomString(10),
-					adminRegistrationCode: getRandomString(10),
+				const [, team_number] = team.split('frc');
+				await setDoc(doc(db, eventRef.path + '/teams', team_number), {
+					team_number,
+					member_registration_code: getRandomString(10),
+					admin_registration_code: getRandomString(10),
 				});
 			}
 		} catch (e) {
