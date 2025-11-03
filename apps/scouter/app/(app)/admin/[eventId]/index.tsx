@@ -1,15 +1,15 @@
 import styled from "styled-components/native";
 import {SectionTitle} from "@/lib/components/game/SectionTitle";
-import {Subtitle, Title, Icon, Loading} from "@ninjas-strategy/ui";
+import {Subtitle, Title, Icon, Loading, HeaderButtons} from "@ninjas-strategy/ui";
 import {TeamItem} from "@/lib/components/admin/TeamItem";
 import {ScrollView, View} from "react-native";
 import {observer} from "mobx-react-lite";
 import {Stack, useGlobalSearchParams} from "expo-router";
-import {DashboardHeaderButtons} from "@/lib/components/admin/DashboardHeaderButtons";
 import {MD2Colors} from "react-native-paper";
 import {useContext} from "react";
 import {EventContext, EventStore} from "@/lib/stores/eventStore";
-import {useEventData} from "@/lib/hooks/tba";
+import {useTBA} from "@/lib/hooks/tba";
+import adminStore from "@/lib/stores/adminStore";
 
 const IconsRow = styled.View`
 	display: flex;
@@ -18,9 +18,9 @@ const IconsRow = styled.View`
 `;
 
 export default observer(function AdminIndex() {
-	const {isLoading, teamsRanked, totalGamesCount} = useContext(EventContext) as EventStore;
-	const {eventId} = useGlobalSearchParams();
-	const {data: event} = useEventData(eventId as string);
+	const {isLoading, loadTeams, teamsRanked, totalGamesCount, eventId} = useContext(EventContext) as EventStore;
+	const {events} = adminStore;
+	const event = events[eventId];
 
 	if (isLoading)
 		return <Loading />;
@@ -29,7 +29,7 @@ export default observer(function AdminIndex() {
 
 	return <>
 			<ScrollView>
-				<Stack.Screen options={{title: event?.data.name, headerRight: () => <DashboardHeaderButtons />}}/>
+				<Stack.Screen options={{title: event.name, headerRight: () => <HeaderButtons buttons={[{icon: 'refresh', onPress: () => loadTeams()}]} />}}/>
 				<SectionTitle
 					title="Team Analytics Dashboard"
 					subtitle={`${teamsRanked.length} teams analyzed • ${totalGamesCount} total games`} />

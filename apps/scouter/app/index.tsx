@@ -1,12 +1,12 @@
 import {useAuth} from '@/lib/context/auth';
 import {useEffect, useState} from "react";
 import styled from 'styled-components/native';
-import {Button, MD2Colors, TextInput} from "react-native-paper";
+import {Button, MD2Colors} from "react-native-paper";
 import {useRouter} from "expo-router";
 import {z} from "zod";
 import {doc, onSnapshot} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
-import {BeautifulButton, Text, showSnackbar, AppHeader} from "@ninjas-strategy/ui";
+import {BeautifulButton, Text, showSnackbar, AppHeader, TextInput, TextInputIcon, FormGroup} from "@ninjas-strategy/ui";
 
 const userSchema = z.object({
 	email: z.string().email({ message: "Invalid email address" }),
@@ -58,19 +58,6 @@ const StartButton = () => {
 		<BeautifulButton onPress={() => nextRoute()} icon={icon} label={label} />
 	</Section>: null;
 };
-
-const FormGroup = styled.View`
-	padding: 20px;
-	background-color: ${MD2Colors.white}10;
-	gap: 16px;
-	border: ${MD2Colors.white}20;
-	border-radius: 16px;
-`;
-
-const LoginTextInput = styled(TextInput)`
-	background-color: ${MD2Colors.white}70;
-	border-radius: 16px;
-`;
 
 const LoginForm = () => {
 	const {signIn, user, signOut, signUp} = useAuth();
@@ -137,26 +124,26 @@ const LoginForm = () => {
 	return <Section>
 		{user && <Text>Login as someone else</Text>}
 		<FormGroup>
-			<LoginTextInput
+			<TextInput
 				label="Email"
 				keyboardType="email-address"
 				value={email}
 				onChangeText={setEmail}
-				left={<TextInput.Icon icon="email" />}
+				left={<TextInputIcon icon="email" />}
 				underlineStyle={{display: 'none'}}/>
-			<LoginTextInput
+			<TextInput
 				label="Password"
 				secureTextEntry
 				value={password}
 				onChangeText={setPassword}
-				left={<TextInput.Icon icon="lock" />}
+				left={<TextInputIcon icon="lock" />}
 				underlineStyle={{display: 'none'}}/>
-			{registerMode && <LoginTextInput
+			{registerMode && <TextInput
 				label="Confirm Password"
 				secureTextEntry
 				value={confirmPassword}
 				onChangeText={setConfirmPassword}
-				left={<TextInput.Icon icon="lock"/>}
+				left={<TextInputIcon icon="lock"/>}
 				underlineStyle={{display: 'none'}}/>}
 		</FormGroup>
 		<BeautifulButton onPress={registerMode ? handleRegister : handleLogin} icon={registerMode ? "person-add" : "login"} label={registerMode ? "Register" : "Login"} />

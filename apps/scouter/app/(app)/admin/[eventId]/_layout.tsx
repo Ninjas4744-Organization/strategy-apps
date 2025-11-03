@@ -1,5 +1,4 @@
 import {observer} from "mobx-react-lite";
-import adminStore from "@/lib/stores/adminStore";
 import {Stack, useGlobalSearchParams} from "expo-router";
 import {useEffect, useMemo} from "react";
 import {Loading, StackWrapper} from "@ninjas-strategy/ui";

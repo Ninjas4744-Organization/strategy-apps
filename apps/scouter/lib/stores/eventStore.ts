@@ -4,6 +4,7 @@ import {collection, getDocs} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {Team} from "@/lib/models/Team";
 import {Game} from "@/lib/models/Game";
+import {Event} from "@/lib/models/Event";
 
 type Teams = {
 	[id: number]: Team,
@@ -17,7 +18,7 @@ export class EventStore {
 	@observable isLoading: boolean = true;
 	@observable error?: string;
 
-	constructor(private eventId: string) {
+	constructor(public eventId: string) {
 		makeObservable(this);
 	}
 
@@ -42,7 +43,7 @@ export class EventStore {
 				this.teams[team.teamNumber] = new Team(
 					team.id,
 					team.teamNumber,
-					games.sort((a, b) => Number.parseInt(a.gameNumber) > Number.parseInt(b.gameNumber) ? 1 : -1)
+					(games || []).sort((a, b) => Number.parseInt(a.gameNumber) > Number.parseInt(b.gameNumber) ? 1 : -1)
 				);
 			}
 		} catch (e) {

@@ -8,6 +8,7 @@ import {StatusBar} from "expo-status-bar";
 import {Snackbar, StackWrapper} from "@ninjas-strategy/ui";
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import 'react-native-reanimated';
+import {PaperProvider} from "react-native-paper";
 
 const queryClient = new QueryClient()
 
@@ -19,9 +20,11 @@ export default observer(function Root() {
 	return (
 		<AuthProvider>
 			<QueryClientProvider client={queryClient}>
-				<SplashScreenController/>
-				<RootNavigator/>
-				<Snackbar/>
+				<PaperProvider>
+					<SplashScreenController/>
+					<RootNavigator/>
+					<Snackbar/>
+				</PaperProvider>
 			</QueryClientProvider>
 		</AuthProvider>
 	);
@@ -39,6 +42,7 @@ function RootNavigator() {
 						contentStyle: {backgroundColor: 'transparent'}
 				}}>
 					<Stack.Screen name="index"/>
+					<Stack.Screen name="registration/[teamNumber]" />
 					<Stack.Protected guard={!!user}>
 						<Stack.Screen name="(app)" options={{gestureEnabled: false}}/>
 					</Stack.Protected>

@@ -23,3 +23,12 @@ export function chunkArray<T>(array: T[], chunkSize: number): T[][] {
 	}
 	return result;
 }
+
+const possibleRandomStrChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+export function getRandomString(length: number, prefix = '') {
+	let text = prefix;
+	for (let i = 0; i < length; i++)
+		text += possibleRandomStrChars.charAt(Math.floor(Math.random() * possibleRandomStrChars.length));
+
+	return text;
+}

@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "scouting",
+    "name": "The Ninja Scouter",
     "slug": "scouting",
     "version": "0.0.5",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "scheme": "scouting",
+    "scheme": "ninjascouter",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {

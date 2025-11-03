@@ -2,13 +2,13 @@ import styled from "styled-components/native";
 import {Subtitle, Title, Icon} from "@ninjas-strategy/ui";
 import {useRouter} from "expo-router";
 import {MD2Colors} from "react-native-paper";
-import {useQuery} from "@tanstack/react-query";
-import axios from 'axios';
-import {useEventData} from "@/lib/hooks/tba";
 
 type EventItemProps = {
-	id: string,
-	year: number,
+	id: string;
+	name: string;
+	year: number;
+	startDate: string;
+	endDate: string;
 };
 
 const EventItemContainer = styled.View`
@@ -35,17 +35,14 @@ const NavigationButtons = styled.View`
 	gap: 20px;
 `;
 
-export const EventItem = ({id, year}: EventItemProps) => {
-	const {data: event, isPending, error} = useEventData(id);
+export const EventItem = ({id, name, year, startDate, endDate}: EventItemProps) => {
 	const router = useRouter();
-
-	if (isPending)
-		return null;
 
 	return <EventItemContainer>
 		<Details>
-			<Title>{event?.data.name}</Title>
+			<Title>{name}</Title>
 			<Subtitle>{year}</Subtitle>
+			<Subtitle>{startDate} → {endDate}</Subtitle>
 		</Details>
 		<NavigationButtons>
 			<Icon name="chevron-right" onPress={() => router.push(`/admin/${id}`)}/>

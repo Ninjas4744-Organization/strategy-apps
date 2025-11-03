@@ -1,30 +1,35 @@
-import styled from "styled-components/native";
 import adminStore from "@/lib/stores/adminStore";
-import {Icon, Loading, showSnackbar, Row, BeautifulButton} from "@ninjas-strategy/ui";
+import {Loading, showSnackbar, Row, HeaderButtons} from "@ninjas-strategy/ui";
 import {ScrollView, Text as RNText} from "react-native";
 import {observer} from "mobx-react-lite";
-import {Stack} from "expo-router";
-import {DashboardHeaderButtons} from "@/lib/components/admin/DashboardHeaderButtons";
+import {Stack, useRouter} from "expo-router";
 import {Button, Dialog, MD2Colors} from "react-native-paper";
 import {EventItem} from "@/lib/components/admin/EventItem";
-
-const IconsRow = styled.View`
-	display: flex;
-	flex-direction: row;
-	margin: 8px;
-`;
+import {useAuth} from "@/lib/context/auth";
 
 export default observer(function AdminIndex() {
-	const {isLoading, events, updateRegistrationSetting, showAppSettings, setShowAppSettings} = adminStore;
+	const {isLoading, events, updateRegistrationSetting, showAppSettings, setShowAppSettings, loadEvents} = adminStore;
+	const router = useRouter();
+	const {signOut} = useAuth();
 
 	if (isLoading)
 		return <Loading />;
 
 	return <>
 		<ScrollView>
-			<Stack.Screen options={{title: 'Events', headerRight: () => <DashboardHeaderButtons />}}/>
+			<Stack.Screen
+				options={{
+					headerShown: true,
+					title: 'Events',
+					headerRight: () => (
+						<HeaderButtons buttons={[
+							{onPress: () => loadEvents(), icon: 'refresh'},
+							{onPress: () => router.push('/admin/addEvent'), icon: 'add'},
+							{onPress: () => signOut().then(() => router.push('/')), icon: 'logout'},
+						]} />
+					)}}/>
 			{Object.values(events).map((event) => (
-				<EventItem key={event.id} id={event.id} year={event.year} />
+				<EventItem key={event.id} {...event} />
 			))}
 		</ScrollView>
 		<Dialog visible={showAppSettings} onDismiss={() => setShowAppSettings(false)}>
