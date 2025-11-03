@@ -1,17 +1,15 @@
-import {Stack, useGlobalSearchParams} from 'expo-router';
+import {Stack} from 'expo-router';
 import {observer} from "mobx-react-lite";
 import adminStore from "@/lib/stores/adminStore";
 import {Loading, StackWrapper} from "@ninjas-strategy/ui";
 import {useEffect} from "react";
-import {MD2Colors} from "react-native-paper";
 
 export default observer(function AdminLayout() {
-	const {isLoading, loadTeams, loaded} = adminStore;
-	const {id} = useGlobalSearchParams();
+	const {isLoading, loadEvents, loaded} = adminStore;
 
 	useEffect(() => {
 		if (!loaded)
-			loadTeams();
+			loadEvents();
 	}, []);
 
 	if (isLoading)
@@ -20,21 +18,8 @@ export default observer(function AdminLayout() {
 	return <StackWrapper>
 		<Stack
 			screenOptions={{
-				headerTitleAlign: 'left',
-				headerStyle: {backgroundColor: MD2Colors.indigo900},
-				headerTitleStyle: {
-					color: MD2Colors.white
-				},
-				headerBackButtonDisplayMode: 'minimal',
+				headerShown: false,
 				contentStyle: {backgroundColor: 'transparent'},
-				headerBlurEffect: 'light',
-			}}>
-			<Stack.Screen
-				name="detailed/[id]"
-				options={{
-					headerTitle: `Team ${id} Games`, // או כל כותרת אחרת שתעדכן דינמית
-				}}
-			/>
-		</Stack>
+			}}/>
 	</StackWrapper>;
 });

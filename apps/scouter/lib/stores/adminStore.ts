@@ -1,17 +1,18 @@
 import {action, computed, makeObservable, observable} from "mobx";
+import {Event} from "@/lib/models/Event";
 import {Team} from "@/lib/models/Team";
 import {collection, doc, getDocs, serverTimestamp, setDoc} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {Game} from "@/lib/models/Game";
 import {showSnackbar} from "@ninjas-strategy/ui";
 
-type Teams = {
-	[id: number]: Team,
+type Events = {
+	[eventId: string]: Event,
 };
 
 class AdminStore {
 	@observable loaded: boolean = false;
-	@observable teams: Teams = {};
+	@observable events: Events = {};
 	@observable isLoading: boolean = true;
 	@observable error?: string;
 	@observable showAppSettings: boolean = false;
@@ -37,51 +38,23 @@ class AdminStore {
 	}
 
 	@action.bound
-	async loadTeams() {
+	async loadEvents() {
 		this.isLoading = true;
-		this.teams = {};
+		this.events = {};
 		try {
-			const teamsRef = collection(db, 'teams');
-			const teamsSnapshot = await getDocs(teamsRef);
-			for (const teamDoc of teamsSnapshot.docs) {
-				const teamData = teamDoc.data();
-				const team = Team.fromMap(teamDoc.id, teamData);
-				const gamesRef = collection(db, 'teams', team.id, 'games');
-				const gamesSnapshot = await getDocs(gamesRef);
-
-				const games = gamesSnapshot.docs.map(game => {
-					const data = game.data();
-					return Game.fromMap(game.id, data);
-				});
-
-				this.teams[team.teamNumber] = new Team(
-					team.id,
-					team.teamNumber,
-					games.sort((a, b) => Number.parseInt(a.gameNumber) > Number.parseInt(b.gameNumber) ? 1 : -1)
-				);
+			const eventsRef = collection(db, 'events');
+			const eventsSnapshot = await getDocs(eventsRef);
+			for (const eventDoc of eventsSnapshot.docs) {
+				const eventData = eventDoc.data();
+				const event = Event.fromMap(eventDoc.id, eventData);
+				this.events[event.id] = Event.fromMap(eventDoc.id, eventData)
 			}
 		} catch (e) {
-			this.error = `Failed to load teams: ${e}`;
+			this.error = `Failed to load events: ${e}`;
 		} finally {
 			this.loaded = true;
 			this.isLoading = false;
 		}
-	}
-
-	@computed
-	get rank() {
-		return Object.values(this.teams)
-			.sort((a, b) => b.averageTotalScore > a.averageTotalScore ? 1 : -1)
-			.map(team => team.teamNumber);
-	}
-	@computed
-	get totalGamesCount() {
-		return Object.values(this.teams).reduce((sum, team) => sum + team.games.length, 0);
-	}
-
-	@computed
-	get teamsRanked() {
-		return this.rank.map(team => this.teams[team]);
 	}
 }
 

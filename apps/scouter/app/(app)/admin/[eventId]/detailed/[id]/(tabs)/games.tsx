@@ -1,13 +1,14 @@
 import {observer} from "mobx-react-lite";
 import {useGlobalSearchParams} from "expo-router";
-import adminStore from "@/lib/stores/adminStore";
 import {FlatList} from "react-native";
 import {DetailedGame} from "@/lib/components/admin/detailed/DetailedGame";
 import {FocusWrapper} from "@ninjas-strategy/ui/styles/misc";
+import {useContext} from "react";
+import {EventContext, EventStore} from "@/lib/stores/eventStore";
 
 export default observer(function () {
 	const {id} = useGlobalSearchParams();
-	const {teams} = adminStore;
+	const {teams} = useContext(EventContext) as EventStore;
 	const team = teams[Number.parseInt(id as string)];
 
 	if (!team)

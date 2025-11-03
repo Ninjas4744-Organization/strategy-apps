@@ -8,8 +8,8 @@ export const Breakdown = ({team}: AdminTabProps) => {
 	const [chartWidth, setChartWidth] = useState(0);
 	return <Card
 		onLayout={(e) => {
-			// const { width } = e.nativeEvent.layout;
-			// setChartWidth(width);
+			const { width } = e.nativeEvent.layout;
+			setChartWidth(width);
 		}}>
 		<CardTitle>Score Breakdown</CardTitle>
 		<PieChart

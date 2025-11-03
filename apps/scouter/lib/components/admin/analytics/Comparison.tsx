@@ -41,7 +41,7 @@ const ComparisonCard = ({title, game, color}: ComparisonCardProps) => {
 			<View style={{flexGrow: 1}} />
 			<Subtitle>Teleop: {game.teleopScore}</Subtitle>
 			<View style={{flexGrow: 1}} />
-			<Subtitle>Algae: {game.algaeScore}</Subtitle>
+			<Subtitle>Parking: {game.parkingScore}</Subtitle>
 		</Row>
 	</Card>;
 };

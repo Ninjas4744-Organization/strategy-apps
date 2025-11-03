@@ -1,7 +1,7 @@
 import styled from "styled-components/native";
 import {Game} from "@/lib/models/Game";
 import {Subtitle, Title, Icon} from "@ninjas-strategy/ui";
-import {useRouter} from "expo-router";
+import {useGlobalSearchParams, useRouter} from "expo-router";
 import {MD2Colors} from "react-native-paper";
 
 type TeamItemProps = {
@@ -58,6 +58,7 @@ const NavigationButtons = styled.View`
 `;
 
 export const TeamItem = ({index, teamNumber, games, averageTotalScore}: TeamItemProps) => {
+	const {eventId} = useGlobalSearchParams();
 	const router = useRouter();
 
 	return <TeamItemContainer>
@@ -69,10 +70,10 @@ export const TeamItem = ({index, teamNumber, games, averageTotalScore}: TeamItem
 			<Subtitle>{`${games.length} games • Avg: ${averageTotalScore} points`}</Subtitle>
 		</Details>
 		<NavigationButtons>
-			<Icon name="analytics" onPress={() => router.push(`/admin/analytics/${teamNumber}`)}/>
+			<Icon name="analytics" onPress={() => router.push(`/admin/${eventId}/analytics/${teamNumber}`)}/>
 			<Icon
 				name="chevron-right"
-				onPress={() => router.push(`/admin/team/${teamNumber}`)}/>
+				onPress={() => router.push(`/admin/${eventId}/team/${teamNumber}`)}/>
 		</NavigationButtons>
 	</TeamItemContainer>;
 };

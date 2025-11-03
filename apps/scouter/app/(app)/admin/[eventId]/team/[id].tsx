@@ -1,4 +1,4 @@
-import {Href, Stack, useLocalSearchParams, useRouter} from "expo-router";
+import {Href, Stack, useGlobalSearchParams, useLocalSearchParams, useRouter} from "expo-router";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components/native";
 import {StatItem} from "@/lib/components/admin/StatItem";
@@ -11,6 +11,8 @@ import {GamesList} from "@/lib/components/admin/team/GamesList";
 import {ScoreTrend} from "@/lib/components/admin/analytics/ScoreTrend";
 import {AnalysisTab} from "@/lib/components/admin/team/AnalysisTab";
 import {MD2Colors} from "react-native-paper";
+import {useContext} from "react";
+import {EventContext, EventStore} from "@/lib/stores/eventStore";
 
 const Container = styled.SafeAreaView`
 	background-color: transparent;
@@ -43,9 +45,9 @@ const GreenIcon = styled(Icon)`
 `;
 
 export default observer(function () {
-	const {id} = useLocalSearchParams();
+	const {eventId, id} = useGlobalSearchParams();
 	const router = useRouter();
-	const {teams} = adminStore;
+	const {teams} = useContext(EventContext) as EventStore;
 	const team = teams[Number.parseInt(id as string)];
 	const bestGame = team.games.reduce((a, b) => a.totalScore > b.totalScore ? a : b);
 
@@ -54,7 +56,7 @@ export default observer(function () {
 			options={{
 				title: `Team ${id}`,
 				headerRight: () => (
-					<SimpleButton onPress={() => router.push(`/admin/detailed/${id}` as Href)}>
+					<SimpleButton onPress={() => router.push(`/admin/${eventId}/detailed/${id}` as Href)}>
 						<Icon name="analytics" />
 						<Subtitle>Detailed View</Subtitle>
 					</SimpleButton>

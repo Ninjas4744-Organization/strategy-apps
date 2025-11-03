@@ -1,15 +1,16 @@
 import {observer} from "mobx-react-lite";
 import {BreakdownRow, BreakdownSection} from '@/lib/components/admin/detailed/Breakdown';
 import {useGlobalSearchParams} from "expo-router";
-import adminStore from "@/lib/stores/adminStore";
 import {MD2Colors} from "react-native-paper";
 import {ScoreTrend} from '@/lib/components/admin/analytics/ScoreTrend';
 import {BodyScroll, FocusWrapper, Subtitle} from "@ninjas-strategy/ui";
 import {Card, CardTitle} from "@/lib/components/admin/Card";
+import {useContext} from "react";
+import {EventContext, EventStore} from "@/lib/stores/eventStore";
 
 export default observer(function () {
 	const {id} = useGlobalSearchParams();
-	const {teams} = adminStore;
+	const {teams} = useContext(EventContext) as EventStore;
 	const team = teams[Number.parseInt(id as string)];
 
 	return <BodyScroll>

@@ -8,8 +8,8 @@ export const ScoreTrend = ({team}: AdminTabProps) => {
 
 	return <Card
 		onLayout={(e) => {
-			// const { width } = e.nativeEvent.layout;
-			// setChartWidth(width);
+			const { width } = e.nativeEvent.layout;
+			setChartWidth(width);
 		}}>
 		<CardTitle>Score Trend Over Games</CardTitle>
 		{chartWidth > 0 && (

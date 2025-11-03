@@ -9,6 +9,8 @@ import {Comparison} from "@/lib/components/admin/analytics/Comparison";
 import {StatItem} from "@/lib/components/admin/StatItem";
 import {Tabs} from "@/lib/components/admin/Tabs";
 import {MD2Colors} from "react-native-paper";
+import {useContext} from "react";
+import {EventContext, EventStore} from "@/lib/stores/eventStore";
 
 const Container = styled.SafeAreaView`
 	background-color: transparent;
@@ -31,7 +33,7 @@ const PageHeader = styled.View`
 
 export default observer(function () {
 	const {id} = useLocalSearchParams();
-	const {teams} = adminStore;
+	const {teams} = useContext(EventContext) as EventStore;
 	const team = teams[Number.parseInt(id as string)];
 
 	return <Container>

@@ -6,7 +6,10 @@ import {useEffect} from "react";
 import {OfflineQueue} from "@/lib/OfflineQueue";
 import {StatusBar} from "expo-status-bar";
 import {Snackbar, StackWrapper} from "@ninjas-strategy/ui";
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import 'react-native-reanimated';
+
+const queryClient = new QueryClient()
 
 export default observer(function Root() {
 	useEffect(() => {
@@ -15,9 +18,11 @@ export default observer(function Root() {
 
 	return (
 		<AuthProvider>
-			<SplashScreenController/>
-			<RootNavigator/>
-			<Snackbar/>
+			<QueryClientProvider client={queryClient}>
+				<SplashScreenController/>
+				<RootNavigator/>
+				<Snackbar/>
+			</QueryClientProvider>
 		</AuthProvider>
 	);
 });
