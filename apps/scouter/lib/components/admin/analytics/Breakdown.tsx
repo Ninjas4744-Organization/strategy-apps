@@ -1,5 +1,5 @@
 import {PieChart} from "react-native-chart-kit";
-import {Card, CardTitle} from "@/lib/components/admin/Card";
+import {Card, CardTitle} from "@ninjas-strategy/ui";
 import {useState} from "react";
 import {AdminTabProps, chartConfig} from "@/lib/components/admin/commons";
 import {MD2Colors} from "react-native-paper";

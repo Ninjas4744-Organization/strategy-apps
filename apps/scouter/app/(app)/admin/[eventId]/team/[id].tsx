@@ -2,8 +2,7 @@ import {Href, Stack, useGlobalSearchParams, useLocalSearchParams, useRouter} fro
 import {observer} from "mobx-react-lite";
 import styled from "styled-components/native";
 import {StatItem} from "@/lib/components/admin/StatItem";
-import adminStore from "@/lib/stores/adminStore";
-import {Subtitle, Title, Row, Icon, SimpleButton} from "@ninjas-strategy/ui";
+import {Subtitle, Title, Row, Icon, SimpleButton, CardSurface} from "@ninjas-strategy/ui";
 import {Insight} from "@/lib/interfaces/Insight";
 import {Tabs} from "@/lib/components/admin/Tabs";
 import {OverviewTab} from "@/lib/components/admin/team/OverviewTab";
@@ -21,7 +20,7 @@ const Container = styled.SafeAreaView`
 	flex: 1;
 `;
 
-const PageHeader = styled.View`
+const PageHeader = styled(CardSurface)`
 	margin: 8px;
 	padding: 16px 10px;
 	background-color: ${MD2Colors.white}10;

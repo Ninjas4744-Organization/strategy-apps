@@ -1,7 +1,6 @@
 import {AdminTabProps} from "@/lib/components/admin/commons";
 import {Breakdown} from "@/lib/components/admin/analytics/Breakdown";
-import {Card, CardTitle} from "@/lib/components/admin/Card";
-import {Subtitle, Title, Col, Row, Icon} from "@ninjas-strategy/ui";
+import {Card, CardTitle, Subtitle, Title, Col, Row, Icon} from "@ninjas-strategy/ui";
 import styled from "styled-components/native";
 import {MD2Colors} from "react-native-paper";
 

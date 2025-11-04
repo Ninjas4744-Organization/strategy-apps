@@ -1,7 +1,6 @@
 import {AdminTabProps} from "@/lib/components/admin/commons";
 import {Game} from "@/lib/models/Game";
-import {Card, CardTitle} from "@/lib/components/admin/Card";
-import {Col, Row, Subtitle} from "@ninjas-strategy/ui";
+import {Card, CardTitle, Col, Row, Subtitle} from "@ninjas-strategy/ui";
 import styled from "styled-components/native";
 import {MD2Colors} from "react-native-paper";
 

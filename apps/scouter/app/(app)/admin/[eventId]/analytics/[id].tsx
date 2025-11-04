@@ -1,16 +1,15 @@
 import {Stack, useLocalSearchParams} from "expo-router";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components/native";
-import adminStore from "@/lib/stores/adminStore";
 import {ScoreTrend} from "@/lib/components/admin/analytics/ScoreTrend";
 import {Performance} from "@/lib/components/admin/analytics/Performance";
 import {Breakdown} from "@/lib/components/admin/analytics/Breakdown";
 import {Comparison} from "@/lib/components/admin/analytics/Comparison";
 import {StatItem} from "@/lib/components/admin/StatItem";
 import {Tabs} from "@/lib/components/admin/Tabs";
-import {MD2Colors} from "react-native-paper";
 import {useContext} from "react";
 import {EventContext, EventStore} from "@/lib/stores/eventStore";
+import {CardSurface} from "@ninjas-strategy/ui";
 
 const Container = styled.SafeAreaView`
 	background-color: transparent;
@@ -19,13 +18,9 @@ const Container = styled.SafeAreaView`
 	flex: 1;
 `;
 
-const PageHeader = styled.View`
+const PageHeader = styled(CardSurface)`
 	margin: 16px;
 	padding: 20px;
-	background-color: ${MD2Colors.white}10;
-	gap: 16px;
-	border: ${MD2Colors.white}20;
-	border-radius: 16px;
 	display: flex;
 	flex-direction: row;
 	align-items: center;

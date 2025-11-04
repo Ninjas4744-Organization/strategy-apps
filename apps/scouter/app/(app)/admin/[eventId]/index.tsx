@@ -1,6 +1,6 @@
 import styled from "styled-components/native";
 import {SectionTitle} from "@/lib/components/game/SectionTitle";
-import {Subtitle, Title, Icon, Loading, HeaderButtons} from "@ninjas-strategy/ui";
+import {Subtitle, Title, Icon, Loading, HeaderButtons, CardSurface} from "@ninjas-strategy/ui";
 import {TeamItem} from "@/lib/components/admin/TeamItem";
 import {ScrollView, View} from "react-native";
 import {observer} from "mobx-react-lite";
@@ -71,16 +71,12 @@ export default observer(function AdminIndex() {
 });
 
 
-const StatCard = styled.View`
+const StatCard = styled(CardSurface)`
 	flex: 1;
 	display: flex;
 	flex-direction: column;
 	margin: 8px;
 	padding: 10px;
-	background-color: ${MD2Colors.white}10;
-	gap: 16px;
-	border: ${MD2Colors.white}20;
-	border-radius: 16px;
 	align-items: center;
 `;
 

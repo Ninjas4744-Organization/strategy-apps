@@ -3,8 +3,7 @@ import {BreakdownRow, BreakdownSection} from '@/lib/components/admin/detailed/Br
 import {useGlobalSearchParams} from "expo-router";
 import {MD2Colors} from "react-native-paper";
 import {ScoreTrend} from '@/lib/components/admin/analytics/ScoreTrend';
-import {BodyScroll, FocusWrapper, Subtitle} from "@ninjas-strategy/ui";
-import {Card, CardTitle} from "@/lib/components/admin/Card";
+import {BodyScroll, FocusWrapper, Subtitle, Card, CardTitle} from "@ninjas-strategy/ui";
 import {useContext} from "react";
 import {EventContext, EventStore} from "@/lib/stores/eventStore";
 

@@ -1,5 +1,5 @@
 import styled from "styled-components/native";
-import {Icon, Subtitle, TextSection, Title} from "@ninjas-strategy/ui";
+import {CardSurface, Icon, Subtitle, TextSection, Title} from "@ninjas-strategy/ui";
 import {IconContainer, iconContainerStyle} from "@ninjas-strategy/ui/styles/IconContainer";
 import {MD2Colors} from "react-native-paper";
 import {MaterialIcon} from "@ninjas-strategy/ui/interfaces/MaterialIcon";
@@ -12,13 +12,9 @@ type SectionTitleProps = {
 	onLeftClick?: () => void;
 };
 
-const SectionTitleContainer = styled.View`
+const SectionTitleContainer = styled(CardSurface)`
 	margin: 16px;
 	padding: 20px;
-	background-color: ${MD2Colors.white}10;
-	gap: 16px;
-	border: ${MD2Colors.white}20;
-	border-radius: 16px;
 	display: flex;
 	flex-direction: row;
 	align-items: center;

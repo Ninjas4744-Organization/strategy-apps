@@ -1,9 +1,8 @@
 import {Game} from "@/lib/models/Game";
 import styled from "styled-components/native";
 import {useState} from "react";
-import {Card, CardTitle} from "@/lib/components/admin/Card";
 import {TouchableOpacity} from "react-native";
-import {Row, Icon, Subtitle} from "@ninjas-strategy/ui";
+import {Card, CardTitle, Row, Icon, Subtitle} from "@ninjas-strategy/ui";
 import {MD2Colors} from "react-native-paper";
 import {CageLevel} from "@/lib/interfaces/CageLevel";
 import {ExtraBreakdownStat} from "@/lib/interfaces/BreakdownStats";

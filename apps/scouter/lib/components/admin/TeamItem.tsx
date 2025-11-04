@@ -1,6 +1,6 @@
 import styled from "styled-components/native";
 import {Game} from "@/lib/models/Game";
-import {Subtitle, Title, Icon} from "@ninjas-strategy/ui";
+import {Subtitle, Title, Icon, CardSurface} from "@ninjas-strategy/ui";
 import {useGlobalSearchParams, useRouter} from "expo-router";
 import {MD2Colors} from "react-native-paper";
 
@@ -11,13 +11,9 @@ type TeamItemProps = {
 	averageTotalScore: string,
 };
 
-const TeamItemContainer = styled.View`
+const TeamItemContainer = styled(CardSurface)`
 	margin: 8px;
 	padding: 20px;
-	background-color: ${MD2Colors.white}10;
-	gap: 16px;
-	border: ${MD2Colors.white}20;
-	border-radius: 16px;
 	display: flex;
 	flex-direction: row;
 	align-items: center;

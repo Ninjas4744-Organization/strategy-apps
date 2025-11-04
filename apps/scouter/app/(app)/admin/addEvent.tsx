@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {BeautifulButton, FormGroup, Subtitle, TextInput, Title} from "@ninjas-strategy/ui";
+import {BeautifulButton, FormGroup, TextInput, Title} from "@ninjas-strategy/ui";
 import {TBAEventInput} from "@/lib/components/admin/TBAEventInput";
 import {TBAEventSimple} from "@/lib/interfaces/TBAEventSimple";
 import {Stack, useRouter} from "expo-router";
