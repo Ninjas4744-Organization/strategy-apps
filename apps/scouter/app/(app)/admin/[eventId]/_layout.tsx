@@ -20,7 +20,7 @@ export default observer(function EventLayout() {
 			<StackWrapper>
 				<Stack
 					screenOptions={{
-						headerTitleAlign: 'left',
+						// headerTitleAlign: 'left',
 						headerStyle: {backgroundColor: MD2Colors.indigo900},
 						headerTitleStyle: {
 							color: MD2Colors.white
