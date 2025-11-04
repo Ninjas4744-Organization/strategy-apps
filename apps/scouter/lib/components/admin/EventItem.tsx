@@ -2,13 +2,14 @@ import styled from "styled-components/native";
 import {Subtitle, Title, Icon} from "@ninjas-strategy/ui";
 import {useRouter} from "expo-router";
 import {MD2Colors} from "react-native-paper";
+import {flag} from 'country-emoji';
 
 type EventItemProps = {
 	id: string;
 	name: string;
-	year: number;
 	startDate: string;
 	endDate: string;
+	country: string;
 };
 
 const EventItemContainer = styled.View`
@@ -26,7 +27,7 @@ const EventItemContainer = styled.View`
 const Details = styled.View`
 	display: flex;
 	flex-direction: column;
-	flex-grow: 1;
+	flex: 1;
 `;
 
 const NavigationButtons = styled.View`
@@ -35,13 +36,13 @@ const NavigationButtons = styled.View`
 	gap: 20px;
 `;
 
-export const EventItem = ({id, name, year, startDate, endDate}: EventItemProps) => {
+export const EventItem = ({id, name, startDate, endDate, country}: EventItemProps) => {
 	const router = useRouter();
 
 	return <EventItemContainer>
 		<Details>
-			<Title>{name}</Title>
-			<Subtitle>{year}</Subtitle>
+			<Title>{flag(country)} {name}</Title>
+			<Subtitle>{id}</Subtitle>
 			<Subtitle>{startDate} → {endDate}</Subtitle>
 		</Details>
 		<NavigationButtons>

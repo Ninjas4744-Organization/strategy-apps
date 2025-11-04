@@ -134,7 +134,6 @@ export const TBAEventInput: React.FC<TBAEventInputProps> = ({year, label = "FRC 
 	return (
 		<View>
 			<TextInput
-				mode="outlined"
 				label={label}
 				placeholder={placeholder}
 				value={selected ? `${selected.name} (${selected.key})` : ""}
@@ -158,7 +157,6 @@ export const TBAEventInput: React.FC<TBAEventInputProps> = ({year, label = "FRC 
 					<TitleContainer>
 						<Text variant="titleMedium">Choose FRC Event • {year}</Text>
 						<TextInput
-							mode="flat"
 							placeholder={placeholder}
 							value={query}
 							onChangeText={setQuery}

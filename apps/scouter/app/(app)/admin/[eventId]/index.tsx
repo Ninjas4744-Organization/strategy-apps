@@ -29,35 +29,43 @@ export default observer(function AdminIndex() {
 
 	return <>
 			<ScrollView>
-				<Stack.Screen options={{title: event.name, headerRight: () => <HeaderButtons buttons={[{icon: 'refresh', onPress: () => loadTeams()}]} />}}/>
-				<SectionTitle
-					title="Team Analytics Dashboard"
-					subtitle={`${teamsRanked.length} teams analyzed • ${totalGamesCount} total games`} />
-				<IconsRow>
+				<Stack.Screen options={{title: `${event.name} (${event.id})`, headerRight: () => <HeaderButtons buttons={[{icon: 'refresh', onPress: () => loadTeams()}]} />}}/>
+				{teamsRanked.length > 0 ? <>
+					<SectionTitle
+						title="Team Analytics Dashboard"
+						subtitle={`${teamsRanked.length} teams analyzed • ${totalGamesCount} total games`}/>
+					<IconsRow>
+						<StatCard>
+							<StatIcon name="emoji-events" color={MD2Colors.amber500}/>
+							<Title>{topTeam.teamNumber}</Title>
+							<Subtitle>Top Team</Subtitle>
+						</StatCard>
+						<StatCard>
+							<StatIcon name="trending-up" color={MD2Colors.green500}/>
+							<Title>{topTeam.averageTotalScore.toFixed(2)}</Title>
+							<Subtitle>Avg Score</Subtitle>
+						</StatCard>
+						<StatCard>
+							<StatIcon name="sports-esports" color={MD2Colors.blue500}/>
+							<Title>{totalGamesCount}</Title>
+							<Subtitle>Total Games</Subtitle>
+						</StatCard>
+					</IconsRow>
+					<View style={{margin: 8}}>
+						<Title>Team Rankings</Title>
+					</View>
+					{teamsRanked.map((team, index) => <TeamItem
+						key={team.teamNumber}
+						{...team}
+						averageTotalScore={team.averageTotalScore.toFixed(2)}
+						index={index}/>)}
+				</> : <IconsRow>
 					<StatCard>
-						<StatIcon name="emoji-events" color={MD2Colors.amber500}/>
-						<Title>{topTeam.teamNumber}</Title>
-						<Subtitle>Top Team</Subtitle>
+						<StatIcon name="info" color={MD2Colors.blue500} />
+						<Title>There's no data here yet</Title>
+						<Subtitle>Once we'll have scouting reports, the data will show up here</Subtitle>
 					</StatCard>
-					<StatCard>
-						<StatIcon name="trending-up" color={MD2Colors.green500}/>
-						<Title>{topTeam.averageTotalScore.toFixed(2)}</Title>
-						<Subtitle>Avg Score</Subtitle>
-					</StatCard>
-					<StatCard>
-						<StatIcon name="sports-esports" color={MD2Colors.blue500}/>
-						<Title>{totalGamesCount}</Title>
-						<Subtitle>Total Games</Subtitle>
-					</StatCard>
-				</IconsRow>
-				<View style={{margin: 8}}>
-					<Title>Team Rankings</Title>
-				</View>
-				{teamsRanked.map((team, index) => <TeamItem
-					key={team.teamNumber}
-					{...team}
-					averageTotalScore={team.averageTotalScore.toFixed(2)}
-					index={index}/>)}
+				</IconsRow>}
 			</ScrollView>
 		</>;
 });

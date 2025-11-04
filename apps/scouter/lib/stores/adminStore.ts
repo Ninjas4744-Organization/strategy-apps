@@ -60,19 +60,14 @@ class AdminStore {
 	}
 
 	@action.bound
-	async createEvent(name: string, eventData: TBAEventSimple, router: Router) {
+	async createEvent(eventData: TBAEventSimple, router: Router) {
 		try {
-			const eventsRef = collection(db, 'events');
-			const eventRef = await addDoc(eventsRef, {eventName: name, ...eventData});
 			const teamsRes = await TBA(`/event/${eventData.key}/teams/keys`);
-			for (const team of teamsRes.data) {
-				const [, team_number] = team.split('frc');
-				await setDoc(doc(db, eventRef.path + '/teams', team_number), {
-					team_number,
-					member_registration_code: getRandomString(10),
-					admin_registration_code: getRandomString(10),
-				});
-			}
+			const eventsRef = doc(db, 'events', eventData.key);
+			await setDoc(eventsRef, {
+				...eventData,
+				teams: teamsRes.data,
+			});
 		} catch (e) {
 			this.error = `Failed to create event: ${e}`;
 		} finally {

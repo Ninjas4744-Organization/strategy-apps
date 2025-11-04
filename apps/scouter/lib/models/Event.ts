@@ -8,6 +8,7 @@ export class Event implements Model {
 		public name: string,
 		public startDate: string,
 		public endDate: string,
+		public country: string,
 		public teams: Team[] = []
 	) {}
 
@@ -15,18 +16,20 @@ export class Event implements Model {
 		return new Event(
 			id,
 			data.year,
-			data.eventName,
+			data.name,
 			data.start_date,
-			data.end_date
+			data.end_date,
+			data.country,
 		);
 	}
 
 	toMap(): Record<string, any> {
 		return {
 			year: this.year,
-			eventName: this.name,
+			name: this.name,
 			start_date: this.startDate,
 			end_date: this.endDate,
+			country: this.country,
 		};
 	}
 }
