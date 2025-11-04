@@ -1,4 +1,4 @@
-import { initializeApp, getApps } from "firebase/app";
+import {initializeApp, getApps} from "firebase/app";
 
 const firebaseConfig = {
 	apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,

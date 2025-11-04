@@ -1,5 +1,5 @@
-import { SplashScreen } from 'expo-router';
-import { useAuth } from '@/lib/context/auth';
+import {SplashScreen} from 'expo-router';
+import {useAuth} from '@/lib/context/auth';
 
 SplashScreen.preventAutoHideAsync();
 

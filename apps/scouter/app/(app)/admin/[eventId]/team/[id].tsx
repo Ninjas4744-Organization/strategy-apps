@@ -1,4 +1,4 @@
-import {Href, Stack, useGlobalSearchParams, useLocalSearchParams, useRouter} from "expo-router";
+import {Href, Stack, useGlobalSearchParams, useRouter} from "expo-router";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components/native";
 import {StatItem} from "@/lib/components/admin/StatItem";
@@ -23,10 +23,6 @@ const Container = styled.SafeAreaView`
 const PageHeader = styled(CardSurface)`
 	margin: 8px;
 	padding: 16px 10px;
-	background-color: ${MD2Colors.white}10;
-	gap: 16px;
-	border: ${MD2Colors.white}20;
-	border-radius: 16px;
 	display: flex;
 	flex-direction: column;
 `;

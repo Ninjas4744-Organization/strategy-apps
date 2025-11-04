@@ -1,7 +1,6 @@
 import styled from "styled-components/native";
 import {Subtitle, Title, Icon, CardSurface} from "@ninjas-strategy/ui";
 import {useRouter} from "expo-router";
-import {MD2Colors} from "react-native-paper";
 import {flag} from 'country-emoji';
 
 type EventItemProps = {

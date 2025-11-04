@@ -1,7 +1,7 @@
 import {useAuth} from '@/lib/context/auth';
 import {useEffect, useState} from "react";
 import styled from 'styled-components/native';
-import {Button, MD2Colors} from "react-native-paper";
+import {Button} from "react-native-paper";
 import {useRouter} from "expo-router";
 import {z} from "zod";
 import {doc, onSnapshot} from "firebase/firestore";

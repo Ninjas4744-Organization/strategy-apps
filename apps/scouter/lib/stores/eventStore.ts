@@ -4,7 +4,6 @@ import {collection, getDocs} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {Team} from "@/lib/models/Team";
 import {Game} from "@/lib/models/Game";
-import {Event} from "@/lib/models/Event";
 
 type Teams = {
 	[id: number]: Team,

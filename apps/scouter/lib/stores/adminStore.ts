@@ -6,7 +6,6 @@ import {showSnackbar} from "@ninjas-strategy/ui";
 import {TBAEventSimple} from "@/lib/interfaces/TBAEventSimple";
 import {TBA} from "@/lib/hooks/tba";
 import {Router} from "expo-router";
-import {getRandomString} from "@/lib/utilities";
 
 type Events = {
 	[eventId: string]: Event,
