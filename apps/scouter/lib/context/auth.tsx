@@ -1,11 +1,11 @@
 import React, {createContext, useContext, useEffect, useMemo, useState} from 'react';
-import {User} from 'firebase/auth';
+import {User, UserCredential} from 'firebase/auth';
 import {auth, onAuthStateChanged, signOut as fbSignOut, createUserWithEmailAndPassword, signInWithEmailAndPassword} from '../firebase/auth';
 
 interface AuthContextValue {
 	user: User | null;
 	loading: boolean;
-	signUp(email: string, password: string): Promise<void>;
+	signUp(email: string, password: string): Promise<UserCredential>;
 	signIn(email: string, password: string): Promise<void>;
 	signOut(): Promise<void>;
 }
@@ -28,7 +28,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 		user,
 		loading,
 		async signUp(email, password) {
-			await createUserWithEmailAndPassword(auth, email, password);
+			return await createUserWithEmailAndPassword(auth, email, password);
 		},
 		async signIn(email, password) {
 			await signInWithEmailAndPassword(auth, email, password);

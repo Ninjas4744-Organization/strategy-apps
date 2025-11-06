@@ -5,6 +5,7 @@ import axios from "axios";
 import {TextInput, TextInputIcon} from "@ninjas-strategy/ui";
 import styled from "styled-components/native";
 import {TBAEventSimple} from "@/lib/interfaces/TBAEventSimple";
+import {useDebounce} from "@/lib/hooks/debounce";
 
 type TBAEventInputProps = {
 	year: number;
@@ -16,15 +17,6 @@ type TBAEventInputProps = {
 };
 
 const TBA_BASE = "https://www.thebluealliance.com/api/v3";
-
-function useDebounced<T>(value: T, delay = 250) {
-	const [v, setV] = useState(value);
-	useEffect(() => {
-		const id = setTimeout(() => setV(value), delay);
-		return () => clearTimeout(id);
-	}, [value, delay]);
-	return v;
-}
 
 const TitleContainer = styled.View`
 	padding: 8px 12px;
@@ -69,7 +61,7 @@ export const TBAEventInput: React.FC<TBAEventInputProps> = ({year, label = "FRC 
 	const [err, setErr] = useState<string | null>(null);
 
 	const [query, setQuery] = useState("");
-	const debouncedQuery = useDebounced(query, 200);
+	const debouncedQuery = useDebounce(query, 200);
 
 	const [modalVisible, setModalVisible] = useState(false);
 	const [selected, setSelected] = useState<TBAEventSimple | null>(initialValue);

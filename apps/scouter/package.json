@@ -20,6 +20,7 @@
 		"axios": "^1.13.1",
 		"country-emoji": "^1.5.6",
 		"expo": "54.0.21",
+		"expo-clipboard": "~8.0.7",
 		"expo-constants": "~18.0.10",
 		"expo-linear-gradient": "~15.0.7",
 		"expo-linking": "~8.0.8",

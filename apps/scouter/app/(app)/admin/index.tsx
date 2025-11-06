@@ -25,6 +25,7 @@ export default observer(function AdminIndex() {
 						<HeaderButtons buttons={[
 							{onPress: () => loadEvents(), icon: 'refresh'},
 							{onPress: () => router.push('/admin/addEvent'), icon: 'add'},
+							{onPress: () => router.push('/admin/registrationCodes'), icon: 'person-add'},
 							{onPress: () => signOut().then(() => router.push('/')), icon: 'logout'},
 						]} />
 					)}}/>

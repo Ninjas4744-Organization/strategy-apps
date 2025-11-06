@@ -1,25 +1,9 @@
 import {useAuth} from '@/lib/context/auth';
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import styled from 'styled-components/native';
 import {Button} from "react-native-paper";
 import {useRouter} from "expo-router";
-import {z} from "zod";
-import {doc, onSnapshot} from "firebase/firestore";
-import {db} from "@/lib/firebase/firestore";
 import {BeautifulButton, Text, showSnackbar, AppHeader, TextInput, TextInputIcon, FormGroup} from "@ninjas-strategy/ui";
-
-const userSchema = z.object({
-	email: z.string().email({ message: "Invalid email address" }),
-	password: z.string().min(8, { message: "Password must be at least 8 characters long" })
-		.regex(/[A-Z]/, { message: "Password must contain at least one uppercase letter" })
-		.regex(/[a-z]/, { message: "Password must contain at least one lowercase letter" })
-		.regex(/[0-9]/, { message: "Password must contain at least one number" })
-		.regex(/[^A-Za-z0-9]/, { message: "Password must contain at least one special character" }),
-	confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-	message: "Passwords do not match",
-	path: ["confirmPassword"],
-});
 
 const Container = styled.SafeAreaView`
 	padding: 50px 12px 12px;
@@ -60,25 +44,11 @@ const StartButton = () => {
 };
 
 const LoginForm = () => {
-	const {signIn, user, signOut, signUp} = useAuth();
+	const {signIn, user, signOut} = useAuth();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [confirmPassword, setConfirmPassword] = useState('');
 	const nextRoute = useLoginRouter();
-	const [registrationEnabled, setRegistrationEnabled] = useState(false);
-	const [registerMode, setRegisterMode] = useState(false);
-
-	useEffect(() =>
-	{
-		const registrationDocRef = doc(db, 'app_settings', 'registration');
-
-		const unsubscribe = onSnapshot(registrationDocRef, (docSnap) => {
-			const data = docSnap.data();
-			setRegistrationEnabled(data?.enabled);
-		});
-
-		return () => unsubscribe();
-	}, []);
+	const router = useRouter();
 
 	const handleLogin = async () => {
 		try {
@@ -100,57 +70,32 @@ const LoginForm = () => {
 		}
 	};
 
-	const handleRegister = async () => {
-		try {
-			userSchema.parse({email, password, confirmPassword});
-			await signUp(email, password);
-			showSnackbar('Registration successful!');
-			setRegisterMode(false);
-			setEmail('');
-			setPassword('');
-			setConfirmPassword('');
-		} catch (e: any) {
-			if (e instanceof z.ZodError) {
-				showSnackbar(e.issues[0].message);
-			} else {	//firebase errors
-				if (e.code === 'auth/email-already-in-use')
-					showSnackbar('Email already in use');
-				else
-					showSnackbar(e.message);
-			}
-		}
-	}
-
-	return <Section>
-		{user && <Text>Login as someone else</Text>}
-		<FormGroup>
-			<TextInput
-				label="Email"
-				keyboardType="email-address"
-				value={email}
-				onChangeText={setEmail}
-				left={<TextInputIcon icon="email" />}
-				underlineStyle={{display: 'none'}}/>
-			<TextInput
-				label="Password"
-				secureTextEntry
-				value={password}
-				onChangeText={setPassword}
-				left={<TextInputIcon icon="lock" />}
-				underlineStyle={{display: 'none'}}/>
-			{registerMode && <TextInput
-				label="Confirm Password"
-				secureTextEntry
-				value={confirmPassword}
-				onChangeText={setConfirmPassword}
-				left={<TextInputIcon icon="lock"/>}
-				underlineStyle={{display: 'none'}}/>}
-		</FormGroup>
-		<BeautifulButton onPress={registerMode ? handleRegister : handleLogin} icon={registerMode ? "person-add" : "login"} label={registerMode ? "Register" : "Login"} />
-		{registrationEnabled && <Button onPress={() => setRegisterMode(!registerMode)} mode="elevated">
-			{registerMode ? 'Already have an account? Login' : 'Need an account? Register'}
-		</Button>}
-	</Section>;
+	return (
+		<Section>
+			{user && <Text>Login as someone else</Text>}
+			<FormGroup>
+				<TextInput
+					label="Email"
+					keyboardType="email-address"
+					value={email}
+					onChangeText={setEmail}
+					left={<TextInputIcon icon="email" />}
+					underlineStyle={{display: 'none'}}/>
+				<TextInput
+					label="Password"
+					secureTextEntry
+					value={password}
+					onChangeText={setPassword}
+					left={<TextInputIcon icon="lock" />}
+					underlineStyle={{display: 'none'}}/>
+			</FormGroup>
+			<BeautifulButton onPress={handleLogin} icon="login" label="Login" />
+			<BeautifulButton
+				onPress={() => router.push('/register/enter-code')}
+				label="Need an account? Register"
+				icon="person-add"/>
+		</Section>
+	);
 };
 
 const useLoginRouter = () => {
