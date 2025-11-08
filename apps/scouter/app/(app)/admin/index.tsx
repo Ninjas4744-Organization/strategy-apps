@@ -1,16 +1,15 @@
 import adminStore from "@/lib/stores/adminStore";
-import {Loading, showSnackbar, Row, HeaderButtons} from "@ninjas-strategy/ui";
-import {ScrollView, Text as RNText} from "react-native";
+import {Loading, HeaderButtons} from "@ninjas-strategy/ui";
+import {ScrollView} from "react-native";
 import {observer} from "mobx-react-lite";
 import {Stack, useRouter} from "expo-router";
-import {Button, Dialog, MD2Colors} from "react-native-paper";
 import {EventItem} from "@/lib/components/admin/EventItem";
-import {useAuth} from "@/lib/context/auth";
+import {userStore} from "@/lib/stores/userStore";
 
 export default observer(function AdminIndex() {
 	const {isLoading, events, loadEvents} = adminStore;
 	const router = useRouter();
-	const {signOut} = useAuth();
+	const {signOut} = userStore;
 
 	if (isLoading)
 		return <Loading />;

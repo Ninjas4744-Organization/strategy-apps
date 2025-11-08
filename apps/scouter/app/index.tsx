@@ -1,9 +1,9 @@
-import {useAuth} from '@/lib/context/auth';
 import {useState} from "react";
 import styled from 'styled-components/native';
-import {Button} from "react-native-paper";
 import {useRouter} from "expo-router";
 import {BeautifulButton, Text, showSnackbar, AppHeader, TextInput, TextInputIcon, FormGroup} from "@ninjas-strategy/ui";
+import {observer} from "mobx-react-lite";
+import {userStore} from "@/lib/stores/userStore";
 
 const Container = styled.SafeAreaView`
 	padding: 50px 12px 12px;
@@ -30,24 +30,23 @@ const Section = styled.View`
 	gap: 16px;
 `;
 
-const StartButton = () => {
-	const {user} = useAuth();
-	const nextRoute = useLoginRouter();
+const StartButton = observer(() => {
+	const router = useRouter();
+	const {user, goToBaseRoute} = userStore;
 
 	const label = user?.email === 'admin@gmail.com' ? 'To admin panel' : 'Start game';
 	const icon = user?.email === 'admin@gmail.com' ? 'admin-panel-settings' : 'play-arrow';
 
 	return user ? <Section>
 		<Text>Hi, {user.email}</Text>
-		<BeautifulButton onPress={() => nextRoute()} icon={icon} label={label} />
+		<BeautifulButton onPress={() => goToBaseRoute(router)} icon={icon} label={label} />
 	</Section>: null;
-};
+});
 
-const LoginForm = () => {
-	const {signIn, user, signOut} = useAuth();
+const LoginForm = observer(() => {
+	const {signIn, user, signOut, goToBaseRoute} = userStore;
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const nextRoute = useLoginRouter();
 	const router = useRouter();
 
 	const handleLogin = async () => {
@@ -57,7 +56,7 @@ const LoginForm = () => {
 			await signIn(email, password);
 			setEmail('');
 			setPassword('');
-			nextRoute(email);
+			goToBaseRoute(router, email);
 		} catch (e: any) {
 			if (e.code === 'auth/invalid-email')
 				showSnackbar('Invalid email');
@@ -96,21 +95,4 @@ const LoginForm = () => {
 				icon="person-add"/>
 		</Section>
 	);
-};
-
-const useLoginRouter = () => {
-	const {user} = useAuth();
-	const router = useRouter();
-
-	return (email?: string | null) => {
-		if (!email) {
-			if (!user) {
-				return;
-			}
-			email = user.email;
-		}
-		if (email === 'admin@gmail.com')
-			return router.push('/admin');
-		router.push('/game/autonomous');
-	};
-};
+});

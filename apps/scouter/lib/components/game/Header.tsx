@@ -1,10 +1,11 @@
 import styled, {css} from "styled-components/native";
 import {TextSection, Title, Subtitle, Icon} from "@ninjas-strategy/ui";
-import {useAuth} from "@/lib/context/auth";
 import {usePathname} from "expo-router";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import type {EdgeInsets} from "react-native-safe-area-context";
 import {MD2Colors} from "react-native-paper";
+import {observer} from "mobx-react-lite";
+import {userStore} from "@/lib/stores/userStore";
 
 const HeaderContainer = styled.View<{insets: EdgeInsets}>`
 	padding-top: ${props => props.insets.top}px;
@@ -33,8 +34,8 @@ const AppBarIcon = styled(Icon)`
 	color: ${MD2Colors.white};
 `;
 
-export const Header = () => {
-	const {signOut} = useAuth();
+export const Header = observer(() => {
+	const {signOut} = userStore;
 	const pathname = usePathname();
 	const isAuto = pathname.endsWith('autonomous');
 	const insets = useSafeAreaInsets();
@@ -51,4 +52,4 @@ export const Header = () => {
 			<AppBarIcon name="logout" />
 		</NextPageIconContainer>
 	</HeaderContainer>;
-};
+});

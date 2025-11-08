@@ -1,14 +1,15 @@
 import {SplashScreen} from 'expo-router';
-import {useAuth} from '@/lib/context/auth';
+import {observer} from "mobx-react-lite";
+import {userStore} from "@/lib/stores/userStore";
 
 SplashScreen.preventAutoHideAsync();
 
-export function SplashScreenController() {
-	const { loading } = useAuth();
+export const SplashScreenController = observer(function () {
+	const { loading } = userStore;
 
 	if (!loading) {
 		SplashScreen.hide();
 	}
 
 	return null;
-}
+});

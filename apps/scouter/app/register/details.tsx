@@ -5,9 +5,10 @@ import styled from "styled-components/native";
 import {updateProfile} from "firebase/auth";
 import {db} from "@/lib/firebase/firestore";
 import {doc, setDoc} from "firebase/firestore";
-import {useAuth} from "@/lib/context/auth";
 import {z, ZodError} from "zod";
 import {KeyboardAvoidingView, Platform, ScrollView, View} from "react-native";
+import {userStore} from "@/lib/stores/userStore";
+import {observer} from "mobx-react-lite";
 
 const userSchema = z
 	.object({
@@ -35,7 +36,7 @@ const BottomBar = styled(View)`
 	padding-top: 12px;
 `;
 
-export default function RegistrationDetailsPage() {
+export default observer(function RegistrationDetailsPage() {
 	const router = useRouter();
 	const {teamNumber, userType} = useLocalSearchParams();
 
@@ -45,7 +46,7 @@ export default function RegistrationDetailsPage() {
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [loading, setLoading] = useState(false);
 
-	const {signUp} = useAuth();
+	const {signUp} = userStore;
 
 	const handleRegister = async () => {
 		try {
@@ -124,4 +125,4 @@ export default function RegistrationDetailsPage() {
 			</Container>
 		</KeyboardAvoidingView>
 	);
-}
+})
