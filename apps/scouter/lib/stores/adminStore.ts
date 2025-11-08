@@ -27,26 +27,9 @@ class AdminStore {
 	@observable registrationCodesLoading: boolean = false;
 
 	@observable error?: string;
-	@observable showAppSettings: boolean = false;
 
 	constructor() {
 		makeObservable(this);
-	}
-
-	updateRegistrationSetting = async (enabled: boolean) => {
-		try {
-			await setDoc(doc(db, 'app_settings', 'registration'), {
-				enabled,
-				updated_at: serverTimestamp(),
-			});
-		} catch (e) {
-			showSnackbar('Failed to updated registration setting: ' + e);
-		}
-	}
-
-	@action.bound
-	setShowAppSettings(show: boolean) {
-		this.showAppSettings = show;
 	}
 
 	@action.bound
