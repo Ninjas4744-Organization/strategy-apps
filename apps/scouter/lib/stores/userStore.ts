@@ -1,11 +1,17 @@
-import { makeObservable, observable, action, runInAction } from "mobx";
-import {auth, onAuthStateChanged, signOut as fbSignOut, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "../firebase/auth";
-import { User, UserCredential } from "firebase/auth";
+import {action, computed, makeObservable, observable, runInAction} from "mobx";
+import {auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut as fbSignOut} from "../firebase/auth";
+import {User, UserCredential} from "firebase/auth";
 import {Router} from "expo-router";
+import {doc, onSnapshot} from "firebase/firestore";
+import {db} from "@/lib/firebase/firestore";
+import {UserData} from "@/lib/interfaces/UserData";
 
 class UserStore {
 	@observable user: User | null = null;
-	@observable loading: boolean = true;
+	@observable isLoading: boolean = true;
+
+	@observable userData: UserData | null = null;
+	userDataUnsubscribe: (() => void) | null = null;
 
 	constructor() {
 		makeObservable(this);
@@ -17,7 +23,7 @@ class UserStore {
 		onAuthStateChanged(auth, (u) => {
 			runInAction(() => {
 				this.user = u;
-				this.loading = false;
+				this.isLoading = false;
 			});
 		});
 	}
@@ -37,6 +43,44 @@ class UserStore {
 		await fbSignOut(auth);
 	}
 
+	@computed
+	get isConnected(): boolean {
+		return !!this.user;
+	}
+
+	@action.bound
+	subscribe() {
+		if (this.userDataUnsubscribe) {
+			this.userDataUnsubscribe();
+		}
+
+		if (!this.user) {
+			return;
+		}
+
+		const userRef = doc(db, 'users', this.user.uid);
+
+		this.isLoading = true;
+		this.userDataUnsubscribe = onSnapshot(userRef, snapshot => {
+			runInAction(() => {
+				if (snapshot.exists()) {
+					this.userData = snapshot.data() as UserData;
+				} else {
+					this.userData = null;
+				}
+				this.isLoading = false;
+			})
+		});
+	}
+
+	@action.bound
+	unsubscribe() {
+		if (this.userDataUnsubscribe) {
+			this.userDataUnsubscribe();
+			this.userDataUnsubscribe = null;
+		}
+	}
+
 	@action.bound
 	goToBaseRoute(router: Router, email?: string | null) {
 		if (!email) {
@@ -51,4 +95,5 @@ class UserStore {
 	}
 }
 
-export const userStore = new UserStore();
+const userStore = new UserStore();
+export default userStore;

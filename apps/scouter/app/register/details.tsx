@@ -7,7 +7,7 @@ import {db} from "@/lib/firebase/firestore";
 import {doc, setDoc} from "firebase/firestore";
 import {z, ZodError} from "zod";
 import {KeyboardAvoidingView, Platform, ScrollView, View} from "react-native";
-import {userStore} from "@/lib/stores/userStore";
+import userStore from "@/lib/stores/userStore";
 import {observer} from "mobx-react-lite";
 
 const userSchema = z
@@ -58,8 +58,8 @@ export default observer(function RegistrationDetailsPage() {
 
 			await setDoc(doc(db, "users", userCred.user.uid), {
 				name,
-				teamNumber,
-				userType,
+				team: parseInt(teamNumber as string),
+				type: userType,
 			});
 
 			router.replace("/");

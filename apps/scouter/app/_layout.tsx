@@ -8,7 +8,7 @@ import {Snackbar, StackWrapper} from "@ninjas-strategy/ui";
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import 'react-native-reanimated';
 import {PaperProvider} from "react-native-paper";
-import {userStore} from "@/lib/stores/userStore";
+import userStore from "@/lib/stores/userStore";
 
 const queryClient = new QueryClient()
 
@@ -40,7 +40,8 @@ const RootNavigator = observer(function () {
 						contentStyle: {backgroundColor: 'transparent'}
 					}}>
 					<Stack.Screen name="index"/>
-					<Stack.Screen name="registration/[teamNumber]" />
+					<Stack.Screen name="register/details"/>
+					<Stack.Screen name="register/enter-code"/>
 					<Stack.Protected guard={!!user}>
 						<Stack.Screen name="(app)" options={{gestureEnabled: false}}/>
 					</Stack.Protected>

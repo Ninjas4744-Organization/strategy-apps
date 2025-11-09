@@ -1,17 +1,19 @@
 import {Stack} from 'expo-router';
 import {observer} from "mobx-react-lite";
-import adminStore from "@/lib/stores/adminStore";
 import {Loading, StackWrapper} from "@ninjas-strategy/ui";
 import {useEffect} from "react";
 import {MD2Colors} from "react-native-paper";
+import eventsStore from "@/lib/stores/eventsStore";
+import userStore from "@/lib/stores/userStore";
 
 export default observer(function AdminLayout() {
-	const {isLoading, loadEvents, loaded} = adminStore;
+	const {isLoading, subscribe, unsubscribe} = eventsStore;
+	const {userData} = userStore;
 
 	useEffect(() => {
-		if (!loaded)
-			loadEvents();
-	}, []);
+		subscribe();
+		return () => unsubscribe();
+	}, [userData]);
 
 	if (isLoading)
 		return <Loading />;

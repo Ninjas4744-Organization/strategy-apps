@@ -2,11 +2,15 @@ import styled from "styled-components/native";
 import {Subtitle, Title, Icon, showSnackbar} from "@ninjas-strategy/ui";
 import {deleteDoc, doc} from 'firebase/firestore';
 import {db} from "@/lib/firebase/firestore";
-import {observer} from "mobx-react-lite";
-import adminStore from "@/lib/stores/adminStore";
 import * as Clipboard from "expo-clipboard";
 import {MD2Colors} from "react-native-paper";
 import {TouchableOpacity} from "react-native";
+
+type RegistrationCodeItemProps = {
+	id: string;
+	membersCode: string;
+	adminsCode: string;
+};
 
 const Card = styled.View`
 	background-color: ${MD2Colors.white}08;
@@ -34,16 +38,9 @@ const CopyButton = styled(TouchableOpacity)`
 	gap: 4px;
 `;
 
-export const RegistrationCodeItem = observer(({id, membersCode, adminsCode}: {
-	id: string;
-	membersCode: string;
-	adminsCode: string;
-}) => {
-	const {loadRegistrationCodes} = adminStore;
-
+export const RegistrationCodeItem = ({id, membersCode, adminsCode}: RegistrationCodeItemProps) => {
 	const removeItem = async () => {
 		await deleteDoc(doc(db, 'registration_codes', id));
-		loadRegistrationCodes();
 	};
 
 	return (
@@ -69,4 +66,4 @@ export const RegistrationCodeItem = observer(({id, membersCode, adminsCode}: {
 			</ActionRow>
 		</Card>
 	);
-});
+};

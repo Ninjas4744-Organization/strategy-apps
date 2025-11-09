@@ -8,8 +8,8 @@ import {Stack} from "expo-router";
 import {MD2Colors} from "react-native-paper";
 import {useContext} from "react";
 import {EventContext, EventStore} from "@/lib/stores/eventStore";
-import adminStore from "@/lib/stores/adminStore";
 import {TeamItemSkeleton} from "@/lib/components/admin/TeamItemSkeleton";
+import eventsStore from "@/lib/stores/eventsStore";
 
 const IconsRow = styled.View`
 	display: flex;
@@ -19,7 +19,7 @@ const IconsRow = styled.View`
 
 export default observer(function AdminIndex() {
 	const {isLoading, loadTeams, teamsRanked, totalGamesCount, eventId} = useContext(EventContext) as EventStore;
-	const {events} = adminStore;
+	const {events} = eventsStore;
 	const event = events[eventId];
 
 	const [topTeam] = teamsRanked;

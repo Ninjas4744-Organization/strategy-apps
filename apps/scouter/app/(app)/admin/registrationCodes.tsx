@@ -1,4 +1,3 @@
-import adminStore from "@/lib/stores/adminStore";
 import {Loading, HeaderButtons, TextInput, Subtitle, Icon, TextInputIcon} from "@ninjas-strategy/ui";
 import {ScrollView} from "react-native";
 import {observer} from "mobx-react-lite";
@@ -9,6 +8,7 @@ import styled from "styled-components/native";
 import Animated, {FadeInUp} from "react-native-reanimated";
 import {RegistrationCodeItem} from "@/lib/components/admin/RegistrationCodeItem";
 import {useDebounce} from "@/lib/hooks/debounce";
+import registrationCodesStore from "@/lib/stores/registrationCodesStore";
 
 const Container = styled.View`
 	flex: 1;
@@ -27,20 +27,18 @@ const EmptyState = styled.View`
 `;
 
 export default observer(function RegistrationCodesPage() {
-	const {registrationCodesLoading, registrationCodes, loadRegistrationCodes, generateRegistrationCode, registrationCodesLoaded} = adminStore;
+	const {registrationCodes, subscribe, unsubscribe, isLoading, generateRegistrationCode} = registrationCodesStore;
 	const [showAddDialog, setShowAddDialog] = useState(false);
 	const [registrationTeam, setRegistrationTeam] = useState('');
 	const [searchQuery, setSearchQuery] = useState('');
 	const debouncedQuery = useDebounce(searchQuery);
 
 	useEffect(() => {
-		loadRegistrationCodes();
+		subscribe();
+		return () => unsubscribe();
 	}, []);
 
 	const filteredCodes = useMemo(() => {
-		if (!registrationCodesLoaded) {
-			return [];
-		}
 		const allCodes = Object.values(registrationCodes || {});
 		if (!debouncedQuery.trim()) {
 			return allCodes;
@@ -52,9 +50,9 @@ export default observer(function RegistrationCodesPage() {
 				code.membersCode.toLowerCase().includes(q) ||
 				code.adminsCode.toLowerCase().includes(q)
 		);
-	}, [registrationCodes, debouncedQuery, registrationCodesLoaded]);
+	}, [registrationCodes, debouncedQuery, registrationCodes]);
 
-	if (registrationCodesLoading)
+	if (isLoading)
 		return <Loading />;
 
 	return (

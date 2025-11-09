@@ -5,7 +5,7 @@ import {useSafeAreaInsets} from "react-native-safe-area-context";
 import type {EdgeInsets} from "react-native-safe-area-context";
 import {MD2Colors} from "react-native-paper";
 import {observer} from "mobx-react-lite";
-import {userStore} from "@/lib/stores/userStore";
+import userStore from "@/lib/stores/userStore";
 
 const HeaderContainer = styled.View<{insets: EdgeInsets}>`
 	padding-top: ${props => props.insets.top}px;

@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import {useRouter} from "expo-router";
 import {BeautifulButton, Text, showSnackbar, AppHeader, TextInput, TextInputIcon, FormGroup} from "@ninjas-strategy/ui";
 import {observer} from "mobx-react-lite";
-import {userStore} from "@/lib/stores/userStore";
+import userStore from "@/lib/stores/userStore";
 
 const Container = styled.SafeAreaView`
 	padding: 50px 12px 12px;

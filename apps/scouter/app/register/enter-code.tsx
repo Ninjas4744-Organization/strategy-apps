@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {TextInput, Title, Subtitle, FormGroup, BeautifulButton, showSnackbar, TextInputIcon} from "@ninjas-strategy/ui";
+import {BeautifulButton, FormGroup, showSnackbar, Subtitle, TextInput, TextInputIcon, Title} from "@ninjas-strategy/ui";
 import styled from "styled-components/native";
 import {doc, getDoc} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
@@ -9,6 +9,7 @@ import {KeyboardAvoidingView, Platform, ScrollView, View} from "react-native";
 import {z, ZodError} from "zod";
 import * as Clipboard from "expo-clipboard";
 import {useKeyboardHeight} from "@/lib/hooks/keyboardHeight";
+import {UserType} from "@/lib/interfaces/UserType";
 
 export const registrationCodeSchema = z
 	.string()
@@ -53,12 +54,13 @@ export default function EnterCodePage() {
 				return;
 			}
 			const data = snap.data();
-			let userType: "member" | "admin" | null = null;
+			let userType: UserType;
 
-			if (registrationCode === data.members_code) userType = "member";
-			else if (registrationCode === data.admins_code) userType = "admin";
-
-			if (!userType) {
+			if (registrationCode === data.members_code) {
+				userType = UserType.SCOUTER;
+			} else if (registrationCode === data.admins_code) {
+				userType = UserType.APP_ADMIN;
+			} else {
 				showSnackbar("Invalid registration code");
 				return;
 			}

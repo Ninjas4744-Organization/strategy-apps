@@ -4,13 +4,13 @@ import {TBAEventInput} from "@/lib/components/admin/TBAEventInput";
 import {TBAEventSimple} from "@/lib/interfaces/TBAEventSimple";
 import {Stack, useRouter} from "expo-router";
 import {observer} from "mobx-react-lite";
-import adminStore from "@/lib/stores/adminStore";
+import eventsStore from "@/lib/stores/eventsStore";
 
 const initialYear = new Date().getFullYear();
 
 export default observer(function AddEventForm () {
 	const router = useRouter();
-	const {createEvent} = adminStore;
+	const {createEvent} = eventsStore;
 	const [year, setYear] = useState(new Date().getFullYear());
 	const [selectedEvent, setSelectedEvent] = useState<TBAEventSimple | null>(null);
 
