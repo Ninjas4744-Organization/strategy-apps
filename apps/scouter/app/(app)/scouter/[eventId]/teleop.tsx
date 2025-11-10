@@ -9,7 +9,7 @@ import {levelColors} from "@/lib/components/game/commons";
 import {CageLevel} from "@/lib/interfaces/CageLevel";
 import {MD2Colors, RadioButton, TextInput} from "react-native-paper";
 import {BodyScroll, Subtitle, Icon, BeautifulButton} from "@ninjas-strategy/ui";
-import {useRouter} from "expo-router";
+import {useGlobalSearchParams, useRouter} from "expo-router";
 import {action} from "mobx";
 import {KeyboardAvoidingView, Platform} from "react-native";
 
@@ -43,8 +43,9 @@ const TeamInfoInputIcon = styled(Icon)`
 	color: #555;
 `;
 
-export default observer(function AutonomousPage() {
+export default observer(function TeleopPage() {
 	const router = useRouter();
+	const {eventId} = useGlobalSearchParams();
 	const {algae_net, algae_net_missed, algae_processed, algae_processed_missed, corals_left, corals_right, cage_level, teamNumber, gameNumber} = gameStore;
 
 	return <KeyboardAvoidingView
@@ -123,7 +124,7 @@ export default observer(function AutonomousPage() {
 				<BeautifulButton
 					label="Submit to Firebase"
 					icon="cloud-upload"
-					onPress={() => gameStore.submitToFirebase().then(() => router.push('/game/autonomous'))} />
+					onPress={() => gameStore.submitToFirebase(eventId as string).then(() => router.push('/scouter'))} />
 			</BodyScroll>
 		</Container>
 	</KeyboardAvoidingView>;

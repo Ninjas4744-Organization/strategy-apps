@@ -3,11 +3,14 @@ import {Game} from "@/lib/models/Game";
 import {Subtitle, Title, Icon, CardSurface} from "@ninjas-strategy/ui";
 import {useGlobalSearchParams, useRouter} from "expo-router";
 import {MD2Colors} from "react-native-paper";
+import {useEffect} from "react";
+import {Team} from "@/lib/models/Team";
+import {observer} from "mobx-react-lite";
+import {TeamItemSkeleton} from "@/lib/components/admin/TeamItemSkeleton";
 
 type TeamItemProps = {
 	index: number,
-	teamNumber: number,
-	games: Game[],
+	team: Team;
 	averageTotalScore: string,
 };
 
@@ -53,9 +56,18 @@ const NavigationButtons = styled.View`
 	gap: 20px;
 `;
 
-export const TeamItem = ({index, teamNumber, games, averageTotalScore}: TeamItemProps) => {
+export const TeamItem = observer(({index, team, averageTotalScore}: TeamItemProps) => {
 	const {eventId} = useGlobalSearchParams();
 	const router = useRouter();
+	const {subscribe, unsubscribe, teamNumber, games, isLoading} = team;
+
+	useEffect(() => {
+		subscribe();
+		return () => unsubscribe();
+	}, []);
+
+	if (isLoading)
+		return <TeamItemSkeleton />;
 
 	return <TeamItemContainer>
 		<Rank color={getRankColor(index + 1)}>
@@ -72,4 +84,4 @@ export const TeamItem = ({index, teamNumber, games, averageTotalScore}: TeamItem
 				onPress={() => router.push(`/admin/${eventId}/team/${teamNumber}`)}/>
 		</NavigationButtons>
 	</TeamItemContainer>;
-};
+});

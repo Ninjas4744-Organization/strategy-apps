@@ -1,4 +1,4 @@
-import {Stack} from 'expo-router';
+import {Stack, useRouter, useSegments} from 'expo-router';
 import {SplashScreenController} from '@/lib/components/SplashScreenController';
 import {observer} from "mobx-react-lite";
 import {useEffect} from "react";
@@ -39,9 +39,11 @@ const RootNavigator = observer(function () {
 						headerShown: false,
 						contentStyle: {backgroundColor: 'transparent'}
 					}}>
-					<Stack.Screen name="index"/>
-					<Stack.Screen name="register/details"/>
-					<Stack.Screen name="register/enter-code"/>
+					<Stack.Protected guard={!user}>
+						<Stack.Screen name="index"/>
+						<Stack.Screen name="register/details"/>
+						<Stack.Screen name="register/enter-code"/>
+					</Stack.Protected>
 					<Stack.Protected guard={!!user}>
 						<Stack.Screen name="(app)" options={{gestureEnabled: false}}/>
 					</Stack.Protected>
@@ -50,4 +52,4 @@ const RootNavigator = observer(function () {
 			<StatusBar style="light" />
 		</>
 	);
-})
+});

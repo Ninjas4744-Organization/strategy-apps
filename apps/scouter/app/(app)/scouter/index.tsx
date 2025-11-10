@@ -5,12 +5,11 @@ import {Stack, useRouter} from "expo-router";
 import {EventItem} from "@/lib/components/EventItem";
 import userStore from "@/lib/stores/userStore";
 import eventsStore from "@/lib/stores/eventsStore";
-import {UserType} from "@/lib/interfaces/UserType";
 
-export default observer(function AdminIndex() {
+export default observer(function ScouterIndex() {
 	const {events, isLoading} = eventsStore;
 	const router = useRouter();
-	const {signOut, userData} = userStore;
+	const {signOut} = userStore;
 
 	if (isLoading)
 		return <Loading />;
@@ -22,15 +21,10 @@ export default observer(function AdminIndex() {
 					headerShown: true,
 					title: 'Events',
 					headerRight: () => (
-						<HeaderButtons
-							buttons={[
-								userData?.type === UserType.APP_ADMIN && {onPress: () => router.push('/admin/addEvent'), icon: 'add'},
-								userData?.type === UserType.APP_ADMIN && {onPress: () => router.push('/admin/registrationCodes'), icon: 'person-add'},
-								{onPress: () => signOut().then(() => router.push('/')), icon: 'logout'},
-							]} />
+						<HeaderButtons buttons={[{onPress: () => signOut().then(() => router.push('/')), icon: 'logout'}]} />
 					)}}/>
 			{events && Object.values(events).map((event) => (
-				<EventItem key={event.id} route={`/admin/${event.id}`} {...event} />
+				<EventItem key={event.id} route={`/scouter/${event.id}/autonomous`} {...event} />
 			))}
 		</ScrollView>
 	);

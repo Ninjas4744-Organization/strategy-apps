@@ -3,15 +3,24 @@ import {Model} from '@/lib/interfaces/Model';
 import {Insight} from "@/lib/interfaces/Insight";
 import {StreakInfo} from "@/lib/interfaces/StreakInfo";
 import {CageLevel} from "@/lib/interfaces/CageLevel";
+import {collection, onSnapshot} from "firebase/firestore";
+import {db} from "@/lib/firebase/firestore";
+import {action, makeObservable, observable, runInAction} from "mobx";
 
 export class Team implements Model {
+	@observable games: Game[] = [];
+	@observable isLoading: boolean = true;
+	private _unsubscribe: (() => void) | null = null;
+
 	constructor(
 		public id: string,
+		public eventId: string,
 		public teamNumber: number,
-		public games: Game[] = [],
-	) {}
+	) {
+		makeObservable(this);
+	}
 
-	static fromMap(id: string, data: Record<string, any>): Team {
+	static fromMap(id: string, eventId: string, data: Record<string, any>): Team {
 		// Handle team_number as either string or int
 		let teamNumber = 0;
 		const teamNumberData = data['team_number'];
@@ -23,13 +32,40 @@ export class Team implements Model {
 			}
 		}
 
-		return new Team(id, teamNumber, []);
+		return new Team(id, eventId, teamNumber);
 	}
 
 	toMap(): Record<string, any> {
 		return {
 			team_number: this.teamNumber,
 		};
+	}
+
+	@action.bound
+	subscribe() {
+		if (this._unsubscribe)
+			this._unsubscribe();
+
+		const gamesRef = collection(db, 'events', this.eventId, 'teams', this.id, 'games');
+
+		this.isLoading = true;
+		this._unsubscribe = onSnapshot(gamesRef, snapshot => {
+			runInAction(() => {
+				this.games = snapshot.docs.map(game => {
+					const data = game.data();
+					return Game.fromMap(game.id, data);
+				}).sort((a, b) => Number.parseInt(a.gameNumber) > Number.parseInt(b.gameNumber) ? 1 : -1);
+				this.isLoading = false;
+			});
+		});
+	}
+
+	@action.bound
+	unsubscribe() {
+		if (this._unsubscribe) {
+			this._unsubscribe();
+			this._unsubscribe = null;
+		}
 	}
 
 	// Calculate team statistics

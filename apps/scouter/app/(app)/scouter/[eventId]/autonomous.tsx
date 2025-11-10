@@ -4,7 +4,7 @@ import {SectionTitle} from "@/lib/components/game/SectionTitle";
 import {useState} from "react";
 import {Button, Dialog, MD2Colors} from "react-native-paper";
 import {Text as RNText} from "react-native";
-import {useRouter} from "expo-router";
+import {useGlobalSearchParams, useRouter} from "expo-router";
 import {ScoringCategory} from "@/lib/components/game/ScoringCategory";
 import {ScoringElement} from "@/lib/components/game/ScoringElement";
 import {updateItemAtIndex} from "@/lib/utilities";
@@ -31,6 +31,7 @@ export default observer(function AutonomousPage() {
 		autonomous_corals_left
 	} = gameStore;
 	const [showAutoEndDialog, setShowAutoEndDialog] = useState(false);
+	const {eventId} = useGlobalSearchParams();
 
 	return <>
 		<Container>
@@ -82,7 +83,7 @@ export default observer(function AutonomousPage() {
 			</Dialog.Content>
 			<Dialog.Actions>
 				<Button onPress={() => setShowAutoEndDialog(false)}>Cancel</Button>
-				<Button onPress={() => (setShowAutoEndDialog(false), router.push('/game/teleop'))}>OK</Button>
+				<Button onPress={() => (setShowAutoEndDialog(false), router.push(`/scouter/${eventId}/teleop`))}>OK</Button>
 			</Dialog.Actions>
 		</Dialog>
 	</>;

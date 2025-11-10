@@ -7,6 +7,7 @@ import {showSnackbar} from "@ninjas-strategy/ui";
 type GameData = {
 	team_number: number;
 	game_number: number;
+	eventId: string;
 	[key: string]: any;
 };
 
@@ -35,7 +36,7 @@ export class OfflineQueue {
 
 			for (const data of unsent) {
 				try {
-					const teamDoc = doc(collection(db, 'teams'), data.team_number.toString());
+					const teamDoc = doc(collection(db, 'events', data.eventId, 'teams'), data.team_number.toString());
 					const gameDoc = doc(collection(teamDoc, 'games'), data.game_number.toString());
 
 					await setDoc(gameDoc, {

@@ -2,7 +2,7 @@ import {Stack} from 'expo-router';
 import {Header} from "@/lib/components/game/Header";
 import {StackWrapper} from "@ninjas-strategy/ui";
 
-export default function AppLayout() {
+export default function GameLayout() {
 	return <StackWrapper>
 		<Stack
 			screenOptions={{

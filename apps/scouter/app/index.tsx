@@ -19,7 +19,6 @@ export default function Index() {
 				icon="sports-esports"
 				title="The Ninja Scouter"
 				description="Team Performance Analytics" />
-			<StartButton />
 			<LoginForm />
 		</Container>
 	);
@@ -30,21 +29,8 @@ const Section = styled.View`
 	gap: 16px;
 `;
 
-const StartButton = observer(() => {
-	const router = useRouter();
-	const {user, goToBaseRoute} = userStore;
-
-	const label = user?.email === 'admin@gmail.com' ? 'To admin panel' : 'Start game';
-	const icon = user?.email === 'admin@gmail.com' ? 'admin-panel-settings' : 'play-arrow';
-
-	return user ? <Section>
-		<Text>Hi, {user.email}</Text>
-		<BeautifulButton onPress={() => goToBaseRoute(router)} icon={icon} label={label} />
-	</Section>: null;
-});
-
 const LoginForm = observer(() => {
-	const {signIn, user, signOut, goToBaseRoute} = userStore;
+	const {signIn, user, signOut} = userStore;
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const router = useRouter();
@@ -56,7 +42,7 @@ const LoginForm = observer(() => {
 			await signIn(email, password);
 			setEmail('');
 			setPassword('');
-			goToBaseRoute(router, email);
+			router.push('/(app)');
 		} catch (e: any) {
 			if (e.code === 'auth/invalid-email')
 				showSnackbar('Invalid email');

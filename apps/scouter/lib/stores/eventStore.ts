@@ -1,9 +1,10 @@
 import {createContext} from "react";
-import {action, computed, makeObservable, observable} from "mobx";
-import {collection, getDocs} from "firebase/firestore";
+import {action, computed, makeObservable, observable, runInAction} from "mobx";
+import {collection, getDocs, onSnapshot} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {Team} from "@/lib/models/Team";
-import {Game} from "@/lib/models/Game";
+import userStore from "@/lib/stores/userStore";
+import {UserType} from "@/lib/interfaces/UserType";
 
 type Teams = {
 	[id: number]: Team,
@@ -17,39 +18,40 @@ export class EventStore {
 	@observable isLoading: boolean = true;
 	@observable error?: string;
 
+	private _unsubscribe: (() => void) | null = null;
+
 	constructor(public eventId: string) {
 		makeObservable(this);
 	}
 
 	@action.bound
-	async loadTeams() {
+	async subscribe() {
+		if (this._unsubscribe) {
+			this._unsubscribe();
+		}
+
+		if (userStore.userData?.type !== UserType.APP_ADMIN)
+			return;
+
+		const teamsRef = collection(db, 'events', this.eventId, 'teams');
+
 		this.isLoading = true;
-		this.teams = {};
-		try {
-			const teamsRef = collection(db, 'events', this.eventId, 'teams');
-			const teamsSnapshot = await getDocs(teamsRef);
-			for (const teamDoc of teamsSnapshot.docs) {
-				const teamData = teamDoc.data();
-				const team = Team.fromMap(teamDoc.id, teamData);
-				const gamesRef = collection(db, 'events', this.eventId, 'teams', team.id, 'games');
-				const gamesSnapshot = await getDocs(gamesRef);
+		this._unsubscribe = onSnapshot(teamsRef, snapshot => {
+			runInAction(() => {
+				for (const teamDoc of snapshot.docs) {
+					const teamData = teamDoc.data();
+					this.teams[parseInt(teamDoc.id)] = Team.fromMap(teamDoc.id, this.eventId, teamData);
+				}
+				this.isLoading = false;
+			});
+		});
+	}
 
-				const games = gamesSnapshot.docs.map(game => {
-					const data = game.data();
-					return Game.fromMap(game.id, data);
-				});
-
-				this.teams[team.teamNumber] = new Team(
-					team.id,
-					team.teamNumber,
-					(games || []).sort((a, b) => Number.parseInt(a.gameNumber) > Number.parseInt(b.gameNumber) ? 1 : -1)
-				);
-			}
-		} catch (e) {
-			this.error = `Failed to load teams: ${e}`;
-		} finally {
-			this.loaded = true;
-			this.isLoading = false;
+	@action.bound
+	unsubscribe() {
+		if (this._unsubscribe) {
+			this._unsubscribe();
+			this._unsubscribe = null;
 		}
 	}
 

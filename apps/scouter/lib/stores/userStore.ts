@@ -1,10 +1,10 @@
 import {action, computed, makeObservable, observable, runInAction} from "mobx";
 import {auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut as fbSignOut} from "../firebase/auth";
 import {User, UserCredential} from "firebase/auth";
-import {Router} from "expo-router";
 import {doc, onSnapshot} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {UserData} from "@/lib/interfaces/UserData";
+import {UserType} from "@/lib/interfaces/UserType";
 
 class UserStore {
 	@observable user: User | null = null;
@@ -81,17 +81,18 @@ class UserStore {
 		}
 	}
 
-	@action.bound
-	goToBaseRoute(router: Router, email?: string | null) {
-		if (!email) {
-			if (!this.user) {
-				return;
-			}
-			email = this.user.email;
-		}
-		if (email === 'admin@gmail.com')
-			return router.push('/admin');
-		router.push('/game/autonomous');
+	@computed
+	get isAdmin() {
+		if (!this.userData)
+			return false;
+		return this.userData.type !== UserType.SCOUTER;
+	}
+
+	@computed
+	get isAppAdmin() {
+		if (!this.userData)
+			return false;
+		return this.userData.type === UserType.APP_ADMIN;
 	}
 }
 

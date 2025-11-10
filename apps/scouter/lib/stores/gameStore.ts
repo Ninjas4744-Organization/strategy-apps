@@ -5,6 +5,7 @@ import {pick} from "@/lib/utilities";
 import {CageLevel} from "@/lib/interfaces/CageLevel";
 import {OfflineQueue} from "@/lib/OfflineQueue";
 import {showSnackbar} from "@ninjas-strategy/ui";
+import userStore from "@/lib/stores/userStore";
 
 const MAX_TEAM_NUMBER = 20000;
 const MAX_QUALIFICATION_MATCH_NUMBER = 150;
@@ -65,7 +66,7 @@ class GameStore {
 	}
 
 	@action.bound
-	async submitToFirebase() {
+	async submitToFirebase(eventId: string) {
 		if (+this.teamNumber! <= 0 || +this.gameNumber! <= 0) {
 			showSnackbar('Team or game number is missing.');
 			return;
@@ -75,7 +76,7 @@ class GameStore {
 			return;
 		}
 		try {
-			const teamRef = doc(db, 'teams', this.teamNumber!);
+			const teamRef = doc(db, 'events', eventId, 'teams', this.teamNumber!);
 			const teamSnap = await getDoc(teamRef);
 			if (!teamSnap.exists())
 				await setDoc(teamRef, {
@@ -86,14 +87,17 @@ class GameStore {
 				...this.gameData,
 				team_number: this.teamNumber,
 				game_number: this.gameNumber,
+				scouter_id: userStore.user?.uid,
 				timestamp: serverTimestamp()
 			});
 			showSnackbar('Data sent! Starting new match...');
 		} catch (e) {
-			OfflineQueue.saveUnsentGameData({
+			await OfflineQueue.saveUnsentGameData({
 				...this.gameData,
 				team_number: +this.teamNumber,
 				game_number: +this.gameNumber,
+				scouter_id: userStore.user?.uid,
+				eventId,
 			});
 			showSnackbar('No internet. Data will be sent automatically when online.');
 		} finally {

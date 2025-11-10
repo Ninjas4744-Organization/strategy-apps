@@ -3,7 +3,7 @@ import {Icon} from "@ninjas-strategy/ui";
 import type {MaterialIcon} from "../interfaces/MaterialIcon";
 
 type HeaderButtonsProps = {
-	buttons: HeaderButtonProps[];
+	buttons: (HeaderButtonProps | false)[];
 };
 
 const HeaderButtonsContainer = styled.View`
@@ -18,7 +18,7 @@ const Button = styled.TouchableOpacity`
 
 export const HeaderButtons = ({buttons}: HeaderButtonsProps) => {
 	return <HeaderButtonsContainer>
-		{buttons.map((button, index) => <HeaderButton key={"button-" + index} {...button} />)}
+		{buttons.filter(Boolean).map((button, index) => <HeaderButton key={"button-" + index} {...(button as HeaderButtonProps)} />)}
 	</HeaderButtonsContainer>;
 };
 

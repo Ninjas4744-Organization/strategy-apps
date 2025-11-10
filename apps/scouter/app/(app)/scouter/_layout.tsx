@@ -6,7 +6,7 @@ import {MD2Colors} from "react-native-paper";
 import eventsStore from "@/lib/stores/eventsStore";
 import userStore from "@/lib/stores/userStore";
 
-export default observer(function AdminLayout() {
+export default observer(function ScouterLayout() {
 	const {isLoading, subscribe, unsubscribe} = eventsStore;
 	const {userData, isAdmin} = userStore;
 
@@ -15,8 +15,8 @@ export default observer(function AdminLayout() {
 		return () => unsubscribe();
 	}, [userData]);
 
-	if (!isAdmin) {
-		return <Redirect href="/(app)/scouter" />;
+	if (isAdmin) {
+		return <Redirect href="/(app)/admin" />;
 	}
 
 	if (isLoading)
@@ -29,8 +29,7 @@ export default observer(function AdminLayout() {
 					headerStyle: {backgroundColor: MD2Colors.indigo900},
 					headerTintColor: MD2Colors.white,
 					contentStyle: {backgroundColor: 'transparent'},
-				}}
-			>
+				}}>
 				<Stack.Screen name="[eventId]" options={{headerShown: false}} />
 			</Stack>
 		</StackWrapper>

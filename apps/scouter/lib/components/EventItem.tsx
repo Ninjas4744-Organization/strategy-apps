@@ -1,6 +1,6 @@
 import styled from "styled-components/native";
 import {Subtitle, Title, Icon, CardSurface} from "@ninjas-strategy/ui";
-import {useRouter} from "expo-router";
+import {Href, useRouter} from "expo-router";
 import {flag} from 'country-emoji';
 
 type EventItemProps = {
@@ -9,6 +9,7 @@ type EventItemProps = {
 	startDate: string;
 	endDate: string;
 	country: string;
+	route: Href;
 };
 
 const EventItemContainer = styled(CardSurface)`
@@ -31,7 +32,7 @@ const NavigationButtons = styled.View`
 	gap: 20px;
 `;
 
-export const EventItem = ({id, name, startDate, endDate, country}: EventItemProps) => {
+export const EventItem = ({id, name, startDate, endDate, country, route}: EventItemProps) => {
 	const router = useRouter();
 
 	return <EventItemContainer>
@@ -41,7 +42,7 @@ export const EventItem = ({id, name, startDate, endDate, country}: EventItemProp
 			<Subtitle>{startDate} → {endDate}</Subtitle>
 		</Details>
 		<NavigationButtons>
-			<Icon name="chevron-right" onPress={() => router.push(`/admin/${id}`)}/>
+			<Icon name="chevron-right" onPress={() => router.push(route)}/>
 		</NavigationButtons>
 	</EventItemContainer>;
 };

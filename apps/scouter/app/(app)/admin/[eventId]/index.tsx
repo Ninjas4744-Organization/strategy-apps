@@ -4,12 +4,10 @@ import {Subtitle, Title, Icon, HeaderButtons, CardSurface} from "@ninjas-strateg
 import {TeamItem} from "@/lib/components/admin/TeamItem";
 import {ScrollView, View} from "react-native";
 import {observer} from "mobx-react-lite";
-import {Stack} from "expo-router";
 import {MD2Colors} from "react-native-paper";
 import {useContext} from "react";
 import {EventContext, EventStore} from "@/lib/stores/eventStore";
 import {TeamItemSkeleton} from "@/lib/components/admin/TeamItemSkeleton";
-import eventsStore from "@/lib/stores/eventsStore";
 
 const IconsRow = styled.View`
 	display: flex;
@@ -18,15 +16,12 @@ const IconsRow = styled.View`
 `;
 
 export default observer(function AdminIndex() {
-	const {isLoading, loadTeams, teamsRanked, totalGamesCount, eventId} = useContext(EventContext) as EventStore;
-	const {events} = eventsStore;
-	const event = events[eventId];
+	const {isLoading, teamsRanked, totalGamesCount} = useContext(EventContext) as EventStore;
 
 	const [topTeam] = teamsRanked;
 
 	return <>
 			<ScrollView>
-				<Stack.Screen options={{title: `${event.name} (${event.id})`, headerRight: () => <HeaderButtons buttons={[{icon: 'refresh', onPress: () => loadTeams()}]} />}}/>
 				{isLoading ? Array.from({length: 5}).map((_, i) => <TeamItemSkeleton key={i} />) : <>
 					{teamsRanked.length > 0 ? <>
 						<SectionTitle
@@ -52,11 +47,13 @@ export default observer(function AdminIndex() {
 						<View style={{margin: 8}}>
 							<Title>Team Rankings</Title>
 						</View>
-						{teamsRanked.map((team, index) => <TeamItem
-							key={team.teamNumber}
-							{...team}
-							averageTotalScore={team.averageTotalScore.toFixed(2)}
-							index={index}/>)}
+						{teamsRanked.map((team, index) => (
+							<TeamItem
+								key={team.teamNumber}
+								team={team}
+								averageTotalScore={team.averageTotalScore.toFixed(2)}
+								index={index}/>
+						))}
 					</> : <IconsRow>
 						<StatCard>
 							<StatIcon name="info" color={MD2Colors.blue500} />
