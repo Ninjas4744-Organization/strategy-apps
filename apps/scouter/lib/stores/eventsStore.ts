@@ -1,5 +1,5 @@
 import {action, makeObservable, observable, runInAction} from "mobx";
-import {collection, doc, onSnapshot, query, setDoc, where} from "firebase/firestore";
+import {collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, where, updateDoc, deleteField} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {UserType} from "@/lib/interfaces/UserType";
 import {Event} from "@/lib/models/Event";
@@ -8,6 +8,7 @@ import {TBAEventSimple} from "@/lib/interfaces/TBAEventSimple";
 import {Router} from "expo-router";
 import {TBA} from "@/lib/hooks/tba";
 import {showSnackbar} from "@ninjas-strategy/ui";
+import games from "@/app/(app)/admin/[eventId]/detailed/[id]/(tabs)/games";
 
 type Events = {
 	[eventId: string]: Event;

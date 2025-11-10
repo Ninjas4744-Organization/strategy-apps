@@ -4,8 +4,6 @@ import {SectionTitle} from "@/lib/components/game/SectionTitle";
 import {ScoringCategory} from "@/lib/components/game/ScoringCategory";
 import {ScoringElement} from "@/lib/components/game/ScoringElement";
 import gameStore from "@/lib/stores/gameStore";
-import {updateItemAtIndex} from "@/lib/utilities";
-import {levelColors} from "@/lib/components/game/commons";
 import {CageLevel} from "@/lib/interfaces/CageLevel";
 import {MD2Colors, RadioButton, TextInput} from "react-native-paper";
 import {BodyScroll, Subtitle, Icon, BeautifulButton} from "@ninjas-strategy/ui";
@@ -46,7 +44,7 @@ const TeamInfoInputIcon = styled(Icon)`
 export default observer(function TeleopPage() {
 	const router = useRouter();
 	const {eventId} = useGlobalSearchParams();
-	const {algae_net, algae_net_missed, algae_processed, algae_processed_missed, corals_left, corals_right, cage_level, teamNumber, gameNumber} = gameStore;
+	const {algae_net, algae_net_missed, algae_processed, algae_processed_missed, cage_level, teamNumber, gameNumber} = gameStore;
 
 	return <KeyboardAvoidingView
 		behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -80,15 +78,34 @@ export default observer(function TeleopPage() {
 					color={MD2Colors.white}
 					title="Coral Scoring"
 					icon="sports-volleyball">
-					{levelColors.map((color, level) => (
-						<ScoringElement
-							key={"corals_level_" + level}
-							title={"Level " + (level + 1)}
-							color={color}
-							missed={corals_left[level]}
-							setMissed={(missed) => updateItemAtIndex(level, missed, corals_left, action(v => gameStore.corals_left = v))}
-							scored={corals_right[level]}
-							setScored={(scored) => updateItemAtIndex(level, scored, corals_right, action(v => gameStore.corals_right = v))}/>)).reverse()}
+					<ScoringElement
+						title={"Level " + 4}
+						color={MD2Colors.purple500}
+						missed={gameStore.corals_missed_l4}
+						setMissed={action(missed => gameStore.corals_missed_l4 = missed)}
+						scored={gameStore.corals_scored_l4}
+						setScored={action(scored => gameStore.corals_scored_l4 = scored)}/>
+					<ScoringElement
+						title={"Level " + 3}
+						color={MD2Colors.blue500}
+						missed={gameStore.corals_missed_l3}
+						setMissed={action(missed => gameStore.corals_missed_l3 = missed)}
+						scored={gameStore.corals_scored_l3}
+						setScored={action(scored => gameStore.corals_scored_l3 = scored)}/>
+					<ScoringElement
+						title={"Level " + 2}
+						color={MD2Colors.green500}
+						missed={gameStore.corals_missed_l2}
+						setMissed={action(missed => gameStore.corals_missed_l2 = missed)}
+						scored={gameStore.corals_scored_l2}
+						setScored={action(scored => gameStore.corals_scored_l2 = scored)}/>
+					<ScoringElement
+						title={"Level " + 1}
+						color={MD2Colors.orange500}
+						missed={gameStore.corals_missed_l1}
+						setMissed={action(missed => gameStore.corals_missed_l1 = missed)}
+						scored={gameStore.corals_scored_l1}
+						setScored={action(scored => gameStore.corals_scored_l1 = scored)}/>
 				</ScoringCategory>
 				<ScoringCategory
 					color={MD2Colors.blue500}

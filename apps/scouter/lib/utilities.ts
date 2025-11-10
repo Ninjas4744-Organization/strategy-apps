@@ -7,13 +7,6 @@ export function pick(obj: any, keys: string[]): object {
 	return res;
 }
 
-export function updateItemAtIndex<T>(index: number, newValue: T, arr: T[], setArr: (a: T[]) => void): void {
-	const updatedArray = arr.map((item, i) =>
-		i === index ? newValue : item
-	);
-	setArr(updatedArray);
-}
-
 export function chunkArray<T>(array: T[], chunkSize: number): T[][] {
 	if (chunkSize === 0)
 		return [array];

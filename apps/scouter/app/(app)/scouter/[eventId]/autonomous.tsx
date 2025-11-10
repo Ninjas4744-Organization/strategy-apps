@@ -7,10 +7,8 @@ import {Text as RNText} from "react-native";
 import {useGlobalSearchParams, useRouter} from "expo-router";
 import {ScoringCategory} from "@/lib/components/game/ScoringCategory";
 import {ScoringElement} from "@/lib/components/game/ScoringElement";
-import {updateItemAtIndex} from "@/lib/utilities";
 import gameStore from "@/lib/stores/gameStore";
 import {BodyScroll} from "@ninjas-strategy/ui";
-import {levelColors} from "@/lib/components/game/commons";
 import {action} from "mobx";
 
 const Container = styled.SafeAreaView`
@@ -27,8 +25,6 @@ export default observer(function AutonomousPage() {
 		autonomous_net_missed,
 		autonomous_algae_processed,
 		autonomous_processed_missed,
-		autonomous_corals_right,
-		autonomous_corals_left
 	} = gameStore;
 	const [showAutoEndDialog, setShowAutoEndDialog] = useState(false);
 	const {eventId} = useGlobalSearchParams();
@@ -65,14 +61,34 @@ export default observer(function AutonomousPage() {
 					color={MD2Colors.white}
 					title="Coral Scoring"
 					icon="sports-volleyball">
-					{levelColors.map((color, level) => <ScoringElement
-						key={"auto_corals_level_" + level}
-						title={"Level " + (level + 1)}
-						color={color}
-						missed={autonomous_corals_left[level]}
-						setMissed={(missed) => updateItemAtIndex(level, missed, autonomous_corals_left, action(missed => gameStore.autonomous_corals_left = missed))}
-						scored={autonomous_corals_right[level]}
-						setScored={(scored) => updateItemAtIndex(level, scored, autonomous_corals_right, action(scored => gameStore.autonomous_corals_right = scored))}/>).reverse()}
+					<ScoringElement
+						title={"Level " + 4}
+						color={MD2Colors.purple500}
+						missed={gameStore.autonomous_corals_missed_l4}
+						setMissed={action(missed => gameStore.autonomous_corals_missed_l4 = missed)}
+						scored={gameStore.autonomous_corals_scored_l4}
+						setScored={action(scored => gameStore.autonomous_corals_scored_l4 = scored)}/>
+					<ScoringElement
+						title={"Level " + 3}
+						color={MD2Colors.blue500}
+						missed={gameStore.autonomous_corals_missed_l3}
+						setMissed={action(missed => gameStore.autonomous_corals_missed_l3 = missed)}
+						scored={gameStore.autonomous_corals_scored_l3}
+						setScored={action(scored => gameStore.autonomous_corals_scored_l3 = scored)}/>
+					<ScoringElement
+						title={"Level " + 2}
+						color={MD2Colors.green500}
+						missed={gameStore.autonomous_corals_missed_l2}
+						setMissed={action(missed => gameStore.autonomous_corals_missed_l2 = missed)}
+						scored={gameStore.autonomous_corals_scored_l2}
+						setScored={action(scored => gameStore.autonomous_corals_scored_l2 = scored)}/>
+					<ScoringElement
+						title={"Level " + 1}
+						color={MD2Colors.orange500}
+						missed={gameStore.autonomous_corals_missed_l1}
+						setMissed={action(missed => gameStore.autonomous_corals_missed_l1 = missed)}
+						scored={gameStore.autonomous_corals_scored_l1}
+						setScored={action(scored => gameStore.autonomous_corals_scored_l1 = scored)}/>
 				</ScoringCategory>
 			</BodyScroll>
 		</Container>

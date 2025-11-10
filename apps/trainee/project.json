@@ -1,0 +1,31 @@
+{
+	"name": "trainee",
+	"projectType": "application",
+	"sourceRoot": "apps/trainee",
+	"targets": {
+		"start": {
+			"executor": "@nx/expo:start",
+			"options": {
+				"port": 8081
+			}
+		},
+		"build": {
+			"executor": "@nx/expo:build",
+			"options": {
+				"platform": "all"
+			}
+		},
+		"run-ios": {
+			"executor": "@nx/expo:run",
+			"options": {
+				"platform": "ios"
+			}
+		},
+		"run-android": {
+			"executor": "@nx/expo:run",
+			"options": {
+				"platform": "android"
+			}
+		}
+	}
+}

@@ -1,0 +1,16 @@
+{
+	"name": "ui",
+	"projectType": "library",
+	"sourceRoot": "packages/ui",
+	"targets": {
+		"build": {
+			"executor": "@nx/react-native:package",
+			"options": {
+				"outputPath": "dist/packages/ui",
+				"tsConfig": "packages/ui/tsconfig.json",
+				"entryFile": "packages/ui/src/index.ts",
+				"assets": ["packages/ui/src/**/*.{png,svg,jpg,ttf}"]
+			}
+		}
+	}
+}

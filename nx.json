@@ -1,0 +1,18 @@
+{
+	"extends": "nx/presets/npm.json",
+	"npmScope": "ninjas-strategy",
+	"tasksRunnerOptions": {
+		"default": {
+			"runner": "nx/tasks-runners/default",
+			"options": {
+				"cacheableOperations": ["build", "lint", "test"]
+			}
+		}
+	},
+	"projects": {
+		"scouter": "apps/scouter",
+		"trainee": "apps/trainee",
+		"ui": "packages/ui",
+		"frc-games": "packages/frc-games"
+	}
+}

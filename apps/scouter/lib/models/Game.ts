@@ -49,19 +49,15 @@ export class Game implements Model {
 			}
 		}
 
-		// corals_right: [L1, L2, L3, L4]
-		const coralsRight = data['corals_right'] as number[] | undefined;
-		const coralsScoredL1 = coralsRight?.[0] ?? 0;
-		const coralsScoredL2 = coralsRight?.[1] ?? 0;
-		const coralsScoredL3 = coralsRight?.[2] ?? 0;
-		const coralsScoredL4 = coralsRight?.[3] ?? 0;
+		const coralsScoredL1 = data['corals_scored_l1'] ?? 0;
+		const coralsScoredL2 = data['corals_scored_l2'] ?? 0;
+		const coralsScoredL3 = data['corals_scored_l3'] ?? 0;
+		const coralsScoredL4 = data['corals_scored_l4'] ?? 0;
 
-		// autonomous_corals_right: [L1, L2, L3, L4]
-		const autonomousCoralsRight = data['autonomous_corals_right'] as number[] | undefined;
-		const autonomousCoralsScoredL1 = autonomousCoralsRight?.[0] ?? 0;
-		const autonomousCoralsScoredL2 = autonomousCoralsRight?.[1] ?? 0;
-		const autonomousCoralsScoredL3 = autonomousCoralsRight?.[2] ?? 0;
-		const autonomousCoralsScoredL4 = autonomousCoralsRight?.[3] ?? 0;
+		const autonomousCoralsScoredL1 = data['autonomous_corals_scored_l1'] ?? 0;
+		const autonomousCoralsScoredL2 = data['autonomous_corals_scored_l1'] ?? 0;
+		const autonomousCoralsScoredL3 = data['autonomous_corals_scored_l1'] ?? 0;
+		const autonomousCoralsScoredL4 = data['autonomous_corals_scored_l1']?? 0;
 
 		return new Game(
 			id,
@@ -98,19 +94,15 @@ export class Game implements Model {
 			game_number: this.gameNumber,
 			timestamp: this.timestamp,
 			corals_missed: this.coralsMissed,
-			corals_right: [
-				this.coralsScoredL1,
-				this.coralsScoredL2,
-				this.coralsScoredL3,
-				this.coralsScoredL4,
-			],
-			autonomus_corals_missed: this.autonomousCoralsMissed,
-			autonomous_corals_right: [
-				this.autonomousCoralsScoredL1,
-				this.autonomousCoralsScoredL2,
-				this.autonomousCoralsScoredL3,
-				this.autonomousCoralsScoredL4,
-			],
+			corals_scored_l1: this.coralsScoredL1,
+			corals_scored_l2: this.coralsScoredL2,
+			corals_scored_l3: this.coralsScoredL3,
+			corals_scored_l4: this.coralsScoredL4,
+			autonomous_corals_missed: this.autonomousCoralsMissed,
+			autonomous_corals_scored_l1: this.autonomousCoralsScoredL1,
+			autonomous_corals_scored_l2: this.autonomousCoralsScoredL2,
+			autonomous_corals_scored_l3: this.autonomousCoralsScoredL3,
+			autonomous_corals_scored_l4: this.autonomousCoralsScoredL4,
 			algae_processed: this.algaeProcessed,
 			algae_net: this.algaeNet,
 			algae_processed_missed: this.algaeProcessedMissed,

@@ -1,11 +1,19 @@
 {
 	"name": "ninjas-strategy-apps",
 	"private": true,
+	"scripts": {
+		"dev:scouter": "nx run scouter:start",
+		"dev:trainee": "nx run trainee:start",
+		"graph": "nx graph"
+	},
 	"workspaces": [
 		"apps/*",
 		"packages/*"
 	],
 	"devDependencies": {
-		"turbo": "^2.6.0"
+		"@nx/expo": "^22.0.2",
+		"@nx/js": "^22.0.2",
+		"@nx/react": "^22.0.2",
+		"nx": "^22.0.2"
 	}
 }

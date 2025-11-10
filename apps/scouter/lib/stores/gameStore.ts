@@ -15,15 +15,27 @@ class GameStore {
 	@observable autonomous_algae_net: number = 0;
 	@observable autonomous_processed_missed: number = 0;
 	@observable autonomous_net_missed: number = 0;
-	@observable autonomous_corals_right: number[] = [0, 0, 0, 0];
-	@observable autonomous_corals_left: number[] = [0, 0, 0, 0];
+	@observable autonomous_corals_scored_l1: number = 0;
+	@observable autonomous_corals_scored_l2: number = 0;
+	@observable autonomous_corals_scored_l3: number = 0;
+	@observable autonomous_corals_scored_l4: number = 0;
+	@observable autonomous_corals_missed_l1: number = 0;
+	@observable autonomous_corals_missed_l2: number = 0;
+	@observable autonomous_corals_missed_l3: number = 0;
+	@observable autonomous_corals_missed_l4: number = 0;
 
 	@observable algae_processed: number = 0;
 	@observable algae_net: number = 0;
 	@observable algae_processed_missed: number = 0;
 	@observable algae_net_missed: number = 0;
-	@observable corals_right: number[] = [0, 0, 0, 0];
-	@observable corals_left: number[] = [0, 0, 0, 0];
+	@observable corals_scored_l1: number = 0;
+	@observable corals_scored_l2: number = 0;
+	@observable corals_scored_l3: number = 0;
+	@observable corals_scored_l4: number = 0;
+	@observable corals_missed_l1: number = 0;
+	@observable corals_missed_l2: number = 0;
+	@observable corals_missed_l3: number = 0;
+	@observable corals_missed_l4: number = 0;
 
 	@observable cage_level: CageLevel = CageLevel.NONE;
 
@@ -40,8 +52,22 @@ class GameStore {
 		this.autonomous_algae_processed = this.algae_processed = this.algae_processed_missed =
 			this.autonomous_algae_net = this.algae_net = this.algae_net_missed =
 				this.autonomous_processed_missed = this.autonomous_net_missed = 0;
-		this.autonomous_corals_right = this.corals_right =
-			this.autonomous_corals_left = this.corals_left = [0, 0, 0, 0];
+		this.autonomous_corals_missed_l1 =
+			this.autonomous_corals_missed_l2 =
+			this.autonomous_corals_missed_l3 =
+			this.autonomous_corals_missed_l4 =
+			this.autonomous_corals_scored_l1 =
+			this.autonomous_corals_scored_l2 =
+			this.autonomous_corals_scored_l3 =
+			this.autonomous_corals_scored_l4 =
+			this.corals_missed_l1 =
+			this.corals_missed_l2 =
+			this.corals_missed_l3 =
+			this.corals_missed_l4 =
+			this.corals_scored_l1 =
+			this.corals_scored_l2 =
+			this.corals_scored_l3 =
+			this.corals_scored_l4 = 0;
 
 		this.teamNumber = this.gameNumber = '';
 	}
@@ -55,10 +81,22 @@ class GameStore {
 			'autonomous_algae_net',
 			'autonomous_processed_missed',
 			'autonomous_net_missed',
-			'autonomous_corals_right',
-			'autonomous_corals_left',
-			'corals_right',
-			'corals_left',
+			'autonomous_corals_scored_l1',
+			'autonomous_corals_scored_l2',
+			'autonomous_corals_scored_l3',
+			'autonomous_corals_scored_l4',
+			'autonomous_corals_missed_l1',
+			'autonomous_corals_missed_l2',
+			'autonomous_corals_missed_l3',
+			'autonomous_corals_missed_l4',
+			'corals_scored_l1',
+			'corals_scored_l2',
+			'corals_scored_l3',
+			'corals_scored_l4',
+			'corals_missed_l1',
+			'corals_missed_l2',
+			'corals_missed_l3',
+			'corals_missed_l4',
 			'algae_processed_missed',
 			'algae_net_missed',
 			'cage_level',
