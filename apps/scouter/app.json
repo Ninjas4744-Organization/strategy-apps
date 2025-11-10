@@ -1,47 +1,55 @@
 {
-	"expo": {
-		"name": "The Ninja Scouter",
-		"slug": "scouting",
-		"version": "0.1",
-		"orientation": "portrait",
-		"icon": "./assets/icon.png",
-		"scheme": "ninjascouter",
-		"userInterfaceStyle": "light",
-		"newArchEnabled": true,
-		"splash": {
-			"image": "./assets/splash-icon.png",
-			"resizeMode": "contain",
-			"backgroundColor": "#ffffff"
-		},
-		"ios": {
-			"supportsTablet": true,
-			"icon": "./assets/NinjasAppIcon.icon"
-		},
-		"android": {
-			"adaptiveIcon": {
-				"foregroundImage": "./assets/adaptive-icon.png",
-				"backgroundColor": "#ffffff"
-			},
-			"edgeToEdgeEnabled": true,
-			"predictiveBackGestureEnabled": false
-		},
-		"web": {
-			"bundler": "metro",
-			"favicon": "./assets/favicon.png"
-		},
-		"plugins": [
-			"expo-router",
-			"expo-font"
-		],
-		"experiments": {
-			"typedRoutes": true,
-			"reactCompiler": true
-		},
-		"extra": {
-			"router": {},
-			"eas": {
-				"projectId": "ab6c91a9-4edc-4b9a-b50f-032b69ac1395"
-			}
-		}
-	}
+  "expo": {
+    "name": "The Ninja Scouter",
+    "slug": "scouting",
+    "version": "0.1.1",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "ninjascouter",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "icon": "./assets/NinjasAppIcon.icon",
+      "bundleIdentifier": "com.realKfiros.scoutingApp"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "ab6c91a9-4edc-4b9a-b50f-032b69ac1395"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "ascAppId": "6753592050"
+      }
+    }
+  }
 }
