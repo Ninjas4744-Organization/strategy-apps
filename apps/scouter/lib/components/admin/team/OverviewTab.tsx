@@ -56,15 +56,15 @@ const PerformanceComparisonCard = ({team}: AdminTabProps) => {
 		<Row>
 			<Col>
 				<Subtitle>Recent {recentGames.length} games</Subtitle>
-				<Title>{recentAvg.toFixed(2)}</Title>
+				<Title>{recentAvg.toFixed(1)}</Title>
 			</Col>
 			<Col>
 				{improvement > 0 ? <GreenIcon name="trending-up" /> : <RedIcon name="trending-down" />}
-				<TextComponent>{improvement > 0 && '+'}{improvement.toFixed(2)}</TextComponent>
+				<TextComponent>{improvement > 0 && '+'}{improvement.toFixed(1)}</TextComponent>
 			</Col>
 			<Col>
 				<Subtitle>Recent {olderGames.length} games</Subtitle>
-				<Title>{olderAvg.toFixed(2)}</Title>
+				<Title>{olderAvg.toFixed(1)}</Title>
 			</Col>
 		</Row>
 	</Card>;

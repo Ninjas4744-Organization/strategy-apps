@@ -15,19 +15,19 @@ export const Breakdown = ({team}: AdminTabProps) => {
 		<PieChart
 			data={[
 				{
-					name: `Auto: ${team.getAverageScore('autonomousScore').toFixed(2)}`,
+					name: `Auto: ${team.getAverageScore('autonomousScore').toFixed(1)}`,
 					val: team.getAverageScore('autonomousScore'),
 					color: MD2Colors.orange500,
 					legendFontColor: MD2Colors.white,
 				},
 				{
-					name: `Teleop: ${team.getAverageScore('teleopScore').toFixed(2)}`,
+					name: `Teleop: ${team.getAverageScore('teleopScore').toFixed(1)}`,
 					val: team.getAverageScore('teleopScore'),
 					color: MD2Colors.green500,
 					legendFontColor: MD2Colors.white,
 				},
 				{
-					name: `Algae: ${team.getAverageScore('algaeScore').toFixed(2)}`,
+					name: `Algae: ${team.getAverageScore('algaeScore').toFixed(1)}`,
 					val: team.getAverageScore('algaeScore'),
 					color: MD2Colors.blue500,
 					legendFontColor: MD2Colors.white,

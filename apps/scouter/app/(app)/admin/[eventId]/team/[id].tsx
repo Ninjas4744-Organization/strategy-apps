@@ -63,9 +63,9 @@ export default observer(function () {
 			</Row>
 			<Row>
 				<StatItem icon="sports-esports" value={team.games.length} title="Games" />
-				<StatItem icon="trending-up" value={team.averageTotalScore.toFixed(2)} title="Avg Score" />
+				<StatItem icon="trending-up" value={team.averageTotalScore.toFixed(1)} title="Avg Score" />
 				<StatItem icon="emoji-events" value={bestGame.totalScore} title="Best Score" />
-				<StatItem icon="speed" value={(team.consistencyScore * 100).toFixed(2) + '%'} title="Consistency" />
+				<StatItem icon="speed" value={(team.consistencyScore * 100).toFixed(1) + '%'} title="Consistency" />
 			</Row>
 		</PageHeader>
 		<PageHeader>

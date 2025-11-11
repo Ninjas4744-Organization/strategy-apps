@@ -59,12 +59,7 @@ const NavigationButtons = styled.View`
 export const TeamItem = observer(({index, team, averageTotalScore}: TeamItemProps) => {
 	const {eventId} = useGlobalSearchParams();
 	const router = useRouter();
-	const {subscribe, unsubscribe, teamNumber, games, isLoading} = team;
-
-	useEffect(() => {
-		subscribe();
-		return () => unsubscribe();
-	}, []);
+	const {teamNumber, games, isLoading} = team;
 
 	if (isLoading)
 		return <TeamItemSkeleton />;

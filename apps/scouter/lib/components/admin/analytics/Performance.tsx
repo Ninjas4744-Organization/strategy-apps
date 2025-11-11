@@ -28,7 +28,7 @@ const PerformanceCard = ({label, score, color}: PerformanceCardProps) => {
 			<ProgressContainer>
 				<ProgressBar progress={score / 100} color={color} />
 			</ProgressContainer>
-			<Subtitle>{score.toFixed(2)}%</Subtitle>
+			<Subtitle>{score.toFixed(1)}%</Subtitle>
 		</Row>
 	</Card>;
 };

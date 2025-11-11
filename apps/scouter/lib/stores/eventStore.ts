@@ -15,7 +15,7 @@ export const EventContext = createContext<EventStore | null>(null);
 export class EventStore {
 	@observable loaded: boolean = false;
 	@observable teams: Teams = {};
-	@observable isLoading: boolean = true;
+	@observable _isLoading: boolean = true;
 	@observable error?: string;
 
 	private _unsubscribe: (() => void) | null = null;
@@ -35,14 +35,14 @@ export class EventStore {
 
 		const teamsRef = collection(db, 'events', this.eventId, 'teams');
 
-		this.isLoading = true;
+		this._isLoading = true;
 		this._unsubscribe = onSnapshot(teamsRef, snapshot => {
 			runInAction(() => {
 				for (const teamDoc of snapshot.docs) {
 					const teamData = teamDoc.data();
 					this.teams[parseInt(teamDoc.id)] = Team.fromMap(teamDoc.id, this.eventId, teamData);
 				}
-				this.isLoading = false;
+				this._isLoading = false;
 			});
 		});
 	}
@@ -69,5 +69,10 @@ export class EventStore {
 	@computed
 	get teamsRanked() {
 		return this.rank.map(team => this.teams[team]);
+	}
+
+	@computed
+	get isLoading() {
+		return this._isLoading || Object.values(this.teams).some(team => team.isLoading);
 	}
 }

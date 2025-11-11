@@ -19,7 +19,7 @@ export class Game {
 				get(): number {
 					return game.fieldCalculations[calculation]?.reduce(
 						(sum, cur) => sum + (this[cur] ?? 0), 0
-					) ?? 0;
+					) || 0;
 				},
 				configurable: true
 			})
@@ -29,7 +29,7 @@ export class Game {
 				get(): number {
 					return game.totalCalculations[calculation]?.reduce(
 						(sum, cur) => sum + (this[cur] ?? 0), 0
-					) ?? 0;
+					) || 0;
 				},
 				configurable: true
 			})
@@ -39,10 +39,10 @@ export class Game {
 	get totalScore(): number {
 		return this.game.totalScore.reduce(
 			(sum, cur) => sum + (this[cur] ?? 0), 0
-		) ?? 0;
+		) || 0;
 	}
 
 	getValue(field: string) {
-		return this.data[field] ?? 0;
+		return this.data[field] || 0;
 	}
 }

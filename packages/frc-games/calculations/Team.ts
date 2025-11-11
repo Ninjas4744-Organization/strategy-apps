@@ -44,6 +44,14 @@ export class Team {
 		return total / this.games.length;
 	}
 
+	getAverageValue(key: string) {
+		if (this.games.length === 0) {
+			return 0;
+		}
+		const total = this.games.reduce((sum, game) => sum + game.getValue(key), 0);
+		return total / this.games.length;
+	}
+
 	get streakInfo(): DisplayInsight {
 		if (this.games.length === 0) {
 			return {
