@@ -1,4 +1,4 @@
-import type {ScoringSection} from "@ninjas-strategy/frc-games/Game.ts";
+import type {ScoringSection} from "../../frc-games/types";
 import {IconContainer, Title, Icon} from "../";
 import styled from "styled-components/native";
 import {GameField} from "./game_field";

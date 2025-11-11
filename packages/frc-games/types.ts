@@ -1,9 +1,11 @@
 import type {MaterialIcon} from "@ninjas-strategy/ui/interfaces/MaterialIcon";
+import {Game, Team} from "./calculations";
 
-export type Game = {
+export type FRCGame = {
 	sections: ScoringSection[];
 	fieldCalculations: Calculations;
 	totalCalculations: Calculations;
+	totalScore: string[];
 	insights: Insight[];
 	recommendations: Insight[];
 	strengths: Insight[];
@@ -24,7 +26,7 @@ export interface ScoringSection {
 	fields: ScoringElements;
 }
 
-interface Calculations {
+export interface Calculations {
 	[key: string]: string[];
 }
 
@@ -42,10 +44,16 @@ interface ScoringElements {
 	[key: string]: ScoringElement;
 }
 
-interface Insight {
+export type DisplayInsight = {
+	message: string;
+	description?: string;
+	isPositive: boolean
+}
+
+export interface Insight {
+	check: (team: Team) => boolean;
 	text: string;
-	deps: string[];
-	make: (data: Record<string, any>, ...deps: string[]) => string;
+	isPositive?: boolean;
 }
 
 interface BreakdownValue {

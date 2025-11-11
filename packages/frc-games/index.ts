@@ -1,8 +1,8 @@
 import {Reefscape} from "./games/Reefscape";
-import type {Game} from "./Game";
+import type {FRCGame} from "./types";
 
 type Games = {
-	[year: number]: Game;
+	[year: number]: FRCGame;
 }
 
 export const games: Games = {
@@ -32,12 +32,7 @@ export const initGameData = (year: number) => {
 	return data;
 };
 
-export const getPointsAndCalculations = (year: number, data: Record<string, any>): Record<string, number> => {
-	const game = games[year];
-	if (!game) {
-		return {};
-	}
-
+export const getPointsAndCalculations = (game: FRCGame, data: Record<string, any>): Record<string, number> => {
 	let points: Record<string, number> = {};
 	for (const section of game.sections) {
 		for (const fieldKey in section.fields) {
@@ -52,3 +47,5 @@ export const getPointsAndCalculations = (year: number, data: Record<string, any>
 	}
 	return points;
 };
+
+export * from './calculations';

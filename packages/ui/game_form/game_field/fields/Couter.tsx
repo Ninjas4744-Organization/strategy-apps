@@ -1,5 +1,5 @@
 import styled from "styled-components/native";
-import {Icon, Subtitle} from "../../../index.ts";
+import {Icon, Subtitle} from "../../..";
 import {MD2Colors} from "react-native-paper";
 import {observer} from "mobx-react-lite";
 

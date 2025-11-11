@@ -1,5 +1,5 @@
 import {RadioButton} from "react-native-paper";
-import {Subtitle} from "../../../index.ts";
+import {Subtitle} from "../../..";
 import styled from "styled-components/native";
 import {observer} from "mobx-react-lite";
 

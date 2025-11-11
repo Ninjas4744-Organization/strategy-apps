@@ -1,4 +1,4 @@
-import type {ScoringElement} from "@ninjas-strategy/frc-games/Game.ts";
+import type {ScoringElement} from "@ninjas-strategy/frc-games/types";
 import {Counter} from "./fields/Couter";
 import {Enum} from "./fields/Enum";
 import {observer} from "mobx-react-lite";

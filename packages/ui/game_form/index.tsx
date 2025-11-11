@@ -1,8 +1,8 @@
-import type {Game} from "@ninjas-strategy/frc-games/Game";
+import type {FRCGame} from "@ninjas-strategy/frc-games/types";
 import {Section} from "./Section";
 import {observer} from "mobx-react-lite";
 
-type GameFormProps = Game & {
+type GameFormProps = FRCGame & {
 	phase: string;
 	data: Record<string, any>;
 	setData: (key: string, value: any) => void;

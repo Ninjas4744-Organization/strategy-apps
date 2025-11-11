@@ -1,4 +1,4 @@
-import type {Game} from "../Game.ts";
+import type {FRCGame} from "../types";
 import {MD2Colors} from "react-native-paper";
 
 enum CageLevel {
@@ -8,7 +8,7 @@ enum CageLevel {
 	DEEP = 'deep',
 }
 
-export const Reefscape: Game = {
+export const Reefscape: FRCGame = {
 	sections: [
 		{
 			color: MD2Colors.orange500,
@@ -164,18 +164,73 @@ export const Reefscape: Game = {
 		autonomousCoralScore: ['autonomous_corals_scored_l1', 'autonomous_corals_scored_l2', 'autonomous_corals_scored_l3', 'autonomous_corals_scored_l4'],
 		teleopAlgaeScore: ['algae_processed', 'algae_net'],
 		autonomousAlgaeScore: ['autonomous_algae_processed', 'autonomous_algae_net'],
-		parkingScore: ['cage_level'],
+		cageLevel: ['cage_level'],
 	},
 	totalCalculations: {
 		teleopScore: ['teleopCoralScore', 'teleopAlgaeScore'],
 		autonomousScore: ['autonomousCoralScore', 'autonomousAlgaeScore'],
-		parkingScore: ['parkingScore'],
+		parkingScore: ['cageLevel'],
 		algaeScore: ['teleopAlgaeScore', 'autonomousAlgaeScore'],
 	},
-	insights: [],
-	recommendations: [],
-	strengths: [],
-	weaknesses: [],
+	totalScore: ['teleopScore', 'autonomousScore', 'parkingScore'],
+	insights: [
+		{
+			check: game => game.getAverageScore('autonomousScore') > game.getAverageScore('teleopScore') + 10,
+			text: 'Strong autonomous performance',
+			isPositive: true,
+		},
+		{
+			check: game => game.getAverageScore('algaeScore') > 15,
+			text: 'Excellent algae handling capabilities',
+			isPositive: true,
+		},
+	],
+	strengths: [
+		{
+			check: team => team.getAverageScore('autonomousScore') > 20,
+			text: 'Strong autonomous performance',
+		},
+		{
+			check: team => team.getAverageScore('teleopScore') > 30,
+			text: 'Excellent teleop scoring',
+		},
+		{
+			check: team => team.getAverageScore('algaeScore') > 15,
+			text: 'Great algae handling',
+		},
+		{
+			check: team => team.bestScore > 80,
+			text: 'High scoring potential',
+		},
+	],
+	weaknesses: [
+		{
+			check: team => team.getAverageScore('autonomousScore') < 10,
+			text: 'Weak autonomous performance',
+		},
+		{
+			check: team => team.getAverageScore('teleopScore') < 20,
+			text: 'Low teleop scoring',
+		},
+		{
+			check: team => team.getAverageScore('algaeScore') < 8,
+			text: 'Poor algae handling',
+		},
+	],
+	recommendations: [
+		{
+			check: team => team.getAverageScore('autonomousScore') < 15,
+			text: 'Focus on improving autonomous programming and strategy',
+		},
+		{
+			check: team => team.getAverageScore('teleopScore') < 25,
+			text: 'Work on teleop efficiency and driver coordination',
+		},
+		{
+			check: team => team.getAverageScore('algaeScore') < 10,
+			text: 'Improve algae collection and processing mechanisms',
+		},
+	],
 	breakdownGraph: [],
 	gameCard: [],
 	scoreSummary: [],

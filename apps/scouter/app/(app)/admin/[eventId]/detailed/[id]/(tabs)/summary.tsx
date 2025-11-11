@@ -31,19 +31,19 @@ export default observer(function () {
 					},
 					{
 						label: 'Avg Teleop',
-						value: team.averageTeleopScore.toFixed(2),
+						value: team.getAverageScore('teleopScore').toFixed(2),
 						color: MD2Colors.green500,
 						icon: 'sports',
 					},
 					{
 						label: 'Avg Auto',
-						value: team.averageAutonomousScore.toFixed(2),
+						value: team.getAverageScore('autonomousScore').toFixed(2),
 						color: MD2Colors.purple500,
 						icon: 'auto-awesome',
 					},
 					{
 						label: 'Avg Cage Score',
-						value: team.averageCageScore.toFixed(2),
+						value: team.getAverageScore('parkingScore').toFixed(2),
 						color: MD2Colors.amber500,
 						icon: 'local-parking',
 					},
@@ -63,22 +63,22 @@ export default observer(function () {
 					stats={[
 						{
 							label: 'L1',
-							value: team.averageL1.toFixed(2),
+							value: team.getAverageValue('corals_scored_l1').toFixed(2),
 							color: MD2Colors.red500
 						},
 						{
 							label: 'L2',
-							value: team.averageL2.toFixed(2),
+							value: team.getAverageValue('corals_scored_l2').toFixed(2),
 							color: MD2Colors.orange500
 						},
 						{
 							label: 'L3',
-							value: team.averageL3.toFixed(2),
+							value: team.getAverageValue('corals_scored_l3').toFixed(2),
 							color: MD2Colors.yellow500
 						},
 						{
 							label: 'L4',
-							value: team.averageL4.toFixed(2),
+							value: team.getAverageValue('corals_scored_l4').toFixed(2),
 							color: MD2Colors.green500
 						}
 					]} />
@@ -87,12 +87,12 @@ export default observer(function () {
 					stats={[
 						{
 							label: 'Processed',
-							value: team.averageAlgaeProcessed.toFixed(2),
+							value: team.getAverageValue('algae_processed').toFixed(2),
 							color: MD2Colors.blue500
 						},
 						{
 							label: 'Net',
-							value: team.averageAlgaeNet.toFixed(2),
+							value: team.getAverageValue('algae_net').toFixed(2),
 							color: MD2Colors.cyan500
 						},
 					]} />

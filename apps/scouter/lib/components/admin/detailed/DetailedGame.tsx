@@ -38,44 +38,44 @@ const ExpandedGameView = ({game}: DetailedGameProps) => {
 	return <>
 		<ScoreSummary game={game}/>
 		<BreakdownSection
-			title="Algae Scoring Breakdown"
+			title="Coral Scoring Breakdown"
 			stats={[
 				{
 					label: 'L1',
-					value: game.coralsScoredL1,
-					note: game.coralsScoredL1 + ' pts',
+					value: game.getValue('corals_scored_l1'),
+					note: game.corals_scored_l1 + ' pts',
 					color: MD2Colors.red500,
 				},
 				{
 					label: 'L2',
-					value: game.coralsScoredL2,
-					note: (game.coralsScoredL2 * 2) + ' pts',
+					value: game.getValue('corals_scored_l2'),
+					note: game.corals_scored_l2 + ' pts',
 					color: MD2Colors.orange500,
 				},
 				{
 					label: 'L3',
-					value: game.coralsScoredL3,
-					note: (game.coralsScoredL3 * 3) + ' pts',
+					value: game.getValue('corals_scored_l3'),
+					note: game.corals_scored_l3 + ' pts',
 					color: MD2Colors.yellow500,
 				},
 				{
 					label: 'L4',
-					value: game.coralsScoredL4,
-					note: (game.coralsScoredL4 * 5) + ' pts',
+					value: game.getValue('corals_scored_l4'),
+					note: game.corals_scored_l4 + ' pts',
 					color: MD2Colors.green500,
 				}
 			]}
 			extraStats={[
-				{icon: 'close', text: `Missed: ${game.coralsMissed}`, color: MD2Colors.red500},
+				{icon: 'close', text: `Missed: ${game.getValue('corals_missed')}`, color: MD2Colors.red500},
 			]}/>
 		<BreakdownSection
-			title="Coral Scoring Breakdown"
+			title="Algae Scoring Breakdown"
 			stats={[
-				{label: 'Processed', value: game.algaeProcessed, note: game.algaeProcessed + ' pts', color: MD2Colors.blue500,},
-				{label: 'Net', value: game.algaeNet, note: (game.algaeNet * 2) + ' pts', color: MD2Colors.cyan500,},
+				{label: 'Processed', value: game.getValue('algae_processed'), note: game.algae_processed + ' pts', color: MD2Colors.blue500,},
+				{label: 'Net', value: game.getValue('algae_net'), note: game.algae_net + ' pts', color: MD2Colors.cyan500,},
 			]}
 			extraStats={[
-				{icon: 'close', text: `Missed: Processed: ${game.algaeProcessedMissed}, Net: ${game.algaeNetMissed}`, color: MD2Colors.red500},
+				{icon: 'close', text: `Missed: Processed: ${game.getValue('algae_processed_missed')}, Net: ${game.getValue('algae_net_missed')}`, color: MD2Colors.red500},
 			]}/>
 		<BreakdownSection
 			title="Autonomous Performance"
@@ -86,17 +86,17 @@ const ExpandedGameView = ({game}: DetailedGameProps) => {
 			extraStats={[
 				{
 					icon: 'auto-awesome',
-					text: `Autonomous Corals: L1: ${game.autonomousCoralsScoredL1}, L2: ${game.autonomousCoralsScoredL2}, L3: ${game.autonomousCoralsScoredL3}, L4: ${game.autonomousCoralsScoredL4}`,
+					text: `Autonomous Corals: L1: ${game.getValue('autonomous_corals_scored_l1')}, L2: ${game.getValue('autonomous_corals_scored_l2')}, L3: ${game.getValue('autonomous_corals_scored_l3')}, L4: ${game.getValue('autonomous_corals_scored_l4')}`,
 					color: MD2Colors.purple500,
 				},
 				{
 					icon: 'water-drop',
-					text: `Autonomous Algae: Processed: ${game.autonomousAlgaeProcessed} (Missed: ${game.autonomousAlgaeProcessedMissed}), Net: ${game.autonomousAlgaeNet} (Missed: ${game.autonomousAlgaeNetMissed})`,
+					text: `Autonomous Algae: Processed: ${game.getValue('autonomous_algae_processed')} (Missed: ${game.getValue('autonomous_algae_processed_missed')}), Net: ${game.getValue('autonomous_algae_net')} (Missed: ${game.getValue('autonomous_algae_net_missed')})`,
 					color: MD2Colors.teal500
 				},
 				game.parkingScore > 0 && {
 					icon: 'local-parking',
-					text: `Cage Level: ${game.cageLevel?.toUpperCase() ?? 'N/A'} (+${game.parkingScore} points)`,
+					text: `Cage Level: ${game.getValue('cage_level').toUpperCase() ?? 'N/A'} (+${game.parkingScore} points)`,
 					color: MD2Colors.amber500
 				},
 			].filter(Boolean) as ExtraBreakdownStat[]} />
@@ -119,7 +119,7 @@ const ScoreSummary = ({game}: DetailedGameProps) => {
 		</Row>
 		<Row>
 			<ScoreItem label="Autonomous" score={game.autonomousScore} color={MD2Colors.green500} />
-			<ScoreItem label={(game.cageLevel || CageLevel.NONE).toUpperCase()} score={game.parkingScore} color={MD2Colors.orange500} />
+			<ScoreItem label={(game.getValue('cage_level') || CageLevel.NONE).toUpperCase()} score={game.parkingScore} color={MD2Colors.orange500} />
 		</Row>
 	</Card>;
 };

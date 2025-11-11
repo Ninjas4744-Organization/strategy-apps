@@ -5,9 +5,9 @@ import {AdminTabProps} from "@/lib/components/admin/commons";
 
 export const Performance = ({team}: AdminTabProps) => {
 	return <>
-		<PerformanceCard label="Autonomous Performance" score={team.averageAutonomousScore} color={MD2Colors.orange500} />
-		<PerformanceCard label="Teleop Performance" score={team.averageTeleopScore} color={MD2Colors.green500} />
-		<PerformanceCard label="Algae Handling" score={team.averageAlgaeScore} color={MD2Colors.blue500} />
+		<PerformanceCard label="Autonomous Performance" score={team.getAverageScore('autonomousScore')} color={MD2Colors.orange500} />
+		<PerformanceCard label="Teleop Performance" score={team.getAverageScore('teleopScore')} color={MD2Colors.green500} />
+		<PerformanceCard label="Algae Handling" score={team.getAverageScore('algaeScore')} color={MD2Colors.blue500} />
 	</>;
 };
 
