@@ -36,11 +36,14 @@ const ComparisonCard = ({title, game, color}: ComparisonCardProps) => {
 			<ComparisonCardTitle color={color}>{game.totalScore} pts</ComparisonCardTitle>
 		</Row>
 		<Row>
-			<Subtitle>Auto: {game.autonomousScore}</Subtitle>
-			<View style={{flexGrow: 1}} />
-			<Subtitle>Teleop: {game.teleopScore}</Subtitle>
-			<View style={{flexGrow: 1}} />
-			<Subtitle>Parking: {game.parkingScore}</Subtitle>
+			{game.game.gameCard.map((stat, index) => (
+				<ComparisonCardItem key={'comparison-' + game.id + '-' + index}>{stat.label}: {stat.val(game)}</ComparisonCardItem>
+			))}
 		</Row>
 	</Card>;
 };
+
+const ComparisonCardItem = styled(Subtitle)`
+	flex: 1;
+	text-align: center;
+`;

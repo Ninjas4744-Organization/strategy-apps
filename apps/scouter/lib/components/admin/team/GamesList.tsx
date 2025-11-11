@@ -26,13 +26,9 @@ const GameItem = ({game}: GameItemProps) => {
 			<CardTitle>{game.totalScore} pts</CardTitle>
 		</Row>
 		<Row>
-			<FlexGrow />
-			<GameStat label="Auto" value={game.autonomousScore} color={MD2Colors.orange500}/>
-			<FlexGrow />
-			<GameStat label="Teleop" value={game.teleopScore} color={MD2Colors.green500}/>
-			<FlexGrow />
-			<GameStat label="Cage Level" value={game.cageLevel} color={MD2Colors.blue500}/>
-			<FlexGrow />
+			{game.game.gameCard.map((stat, index) => (
+				<GameStat key={game.gameNumber + '-stat-' + index} {...stat} value={stat.val(game)} />
+			))}
 		</Row>
 		<Row>
 			<Subtitle>Date: {game.timestamp.toDateString()}</Subtitle>
@@ -47,6 +43,10 @@ type GameStatProps = {
 	color: string;
 };
 
+const GameStatContainer = styled.View`
+	flex: 1;
+`;
+
 const Label = styled.Text<{color: string}>`
 	font-size: 12px;
 	font-weight: bold;
@@ -60,8 +60,10 @@ const Value = styled.Text`
 `;
 
 const GameStat = ({label, value, color}: GameStatProps) => {
-	return <Col>
-		<Label color={color}>{label}</Label>
-		<Value>{value}</Value>
-	</Col>;
+	return <GameStatContainer>
+		<Col>
+			<Label color={color}>{label}</Label>
+			<Value>{value}</Value>
+		</Col>
+	</GameStatContainer>;
 };

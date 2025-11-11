@@ -231,9 +231,174 @@ export const Reefscape: FRCGame = {
 			text: 'Improve algae collection and processing mechanisms',
 		},
 	],
-	breakdownGraph: [],
-	gameCard: [],
-	scoreSummary: [],
-	breakdowns: [],
-	performance: [],
+	breakdownGraph: [
+		{
+			label: 'Auto',
+			val: team => team.getAverageScore('autonomousScore'),
+			color: MD2Colors.orange500,
+		},
+		{
+			label: 'Teleop',
+			val: team => team.getAverageScore('teleopScore'),
+			color: MD2Colors.green500,
+		},
+		{
+			label: 'Algae',
+			val: team => team.getAverageScore('algaeScore'),
+			color: MD2Colors.blue500,
+		}
+	],
+	gameCard: [
+		{
+			label: 'Auto',
+			val: game => game.autonomousScore,
+			color: MD2Colors.orange500,
+		},
+		{
+			label: 'Teleop',
+			val: game => game.teleopScore,
+			color: MD2Colors.green500,
+		},
+		{
+			label: 'Cage Level',
+			val: game => game.cageLevel,
+			color: MD2Colors.blue500,
+		},
+	],
+	performance: [
+		{
+			label: 'Autonomous Performance',
+			val: team => team.getAverageScore('autonomousScore'),
+			color: MD2Colors.orange500,
+		},
+		{
+			label: 'Teleop Performance',
+			val: team => team.getAverageScore('teleopScore'),
+			color: MD2Colors.green500,
+		},
+		{
+			label: 'Algae Handling',
+			val: team => team.getAverageScore('algaeScore'),
+			color: MD2Colors.blue500,
+		},
+	],
+	scoreSummary: [
+		{
+			label: () => 'Total',
+			val: game => game.totalScore,
+			color: MD2Colors.amber500,
+		},
+		{
+			label: () => 'Teleop',
+			val: game => game.teleopScore,
+			color: MD2Colors.blue500,
+		},
+		{
+			label: () => 'Autonomous',
+			val: game => game.autonomousScore,
+			color: MD2Colors.green500,
+		},
+		{
+			label: game => (game.getValue('cage_level') || CageLevel.NONE).toUpperCase(),
+			val: game => game.parkingScore,
+			color: MD2Colors.orange500,
+		},
+	],
+	gameDetailedBreakdowns: [
+		{
+			title: 'Coral Scoring Breakdown',
+			stats: [
+				{
+					label: 'L1',
+					val: game => game.getValue('corals_scored_l1'),
+					note: game => game.corals_scored_l1 + ' pts',
+					color: MD2Colors.red500,
+				},
+				{
+					label: 'L2',
+					val: game => game.getValue('corals_scored_l2'),
+					note: game => game.corals_scored_l2 + ' pts',
+					color: MD2Colors.orange500,
+				},
+				{
+					label: 'L3',
+					val: game => game.getValue('corals_scored_l3'),
+					note: game => game.corals_scored_l3 + ' pts',
+					color: MD2Colors.yellow500,
+				},
+				{
+					label: 'L4',
+					val: game => game.getValue('corals_scored_l4'),
+					note: game => game.corals_scored_l4 + ' pts',
+					color: MD2Colors.green500,
+				},
+			],
+			extraStats: [
+				{
+					icon: 'close',
+					label: game => `Missed: ${game.getValue('corals_missed')}`,
+					color: MD2Colors.red500,
+				},
+			]
+		},
+		{
+			title: 'Algae Scoring Breakdown',
+			stats: [
+				{
+					label: 'Processed',
+					val: game => game.getValue('algae_processed'),
+					note: game => game.algae_processed + ' pts',
+					color: MD2Colors.blue500,
+				},
+				{
+					label: 'Net',
+					val: game => game.getValue('algae_net'),
+					note: game => game.algae_net + ' pts',
+					color: MD2Colors.cyan500,
+				},
+			],
+			extraStats: [
+				{
+					icon: 'close',
+					label: game => `Missed: Processed: ${game.getValue('algae_processed_missed')}, Net: ${game.getValue('algae_net_missed')}`,
+					color: MD2Colors.red500,
+				},
+			]
+		},
+		{
+			title: 'Autonomous Performance',
+			stats: [
+				{
+					label: 'Corals',
+					val: game => game.autonomousCoralScore,
+					note: () => '',
+					color: MD2Colors.purple500,
+				},
+				{
+					label: 'Algae',
+					val: game => game.autonomousAlgaeScore,
+					note: () => '',
+					color: MD2Colors.teal500,
+				},
+			],
+			extraStats: [
+				{
+					icon: 'auto-awesome',
+					label: game => `Autonomous Corals: L1: ${game.getValue('autonomous_corals_scored_l1')}, L2: ${game.getValue('autonomous_corals_scored_l2')}, L3: ${game.getValue('autonomous_corals_scored_l3')}, L4: ${game.getValue('autonomous_corals_scored_l4')}`,
+					color: MD2Colors.purple500,
+				},
+				{
+					icon: 'water-drop',
+					label: game => `Autonomous Algae: Processed: ${game.getValue('autonomous_algae_processed')} (Missed: ${game.getValue('autonomous_algae_processed_missed')}), Net: ${game.getValue('autonomous_algae_net')} (Missed: ${game.getValue('autonomous_algae_net_missed')})`,
+					color: MD2Colors.teal500,
+				},
+				{
+					icon: 'local-parking',
+					label: game => `Cage Level: ${game.getValue('cage_level').toUpperCase() ?? 'N/A'} (+${game.parkingScore} points)`,
+					color: MD2Colors.amber500,
+				},
+			]
+		},
+	],
+
 };

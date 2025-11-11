@@ -1,6 +1,8 @@
 import type {MaterialIcon} from "@ninjas-strategy/ui/interfaces/MaterialIcon";
 import {Game, Team} from "./calculations";
 
+type Overwrite<T, U> = Pick<T, Exclude<keyof T, keyof U>> & U;
+
 export type FRCGame = {
 	sections: ScoringSection[];
 	fieldCalculations: Calculations;
@@ -10,14 +12,14 @@ export type FRCGame = {
 	recommendations: Insight[];
 	strengths: Insight[];
 	weaknesses: Insight[];
-	breakdownGraph: BreakdownValue[];
-	gameCard: GameCardValue[];
-	scoreSummary: BreakdownValue[];
-	breakdowns: BreakdownSection[];
-	performance: BreakdownValue[];
+	breakdownGraph: Stat<Team>[];
+	gameCard: Stat<Game>[];
+	performance: Stat<Team>[];
+	scoreSummary: ScoreSummaryItem<Game>[];
+	gameDetailedBreakdowns: BreakdownSection[];
 }
 
-export interface ScoringSection {
+export type ScoringSection = {
 	id: string;
 	title: string;
 	color: string;
@@ -26,11 +28,11 @@ export interface ScoringSection {
 	fields: ScoringElements;
 }
 
-export interface Calculations {
+export type Calculations = {
 	[key: string]: string[];
 }
 
-export interface ScoringElement {
+export type ScoringElement = {
 	type: 'counter'|'enum'|'bool';
 	title: string;
 	color: string;
@@ -40,7 +42,7 @@ export interface ScoringElement {
 	defaultValue?: string;				// enum
 }
 
-interface ScoringElements {
+type ScoringElements = {
 	[key: string]: ScoringElement;
 }
 
@@ -50,39 +52,36 @@ export type DisplayInsight = {
 	isPositive: boolean
 }
 
-export interface Insight {
+export type Insight = {
 	check: (team: Team) => boolean;
 	text: string;
 	isPositive?: boolean;
 }
 
-interface BreakdownValue {
-	name: string;
-	val: string;
-	color: string;
-}
-
-interface GameCardValue {
-	name: string;
-	val: string;
-}
-
-interface BreakdownSection {
-	title: string;
-	stats: any;
-	extraStats: any;
-}
-
-interface BreakdownStat {
-	icon?: MaterialIcon;
+type Stat<T> = {
 	label: string;
-	value: number|string;
-	note?: string;
+	val: (item: T) => number;
 	color: string;
-}
+};
 
-interface BreakdownExtraStat {
-	color: string;
+type ScoreSummaryItem<T> = Overwrite<Stat<T>, {
+	label: (item: T) => string;
+}>;
+
+export type BreakdownSection = {
+	title: string;
+	stats: BreakdownStat<Game>[];
+	extraStats: ExtraStat<Game>[];
+};
+
+export type BreakdownStat<T> = Stat<T> & {
+	icon?: MaterialIcon;
+	note: (item: T) => string;
+};
+
+export type ExtraStat<T> = {
 	icon: MaterialIcon;
-	text: string;
-}
+	label: (item: T) => string;
+	color: string;
+};
+

@@ -7,6 +7,7 @@ import {MD2Colors} from "react-native-paper";
 import {CageLevel} from "@/lib/interfaces/CageLevel";
 import {ExtraBreakdownStat} from "@/lib/interfaces/BreakdownStats";
 import {BreakdownSection, ScoreItem} from "./Breakdown";
+import {chunkArray} from "@/lib/utilities";
 
 type DetailedGameProps = {
 	game: Game;
@@ -35,71 +36,17 @@ export const DetailedGame = ({game}: DetailedGameProps) => {
 };
 
 const ExpandedGameView = ({game}: DetailedGameProps) => {
+	const {gameDetailedBreakdowns} = game.game;
 	return <>
 		<ScoreSummary game={game}/>
-		<BreakdownSection
-			title="Coral Scoring Breakdown"
-			stats={[
-				{
-					label: 'L1',
-					value: game.getValue('corals_scored_l1'),
-					note: game.corals_scored_l1 + ' pts',
-					color: MD2Colors.red500,
-				},
-				{
-					label: 'L2',
-					value: game.getValue('corals_scored_l2'),
-					note: game.corals_scored_l2 + ' pts',
-					color: MD2Colors.orange500,
-				},
-				{
-					label: 'L3',
-					value: game.getValue('corals_scored_l3'),
-					note: game.corals_scored_l3 + ' pts',
-					color: MD2Colors.yellow500,
-				},
-				{
-					label: 'L4',
-					value: game.getValue('corals_scored_l4'),
-					note: game.corals_scored_l4 + ' pts',
-					color: MD2Colors.green500,
-				}
-			]}
-			extraStats={[
-				{icon: 'close', text: `Missed: ${game.getValue('corals_missed')}`, color: MD2Colors.red500},
-			]}/>
-		<BreakdownSection
-			title="Algae Scoring Breakdown"
-			stats={[
-				{label: 'Processed', value: game.getValue('algae_processed'), note: game.algae_processed + ' pts', color: MD2Colors.blue500,},
-				{label: 'Net', value: game.getValue('algae_net'), note: game.algae_net + ' pts', color: MD2Colors.cyan500,},
-			]}
-			extraStats={[
-				{icon: 'close', text: `Missed: Processed: ${game.getValue('algae_processed_missed')}, Net: ${game.getValue('algae_net_missed')}`, color: MD2Colors.red500},
-			]}/>
-		<BreakdownSection
-			title="Autonomous Performance"
-			stats={[
-				{label: 'Corals', value: game.autonomousCoralScore, color: MD2Colors.purple500,},
-				{label: 'Algae', value: game.autonomousAlgaeScore, color: MD2Colors.teal500,},
-			]}
-			extraStats={[
-				{
-					icon: 'auto-awesome',
-					text: `Autonomous Corals: L1: ${game.getValue('autonomous_corals_scored_l1')}, L2: ${game.getValue('autonomous_corals_scored_l2')}, L3: ${game.getValue('autonomous_corals_scored_l3')}, L4: ${game.getValue('autonomous_corals_scored_l4')}`,
-					color: MD2Colors.purple500,
-				},
-				{
-					icon: 'water-drop',
-					text: `Autonomous Algae: Processed: ${game.getValue('autonomous_algae_processed')} (Missed: ${game.getValue('autonomous_algae_processed_missed')}), Net: ${game.getValue('autonomous_algae_net')} (Missed: ${game.getValue('autonomous_algae_net_missed')})`,
-					color: MD2Colors.teal500
-				},
-				game.parkingScore > 0 && {
-					icon: 'local-parking',
-					text: `Cage Level: ${game.getValue('cage_level').toUpperCase() ?? 'N/A'} (+${game.parkingScore} points)`,
-					color: MD2Colors.amber500
-				},
-			].filter(Boolean) as ExtraBreakdownStat[]} />
+		{gameDetailedBreakdowns.map((breakdown, index) => (
+			<BreakdownSection
+				key={'game-' + game.gameNumber + '-breakdown-' + index}
+				title={breakdown.title}
+				stats={breakdown.stats}
+				extraStats={breakdown.extraStats}
+				game={game} />
+		))}
 		<Card>
 			<CardTitle>Autonomous Performance</CardTitle>
 			<Row>
@@ -111,16 +58,24 @@ const ExpandedGameView = ({game}: DetailedGameProps) => {
 };
 
 const ScoreSummary = ({game}: DetailedGameProps) => {
+	const {scoreSummary} = game.game;
+
+	const rows = chunkArray(scoreSummary, 2);
+
 	return <Card>
 		<CardTitle>Score Summary</CardTitle>
-		<Row>
-			<ScoreItem label="Total" score={game.totalScore} color={MD2Colors.amber500} />
-			<ScoreItem label="Teleop" score={game.teleopScore} color={MD2Colors.blue500} />
-		</Row>
-		<Row>
-			<ScoreItem label="Autonomous" score={game.autonomousScore} color={MD2Colors.green500} />
-			<ScoreItem label={(game.getValue('cage_level') || CageLevel.NONE).toUpperCase()} score={game.parkingScore} color={MD2Colors.orange500} />
-		</Row>
+		{rows.map((row, rowIndex) => (
+			<Row
+				key={'game-' + game.gameNumber + '-summary-row-' + rowIndex}>
+				{row.map((stat, statIndex) => (
+					<ScoreItem
+						key={'game-' + game.gameNumber + '-summary-' + statIndex}
+						label={stat.label(game)}
+						score={stat.val(game)}
+						color={stat.color} />
+				))}
+			</Row>
+		))}
 	</Card>;
 };
 
