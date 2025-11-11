@@ -6,10 +6,11 @@ import {ScoringElement} from "@/lib/components/game/ScoringElement";
 import gameStore from "@/lib/stores/gameStore";
 import {CageLevel} from "@/lib/interfaces/CageLevel";
 import {MD2Colors, RadioButton, TextInput} from "react-native-paper";
-import {BodyScroll, Subtitle, Icon, BeautifulButton} from "@ninjas-strategy/ui";
+import {BodyScroll, Subtitle, Icon, BeautifulButton, GameForm} from "@ninjas-strategy/ui";
 import {useGlobalSearchParams, useRouter} from "expo-router";
 import {action} from "mobx";
 import {KeyboardAvoidingView, Platform} from "react-native";
+import {games} from "@ninjas-strategy/frc-games";
 
 const Container = styled.SafeAreaView`
 	background-color: transparent;
@@ -44,7 +45,7 @@ const TeamInfoInputIcon = styled(Icon)`
 export default observer(function TeleopPage() {
 	const router = useRouter();
 	const {eventId} = useGlobalSearchParams();
-	const {algae_net, algae_net_missed, algae_processed, algae_processed_missed, cage_level, teamNumber, gameNumber} = gameStore;
+	const {data, updateValue, teamNumber, gameNumber} = gameStore;
 
 	return <KeyboardAvoidingView
 		behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -55,70 +56,11 @@ export default observer(function TeleopPage() {
 				subtitle="Drivers control"
 				iconLeft="gamepad"/>
 			<BodyScroll>
-				<ScoringCategory
-					color={MD2Colors.green500}
-					title="Algae Collection"
-					icon="grass">
-					<ScoringElement
-						title="Net"
-						color={MD2Colors.blue500}
-						missed={algae_net_missed}
-						scored={algae_net}
-						setMissed={action(missed => gameStore.algae_net_missed = missed)}
-						setScored={action(scored => gameStore.algae_net = scored)}/>
-					<ScoringElement
-						title="Processor"
-						color={MD2Colors.green500}
-						missed={algae_processed_missed}
-						scored={algae_processed}
-						setMissed={action(missed => gameStore.algae_processed_missed = missed)}
-						setScored={action(scored => gameStore.algae_processed = scored)}/>
-				</ScoringCategory>
-				<ScoringCategory
-					color={MD2Colors.white}
-					title="Coral Scoring"
-					icon="sports-volleyball">
-					<ScoringElement
-						title={"Level " + 4}
-						color={MD2Colors.purple500}
-						missed={gameStore.corals_missed_l4}
-						setMissed={action(missed => gameStore.corals_missed_l4 = missed)}
-						scored={gameStore.corals_scored_l4}
-						setScored={action(scored => gameStore.corals_scored_l4 = scored)}/>
-					<ScoringElement
-						title={"Level " + 3}
-						color={MD2Colors.blue500}
-						missed={gameStore.corals_missed_l3}
-						setMissed={action(missed => gameStore.corals_missed_l3 = missed)}
-						scored={gameStore.corals_scored_l3}
-						setScored={action(scored => gameStore.corals_scored_l3 = scored)}/>
-					<ScoringElement
-						title={"Level " + 2}
-						color={MD2Colors.green500}
-						missed={gameStore.corals_missed_l2}
-						setMissed={action(missed => gameStore.corals_missed_l2 = missed)}
-						scored={gameStore.corals_scored_l2}
-						setScored={action(scored => gameStore.corals_scored_l2 = scored)}/>
-					<ScoringElement
-						title={"Level " + 1}
-						color={MD2Colors.orange500}
-						missed={gameStore.corals_missed_l1}
-						setMissed={action(missed => gameStore.corals_missed_l1 = missed)}
-						scored={gameStore.corals_scored_l1}
-						setScored={action(scored => gameStore.corals_scored_l1 = scored)}/>
-				</ScoringCategory>
-				<ScoringCategory
-					color={MD2Colors.blue500}
-					title="Cage Level"
-					icon="water-drop">
-					<RadioButton.Group
-						onValueChange={action(value => gameStore.cage_level = (value as CageLevel))} value={cage_level}>
-						{Object.values(CageLevel).map(level => <CageLevelContainer key={level} isSelected={cage_level === level}>
-							<RadioButton value={level} color={MD2Colors.blue500} />
-							<Subtitle>{level}</Subtitle>
-						</CageLevelContainer>)}
-					</RadioButton.Group>
-				</ScoringCategory>
+				<GameForm
+					{...games[2025]}
+					phase="teleop"
+					data={data}
+					setData={(key, value) => updateValue(key, value)} />
 				<ScoringCategory
 					color={MD2Colors.white}
 					title="Team Information"

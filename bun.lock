@@ -16,6 +16,7 @@
       "dependencies": {
         "@expo/metro-runtime": "~6.1.2",
         "@expo/vector-icons": "^15.0.3",
+        "@ninjas-strategy/frc-games": "workspace:*",
         "@ninjas-strategy/ui": "workspace:*",
         "@react-native-async-storage/async-storage": "2.2.0",
         "@react-native-community/netinfo": "11.4.1",
@@ -80,11 +81,19 @@
         "typescript": "~5.9.2",
       },
     },
+    "packages/frc-games": {
+      "name": "@ninjas-strategy/frc-games",
+      "version": "1.0.0",
+      "devDependencies": {
+        "@types/bun": "latest",
+      },
+    },
     "packages/ui": {
       "name": "@ninjas-strategy/ui",
       "version": "1.0.0",
       "dependencies": {
         "@expo/vector-icons": "^15.0.3",
+        "@ninjas-strategy/frc-games": "workspace:*",
         "expo-linear-gradient": "~15.0.7",
         "mobx": "^6.15.0",
         "mobx-react-lite": "^4.1.1",
@@ -708,6 +717,8 @@
     "@module-federation/webpack-bundler-runtime": ["@module-federation/webpack-bundler-runtime@0.18.4", "", { "dependencies": { "@module-federation/runtime": "0.18.4", "@module-federation/sdk": "0.18.4" } }, "sha512-nPHp2wRS4/yfrGRQchZ0cyvdUZk+XgUmD0qWQl95xmeIeXUb90s3JrWFHSmS6Dt1gwMgJOeNpzzZDcBSy2P1VQ=="],
 
     "@napi-rs/wasm-runtime": ["@napi-rs/wasm-runtime@0.2.4", "", { "dependencies": { "@emnapi/core": "^1.1.0", "@emnapi/runtime": "^1.1.0", "@tybys/wasm-util": "^0.9.0" } }, "sha512-9zESzOO5aDByvhIAsOy9TbpZ0Ur2AJbUI7UT73kcUTS2mxAMHOBaa1st/jAymNoCtvrit99kkzT1FZuXVcgfIQ=="],
+
+    "@ninjas-strategy/frc-games": ["@ninjas-strategy/frc-games@workspace:packages/frc-games"],
 
     "@ninjas-strategy/ui": ["@ninjas-strategy/ui@workspace:packages/ui"],
 

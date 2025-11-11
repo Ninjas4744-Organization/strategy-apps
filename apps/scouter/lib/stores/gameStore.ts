@@ -1,43 +1,16 @@
-import {action, computed, makeObservable, observable} from "mobx";
+import {action, makeObservable, observable} from "mobx";
 import {db} from "@/lib/firebase/firestore";
 import {doc, getDoc, setDoc, serverTimestamp} from "firebase/firestore";
-import {pick} from "@/lib/utilities";
-import {CageLevel} from "@/lib/interfaces/CageLevel";
 import {OfflineQueue} from "@/lib/OfflineQueue";
 import {showSnackbar} from "@ninjas-strategy/ui";
 import userStore from "@/lib/stores/userStore";
+import {initGameData} from "@ninjas-strategy/frc-games";
 
 const MAX_TEAM_NUMBER = 20000;
 const MAX_QUALIFICATION_MATCH_NUMBER = 150;
 
 class GameStore {
-	@observable autonomous_algae_processed: number = 0;
-	@observable autonomous_algae_net: number = 0;
-	@observable autonomous_processed_missed: number = 0;
-	@observable autonomous_net_missed: number = 0;
-	@observable autonomous_corals_scored_l1: number = 0;
-	@observable autonomous_corals_scored_l2: number = 0;
-	@observable autonomous_corals_scored_l3: number = 0;
-	@observable autonomous_corals_scored_l4: number = 0;
-	@observable autonomous_corals_missed_l1: number = 0;
-	@observable autonomous_corals_missed_l2: number = 0;
-	@observable autonomous_corals_missed_l3: number = 0;
-	@observable autonomous_corals_missed_l4: number = 0;
-
-	@observable algae_processed: number = 0;
-	@observable algae_net: number = 0;
-	@observable algae_processed_missed: number = 0;
-	@observable algae_net_missed: number = 0;
-	@observable corals_scored_l1: number = 0;
-	@observable corals_scored_l2: number = 0;
-	@observable corals_scored_l3: number = 0;
-	@observable corals_scored_l4: number = 0;
-	@observable corals_missed_l1: number = 0;
-	@observable corals_missed_l2: number = 0;
-	@observable corals_missed_l3: number = 0;
-	@observable corals_missed_l4: number = 0;
-
-	@observable cage_level: CageLevel = CageLevel.NONE;
+	@observable data: Record<string, any> = {};
 
 	@observable teamNumber: string = '';
 	@observable gameNumber: string = '';
@@ -49,58 +22,13 @@ class GameStore {
 
 	@action
 	reset() {
-		this.autonomous_algae_processed = this.algae_processed = this.algae_processed_missed =
-			this.autonomous_algae_net = this.algae_net = this.algae_net_missed =
-				this.autonomous_processed_missed = this.autonomous_net_missed = 0;
-		this.autonomous_corals_missed_l1 =
-			this.autonomous_corals_missed_l2 =
-			this.autonomous_corals_missed_l3 =
-			this.autonomous_corals_missed_l4 =
-			this.autonomous_corals_scored_l1 =
-			this.autonomous_corals_scored_l2 =
-			this.autonomous_corals_scored_l3 =
-			this.autonomous_corals_scored_l4 =
-			this.corals_missed_l1 =
-			this.corals_missed_l2 =
-			this.corals_missed_l3 =
-			this.corals_missed_l4 =
-			this.corals_scored_l1 =
-			this.corals_scored_l2 =
-			this.corals_scored_l3 =
-			this.corals_scored_l4 = 0;
-
+		this.data = initGameData(2025);
 		this.teamNumber = this.gameNumber = '';
 	}
 
-	@computed
-	get gameData() {
-		return pick(this, [
-			'autonomous_algae_processed',
-			'algae_processed',
-			'algae_net',
-			'autonomous_algae_net',
-			'autonomous_processed_missed',
-			'autonomous_net_missed',
-			'autonomous_corals_scored_l1',
-			'autonomous_corals_scored_l2',
-			'autonomous_corals_scored_l3',
-			'autonomous_corals_scored_l4',
-			'autonomous_corals_missed_l1',
-			'autonomous_corals_missed_l2',
-			'autonomous_corals_missed_l3',
-			'autonomous_corals_missed_l4',
-			'corals_scored_l1',
-			'corals_scored_l2',
-			'corals_scored_l3',
-			'corals_scored_l4',
-			'corals_missed_l1',
-			'corals_missed_l2',
-			'corals_missed_l3',
-			'corals_missed_l4',
-			'algae_processed_missed',
-			'algae_net_missed',
-			'cage_level',
-		]);
+	@action.bound
+	updateValue(field: string, value: any) {
+		this.data[field] = value;
 	}
 
 	@action.bound
@@ -122,7 +50,7 @@ class GameStore {
 				});
 			const gameRef = doc(teamRef, 'games', this.gameNumber!);
 			await setDoc(gameRef, {
-				...this.gameData,
+				...this.data,
 				team_number: this.teamNumber,
 				game_number: this.gameNumber,
 				scouter_id: userStore.user?.uid,
@@ -131,7 +59,7 @@ class GameStore {
 			showSnackbar('Data sent! Starting new match...');
 		} catch (e) {
 			await OfflineQueue.saveUnsentGameData({
-				...this.gameData,
+				...this.data,
 				team_number: +this.teamNumber,
 				game_number: +this.gameNumber,
 				scouter_id: userStore.user?.uid,

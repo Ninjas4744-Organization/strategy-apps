@@ -3,6 +3,7 @@
 	"private": true,
 	"version": "1.0.0",
 	"dependencies": {
+		"@ninjas-strategy/frc-games": "workspace:*",
 		"@expo/vector-icons": "^15.0.3",
 		"expo-linear-gradient": "~15.0.7",
 		"mobx": "^6.15.0",
