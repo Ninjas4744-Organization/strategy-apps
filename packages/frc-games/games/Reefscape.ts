@@ -1,5 +1,6 @@
 import type {FRCGame} from "../types";
 import {MD2Colors} from "react-native-paper";
+import {Game} from "../calculations";
 
 enum CageLevel {
 	NONE = 'none',
@@ -299,7 +300,7 @@ export const Reefscape: FRCGame = {
 			color: MD2Colors.green500,
 		},
 		{
-			label: game => (game.getValue('cage_level') || CageLevel.NONE).toUpperCase(),
+			label: game => cageLevel(game).toUpperCase(),
 			val: game => game.parkingScore,
 			color: MD2Colors.orange500,
 		},
@@ -394,11 +395,102 @@ export const Reefscape: FRCGame = {
 				},
 				{
 					icon: 'local-parking',
-					label: game => `Cage Level: ${game.getValue('cage_level').toUpperCase() ?? 'N/A'} (+${game.parkingScore} points)`,
+					label: game => `Cage Level: ${cageLevel(game).toUpperCase() ?? 'N/A'} (+${game.parkingScore} points)`,
 					color: MD2Colors.amber500,
 				},
 			]
 		},
 	],
-
+	teamDetailedBreakdowns: [
+		{
+			title: 'Team Performance Summary',
+			stats: [
+				{
+					label: 'Games Played',
+					val: team => team.games.length.toString(),
+					color: MD2Colors.blue500,
+					icon: 'sports-esports'
+				},
+				{
+					label: 'Avg Total',
+					val: team => team.averageTotalScore.toFixed(1),
+					color: MD2Colors.amber500,
+					icon: 'trending-up',
+				},
+				{
+					label: 'Avg Teleop',
+					val: team => team.getAverageScore('teleopScore').toFixed(1),
+					color: MD2Colors.green500,
+					icon: 'sports',
+				},
+				{
+					label: 'Avg Auto',
+					val: team => team.getAverageScore('autonomousScore').toFixed(1),
+					color: MD2Colors.purple500,
+					icon: 'auto-awesome',
+				},
+				{
+					label: 'Avg Cage Score',
+					val: team => team.getAverageScore('parkingScore').toFixed(1),
+					color: MD2Colors.amber500,
+					icon: 'local-parking',
+				},
+				{
+					label: 'Cage Games',
+					val: team => {
+						const cageGames = team.games.filter(game => game.cageLevel !== CageLevel.NONE).length;
+						return `${cageGames}/${team.games.length}`;
+					},
+					color: MD2Colors.orange500,
+					icon: 'check-circle',
+				},
+			],
+			extraStats: [],
+			itemsPerRow: 2,
+		},
+		{
+			title: 'Coral Scoring Averages',
+			stats: [
+				{
+					label: 'L1',
+					val: team => team.getAverageValue('corals_scored_l1').toFixed(1),
+					color: MD2Colors.red500
+				},
+				{
+					label: 'L2',
+					val: team => team.getAverageValue('corals_scored_l2').toFixed(1),
+					color: MD2Colors.orange500
+				},
+				{
+					label: 'L3',
+					val: team => team.getAverageValue('corals_scored_l3').toFixed(1),
+					color: MD2Colors.yellow500
+				},
+				{
+					label: 'L4',
+					val: team => team.getAverageValue('corals_scored_l4').toFixed(1),
+					color: MD2Colors.green500
+				}
+			],
+			extraStats: [],
+		},
+		{
+			title: 'Algae Scoring Averages',
+			stats: [
+				{
+					label: 'Processed',
+					val: team => team.getAverageValue('algae_processed').toFixed(1),
+					color: MD2Colors.blue500
+				},
+				{
+					label: 'Net',
+					val: team => team.getAverageValue('algae_net').toFixed(1),
+					color: MD2Colors.cyan500
+				},
+			],
+			extraStats: [],
+		},
+	],
 };
+
+const cageLevel = (game: Game) => game.getValue('cage_level') || CageLevel.NONE;

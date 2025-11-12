@@ -35,15 +35,15 @@ const BreakdownStatNote = styled.Text<{color: string}>`
 	font-size: 8px;
 `;
 
-type BreakdownSectionProps = {
+type BreakdownSectionProps<T> = {
 	title: string;
-	stats: BreakdownStat<Game>[];
-	game: Game;
-	extraStats: ExtraStat<Game>[];
+	stats: BreakdownStat<T>[];
+	item: T;
+	extraStats: ExtraStat<T>[];
 	itemsPerRow?: number;
 };
 
-export const BreakdownSection = ({title, stats, game, extraStats, itemsPerRow = 0}: BreakdownSectionProps) => {
+export function BreakdownSection<T>({title, stats, item, extraStats, itemsPerRow = 0}: BreakdownSectionProps<T>) {
 	const [breakdownItemsWidth, setBreakdownItemsWidth] = useState(0);
 
 	const handleLayout = (event: LayoutChangeEvent) => {
@@ -56,41 +56,48 @@ export const BreakdownSection = ({title, stats, game, extraStats, itemsPerRow = 
 	return <Card>
 		<CardTitle>{title}</CardTitle>
 		<Col onLayout={handleLayout}>
-			{rows.map((row, index) => <BreakdownRow key={'row-' + index} game={game} stats={row} />)}
+			{rows.map((row, index) => (
+				<BreakdownRow<T>
+					key={'row-' + index}
+					item={item}
+					stats={row} />
+			))}
 		</Col>
 		<Col>
 			{extraStats.filter(Boolean).map((stat, index) => (
-				<ExtraBreakdownStatView
+				<ExtraBreakdownStatView<T>
 					key={title + '-stat-' + index}
 					width={breakdownItemsWidth}
 					{...stat}
-					game={game}/>
+					item={item}/>
 			))}
 		</Col>
 	</Card>;
+}
+
+type BreakdownRowProps<T> = {
+	stats: BreakdownStat<T>[];
+	item: T;
 };
 
-type BreakdownRowProps = {
-	stats: BreakdownStat<Game>[];
-	game: Game;
-};
-
-export const BreakdownRow = ({stats, game}: BreakdownRowProps) => (
-	<Row>
-		{stats.map((stat, index) => (
-			<BreakdownStatContainer
-				key={stat.label + '_' + index}
-				color={stat.color}>
-				<Col>
-					{stat.icon && <BreakdownStatIcon name={stat.icon} color={stat.color}/>}
-					<BreakdownStatValue color={stat.color}>{stat.val(game)}</BreakdownStatValue>
-					<BreakdownStatLabel color={stat.color}>{stat.label}</BreakdownStatLabel>
-					{stat.note && <BreakdownStatNote color={stat.color}>{stat.note(game)}</BreakdownStatNote>}
-				</Col>
-			</BreakdownStatContainer>
-		))}
-	</Row>
-);
+export function BreakdownRow<T>({stats, item}: BreakdownRowProps<T>) {
+	return (
+		<Row>
+			{stats.map((stat, index) => (
+				<BreakdownStatContainer
+					key={stat.label + '_' + index}
+					color={stat.color}>
+					<Col>
+						{stat.icon && <BreakdownStatIcon name={stat.icon} color={stat.color}/>}
+						<BreakdownStatValue color={stat.color}>{stat.val(item)}</BreakdownStatValue>
+						<BreakdownStatLabel color={stat.color}>{stat.label}</BreakdownStatLabel>
+						{stat.note && <BreakdownStatNote color={stat.color}>{stat.note(item)}</BreakdownStatNote>}
+					</Col>
+				</BreakdownStatContainer>
+			))}
+		</Row>
+	)
+}
 
 const ExtraBreakdownStatContainer = styled.View<{color: string, width: number}>`
 	width: ${props => props.width}px;
@@ -114,21 +121,23 @@ const ExtraBreakdownStatText = styled.Text<{color: string}>`
 	flex-wrap: wrap;
 `;
 
-type ExtraBreakdownStatProps = ExtraStat<Game> & {
-	game: Game;
+type ExtraBreakdownStatProps<T> = ExtraStat<T> & {
+	item: T;
 	width: number;
 };
 
-const ExtraBreakdownStatView = ({color, icon, label, game, width}: ExtraBreakdownStatProps) => {
-	return <ExtraBreakdownStatContainer color={color} width={width}>
-		<ExtraBreakdownStatIcon color={color} name={icon} />
-		<ExtraBreakdownStatText color={color}>{label(game)}</ExtraBreakdownStatText>
-	</ExtraBreakdownStatContainer>;
-};
+function ExtraBreakdownStatView<T>({color, icon, label, item, width}: ExtraBreakdownStatProps<T>) {
+	return (
+		<ExtraBreakdownStatContainer color={color} width={width}>
+			<ExtraBreakdownStatIcon color={color} name={icon} />
+			<ExtraBreakdownStatText color={color}>{label(item)}</ExtraBreakdownStatText>
+		</ExtraBreakdownStatContainer>
+	);
+}
 
 type ScoreItemProps = {
 	label: string;
-	score: number;
+	score: string;
 	color: string;
 };
 

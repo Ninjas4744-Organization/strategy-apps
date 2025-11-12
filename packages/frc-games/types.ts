@@ -12,11 +12,12 @@ export type FRCGame = {
 	recommendations: Insight[];
 	strengths: Insight[];
 	weaknesses: Insight[];
-	breakdownGraph: Stat<Team>[];
+	breakdownGraph: NumberStat<Team>[];
 	gameCard: Stat<Game>[];
-	performance: Stat<Team>[];
+	performance: NumberStat<Team>[];
 	scoreSummary: ScoreSummaryItem<Game>[];
-	gameDetailedBreakdowns: BreakdownSection[];
+	gameDetailedBreakdowns: BreakdownSection<Game>[];
+	teamDetailedBreakdowns: BreakdownSection<Team>[];
 }
 
 export type ScoringSection = {
@@ -60,23 +61,26 @@ export type Insight = {
 
 type Stat<T> = {
 	label: string;
-	val: (item: T) => number;
+	val: (item: T) => string;
 	color: string;
 };
+
+type NumberStat<T> = Overwrite<Stat<T>, {val: (item: T) => number}>;
 
 type ScoreSummaryItem<T> = Overwrite<Stat<T>, {
 	label: (item: T) => string;
 }>;
 
-export type BreakdownSection = {
+export type BreakdownSection<T> = {
 	title: string;
-	stats: BreakdownStat<Game>[];
-	extraStats: ExtraStat<Game>[];
+	stats: BreakdownStat<T>[];
+	extraStats: ExtraStat<T>[];
+	itemsPerRow?: number;
 };
 
 export type BreakdownStat<T> = Stat<T> & {
 	icon?: MaterialIcon;
-	note: (item: T) => string;
+	note?: (item: T) => string;
 };
 
 export type ExtraStat<T> = {

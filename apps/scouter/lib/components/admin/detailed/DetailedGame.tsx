@@ -4,8 +4,6 @@ import {useState} from "react";
 import {TouchableOpacity} from "react-native";
 import {Card, CardTitle, Row, Icon, Subtitle} from "@ninjas-strategy/ui";
 import {MD2Colors} from "react-native-paper";
-import {CageLevel} from "@/lib/interfaces/CageLevel";
-import {ExtraBreakdownStat} from "@/lib/interfaces/BreakdownStats";
 import {BreakdownSection, ScoreItem} from "./Breakdown";
 import {chunkArray} from "@/lib/utilities";
 
@@ -40,12 +38,12 @@ const ExpandedGameView = ({game}: DetailedGameProps) => {
 	return <>
 		<ScoreSummary game={game}/>
 		{gameDetailedBreakdowns.map((breakdown, index) => (
-			<BreakdownSection
+			<BreakdownSection<Game, number>
 				key={'game-' + game.gameNumber + '-breakdown-' + index}
 				title={breakdown.title}
 				stats={breakdown.stats}
 				extraStats={breakdown.extraStats}
-				game={game} />
+				item={game} />
 		))}
 		<Card>
 			<CardTitle>Autonomous Performance</CardTitle>
