@@ -9,7 +9,7 @@ export class Event implements Model {
 		public startDate: string,
 		public endDate: string,
 		public country: string,
-		public teams: Team[] = []
+		public teams: string[],
 	) {}
 
 	static fromMap(id: string, data: Record<string, any>): Event {
@@ -20,6 +20,7 @@ export class Event implements Model {
 			data.start_date,
 			data.end_date,
 			data.country,
+			data.teams,
 		);
 	}
 
@@ -30,6 +31,7 @@ export class Event implements Model {
 			start_date: this.startDate,
 			end_date: this.endDate,
 			country: this.country,
+			teams: this.teams,
 		};
 	}
 }

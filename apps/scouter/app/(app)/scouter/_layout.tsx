@@ -8,12 +8,12 @@ import userStore from "@/lib/stores/userStore";
 
 export default observer(function ScouterLayout() {
 	const {isLoading, subscribe, unsubscribe} = eventsStore;
-	const {userData, isAdmin} = userStore;
+	const {user, isAdmin} = userStore;
 
 	useEffect(() => {
 		subscribe();
 		return () => unsubscribe();
-	}, [userData]);
+	}, [user]);
 
 	if (isAdmin) {
 		return <Redirect href="/(app)/admin" />;

@@ -11,7 +11,7 @@ class UserStore {
 	@observable isLoading: boolean = true;
 
 	@observable userData: UserData | null = null;
-	userDataUnsubscribe: (() => void) | null = null;
+	private _unsubscribe: (() => void) | null = null;
 
 	constructor() {
 		makeObservable(this);
@@ -50,8 +50,8 @@ class UserStore {
 
 	@action.bound
 	subscribe() {
-		if (this.userDataUnsubscribe) {
-			this.userDataUnsubscribe();
+		if (this._unsubscribe) {
+			this._unsubscribe();
 		}
 
 		if (!this.user) {
@@ -61,7 +61,7 @@ class UserStore {
 		const userRef = doc(db, 'users', this.user.uid);
 
 		this.isLoading = true;
-		this.userDataUnsubscribe = onSnapshot(userRef, snapshot => {
+		this._unsubscribe = onSnapshot(userRef, snapshot => {
 			runInAction(() => {
 				if (snapshot.exists()) {
 					this.userData = snapshot.data() as UserData;
@@ -75,9 +75,9 @@ class UserStore {
 
 	@action.bound
 	unsubscribe() {
-		if (this.userDataUnsubscribe) {
-			this.userDataUnsubscribe();
-			this.userDataUnsubscribe = null;
+		if (this._unsubscribe) {
+			this._unsubscribe();
+			this._unsubscribe = null;
 		}
 	}
 

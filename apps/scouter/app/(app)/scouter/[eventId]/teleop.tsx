@@ -2,15 +2,16 @@ import styled from "styled-components/native";
 import {observer} from "mobx-react-lite";
 import {SectionTitle} from "@/lib/components/game/SectionTitle";
 import {ScoringCategory} from "@/lib/components/game/ScoringCategory";
-import {ScoringElement} from "@/lib/components/game/ScoringElement";
 import gameStore from "@/lib/stores/gameStore";
-import {CageLevel} from "@/lib/interfaces/CageLevel";
-import {MD2Colors, RadioButton, TextInput} from "react-native-paper";
-import {BodyScroll, Subtitle, Icon, BeautifulButton, GameForm} from "@ninjas-strategy/ui";
+import {MD2Colors, TextInput} from "react-native-paper";
+import {BodyScroll, Icon, BeautifulButton, GameForm} from "@ninjas-strategy/ui";
 import {useGlobalSearchParams, useRouter} from "expo-router";
 import {action} from "mobx";
-import {KeyboardAvoidingView, Platform} from "react-native";
+import {KeyboardAvoidingView, Platform, TouchableOpacity, TouchableWithoutFeedback} from "react-native";
 import {games} from "@ninjas-strategy/frc-games";
+import eventsStore from "@/lib/stores/eventsStore";
+import {TeamDropdown} from "@/lib/components/game/TeamDropdown";
+import {useState} from "react";
 
 const Container = styled.SafeAreaView`
 	background-color: transparent;
@@ -18,18 +19,6 @@ const Container = styled.SafeAreaView`
 	flex-direction: column;
 	flex: 1;
 	padding: 8px;
-`;
-
-const CageLevelContainer = styled.View<{isSelected: boolean}>`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 16px;
-    background-color: ${props => props.isSelected ? (MD2Colors.blue500 + '20') : 'transparent'};
-    border-radius: 12px;
-    border-width: 1px;
-    border-color: ${props => MD2Colors.blue500 + (props.isSelected ? '' : '20')};
-    margin-bottom: 8px;
 `;
 
 const TeamInfoInput = styled(TextInput)`
@@ -45,7 +34,11 @@ const TeamInfoInputIcon = styled(Icon)`
 export default observer(function TeleopPage() {
 	const router = useRouter();
 	const {eventId} = useGlobalSearchParams();
+	const [teamDropdownVisible, setTeamDropdownVisible] = useState(false);
 	const {data, updateValue, teamNumber, gameNumber} = gameStore;
+	const {events} = eventsStore;
+
+	const event = events[eventId as string];
 
 	return <KeyboardAvoidingView
 		behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -65,13 +58,20 @@ export default observer(function TeleopPage() {
 					color={MD2Colors.white}
 					title="Team Information"
 					icon="info">
-					<TeamInfoInput
-						label="Team Number"
-						keyboardType="number-pad"
-						value={teamNumber}
-						onChangeText={action(number => gameStore.teamNumber = number)}
-						left={<TextInput.Icon icon={() => <TeamInfoInputIcon name="group" />} />}
-						underlineStyle={{display: 'none'}}/>
+					<TeamDropdown
+						teams={event?.teams || []}
+						visible={teamDropdownVisible}
+						setVisible={setTeamDropdownVisible}
+						onSelect={action(number => gameStore.teamNumber = number)}>
+						<TeamInfoInput
+							label="Team Number"
+							editable={false}
+							pointerEvents="none"
+							value={teamNumber ? `Team ${teamNumber}` : 'Select team'}
+							left={<TextInput.Icon icon={() => <TeamInfoInputIcon name="group" />} />}
+							right={<TextInput.Icon icon="chevron-down"/>}
+							underlineStyle={{display: 'none'}}/>
+					</TeamDropdown>
 					<TeamInfoInput
 						label="Game Number"
 						keyboardType="number-pad"
