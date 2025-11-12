@@ -38,7 +38,7 @@ const ExpandedGameView = ({game}: DetailedGameProps) => {
 	return <>
 		<ScoreSummary game={game}/>
 		{gameDetailedBreakdowns.map((breakdown, index) => (
-			<BreakdownSection<Game, number>
+			<BreakdownSection<Game>
 				key={'game-' + game.gameNumber + '-breakdown-' + index}
 				title={breakdown.title}
 				stats={breakdown.stats}

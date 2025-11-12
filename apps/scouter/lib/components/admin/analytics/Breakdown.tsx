@@ -15,6 +15,7 @@ export const Breakdown = ({team}: AdminTabProps) => {
 		<PieChart
 			data={team.game.breakdownGraph.map(graph => ({
 				...graph,
+				name: graph.label,
 				val: graph.val(team),
 				legendFontColor: MD2Colors.white,
 			}))}
