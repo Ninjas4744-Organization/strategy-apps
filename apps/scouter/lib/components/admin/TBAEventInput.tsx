@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useState} from "react";
+import {useCallback, useMemo, useState} from "react";
 import {FlatList, TouchableOpacity, View} from "react-native";
 import {ActivityIndicator, Divider, List, Modal, Portal, Text, useTheme, Button} from "react-native-paper";
 import axios from "axios";

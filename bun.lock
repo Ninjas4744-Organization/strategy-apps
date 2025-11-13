@@ -28,6 +28,7 @@
         "expo-constants": "~18.0.10",
         "expo-linear-gradient": "~15.0.7",
         "expo-linking": "~8.0.8",
+        "expo-localization": "~17.0.7",
         "expo-router": "~6.0.14",
         "expo-status-bar": "~3.0.8",
         "firebase": "^12.3.0",
@@ -1746,6 +1747,8 @@
 
     "expo-linking": ["expo-linking@8.0.8", "", { "dependencies": { "expo-constants": "~18.0.8", "invariant": "^2.2.4" }, "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-MyeMcbFDKhXh4sDD1EHwd0uxFQNAc6VCrwBkNvvvufUsTYFq3glTA9Y8a+x78CPpjNqwNAamu74yIaIz7IEJyg=="],
 
+    "expo-localization": ["expo-localization@17.0.7", "", { "dependencies": { "rtl-detect": "^1.0.2" }, "peerDependencies": { "expo": "*", "react": "*" } }, "sha512-ACg1B0tJLNa+f8mZfAaNrMyNzrrzHAARVH1sHHvh+LolKdQpgSKX69Uroz1Llv4C71furpwBklVStbNcEwVVVA=="],
+
     "expo-modules-autolinking": ["expo-modules-autolinking@3.0.21", "", { "dependencies": { "@expo/spawn-async": "^1.7.2", "chalk": "^4.1.0", "commander": "^7.2.0", "require-from-string": "^2.0.2", "resolve-from": "^5.0.0" }, "bin": { "expo-modules-autolinking": "bin/expo-modules-autolinking.js" } }, "sha512-pOtPDLln3Ju8DW1zRW4OwZ702YqZ8g+kM/tEY1sWfv22kWUtxkvK+ytRDRpRdnKEnC28okbhWqeMnmVkSFzP6Q=="],
 
     "expo-modules-core": ["expo-modules-core@3.0.25", "", { "dependencies": { "invariant": "^2.2.4" }, "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-0P8PT8UV6c5/+p8zeVM/FXvBgn/ErtGcMaasqUgbzzBUg94ktbkIrij9t9reGCrir03BYt/Bcpv+EQtYC8JOug=="],
@@ -2763,6 +2766,8 @@
     "rollup-pluginutils": ["rollup-pluginutils@2.8.2", "", { "dependencies": { "estree-walker": "^0.6.1" } }, "sha512-EEp9NhnUkwY8aif6bxgovPHMoMoNr2FulJziTndpt5H9RdwC47GSGuII9XxpSdzVGM0GWrNPHV6ie1LTNJPaLQ=="],
 
     "rslog": ["rslog@1.3.0", "", {}, "sha512-93DpwwaiRrLz7fJ5z6Uwb171hHBws1VVsWjU6IruLFX63BicLA44QNu0sfn3guKHnBHZMFSKO8akfx5QhjuegQ=="],
+
+    "rtl-detect": ["rtl-detect@1.1.2", "", {}, "sha512-PGMBq03+TTG/p/cRB7HCLKJ1MgDIi07+QU1faSjiYRfmY5UsAttV9Hs08jDAHVwcOwmVLcSJkpwyfXszVjWfIQ=="],
 
     "run-parallel": ["run-parallel@1.2.0", "", { "dependencies": { "queue-microtask": "^1.2.2" } }, "sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA=="],
 
