@@ -24,7 +24,7 @@ export default observer(function ScouterIndex() {
 						<HeaderButtons buttons={[{onPress: () => signOut().then(() => router.push('/')), icon: 'logout'}]} />
 					)}}/>
 			{events && Object.values(events).map((event) => (
-				<EventItem key={event.id} route={`/scouter/${event.id}/autonomous`} {...event} />
+				<EventItem key={event.id} route={`/scouter/${event.id}/0`} {...event} />
 			))}
 		</ScrollView>
 	);

@@ -1,11 +1,12 @@
 import styled, {css} from "styled-components/native";
 import {TextSection, Title, Subtitle, Icon} from "@ninjas-strategy/ui";
-import {usePathname} from "expo-router";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import type {EdgeInsets} from "react-native-safe-area-context";
 import {MD2Colors} from "react-native-paper";
 import {observer} from "mobx-react-lite";
 import userStore from "@/lib/stores/userStore";
+import {useLocalSearchParams} from "expo-router";
+import eventsStore from "@/lib/stores/eventsStore";
 
 const HeaderContainer = styled.View<{insets: EdgeInsets}>`
 	padding-top: ${props => props.insets.top}px;
@@ -36,17 +37,14 @@ const AppBarIcon = styled(Icon)`
 
 export const Header = observer(() => {
 	const {signOut} = userStore;
-	const pathname = usePathname();
-	const isAuto = pathname.endsWith('autonomous');
 	const insets = useSafeAreaInsets();
+	const {eventId} = useLocalSearchParams();
+	const event = eventsStore.events[eventId as string];
 
 	return <HeaderContainer insets={insets}>
-		<IconContainer>
-			<AppBarIcon name="sports-esports" />
-		</IconContainer>
 		<TextSection>
-			<Title>FRC Scouting App</Title>
-			<Subtitle>{isAuto ? 'Autonomous Phase' : 'Teleop Phase'}</Subtitle>
+			<Title>{event.name}</Title>
+			<Subtitle>{eventId}</Subtitle>
 		</TextSection>
 		<NextPageIconContainer onPress={() => signOut()}>
 			<AppBarIcon name="logout" />

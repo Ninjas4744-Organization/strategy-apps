@@ -4,7 +4,8 @@ import {Game, Team} from "./calculations";
 type Overwrite<T, U> = Pick<T, Exclude<keyof T, keyof U>> & U;
 
 export type FRCGame = {
-	sections: ScoringSection[];
+	sections: Sections;
+	pages: Page[];
 	fieldCalculations: Calculations;
 	totalCalculations: Calculations;
 	totalScore: string[];
@@ -18,20 +19,31 @@ export type FRCGame = {
 	scoreSummary: ScoreSummaryItem<Game>[];
 	gameDetailedBreakdowns: BreakdownSection<Game>[];
 	teamDetailedBreakdowns: BreakdownSection<Team>[];
-}
+};
+
+export type Page = {
+	title: string;
+	description: string;
+	icon: MaterialIcon;
+	phase: Phase;
+	sections: (game: Record<string, any>) => string[];
+};
 
 export type ScoringSection = {
 	id: string;
 	title: string;
 	color: string;
 	icon: MaterialIcon;
-	phase: 'autonomous' | 'teleop';
 	fields: ScoringElements;
-}
+};
+
+export type Sections = {
+	[key: string]: ScoringSection;
+};
 
 export type Calculations = {
 	[key: string]: string[];
-}
+};
 
 export type ScoringElement = {
 	type: 'counter'|'enum'|'bool';
@@ -42,23 +54,23 @@ export type ScoringElement = {
 	missed_key?: string;				// counter
 	values?: {[key: string]: string};	// enum
 	defaultValue?: string;				// enum
-}
+};
 
 type ScoringElements = {
 	[key: string]: ScoringElement;
-}
+};
 
 export type DisplayInsight = {
 	message: string;
 	description?: string;
 	isPositive: boolean
-}
+};
 
 export type Insight = {
 	check: (team: Team) => boolean;
 	text: string;
 	isPositive?: boolean;
-}
+};
 
 type Stat<T> = {
 	label: string;
@@ -89,4 +101,6 @@ export type ExtraStat<T> = {
 	label: (item: T) => string;
 	color: string;
 };
+
+export type Phase = 'autonomous' | 'teleop' | 'endgame';
 

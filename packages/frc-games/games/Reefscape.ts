@@ -10,12 +10,11 @@ enum CageLevel {
 }
 
 export const Reefscape: FRCGame = {
-	sections: [
-		{
+	sections: {
+		auto_algae_collection: {
 			color: MD2Colors.orange500,
 			title: "Algae Collection",
 			icon: "grass",
-			phase: 'autonomous',
 			id: 'auto_algae_collection',
 			fields: {
 				autonomous_algae_net: {
@@ -34,11 +33,10 @@ export const Reefscape: FRCGame = {
 				},
 			},
 		},
-		{
+		auto_coral_scoring: {
 			color: MD2Colors.white,
 			title: "Coral Scoring",
 			icon: "sports-volleyball",
-			phase: 'autonomous',
 			id: 'auto_coral_scoring',
 			fields: {
 				autonomous_corals_scored_l4: {
@@ -71,11 +69,10 @@ export const Reefscape: FRCGame = {
 				}
 			},
 		},
-		{
+		tele_algae_collection: {
 			color: MD2Colors.green500,
 			title: "Algae Collection",
 			icon: "grass",
-			phase: 'teleop',
 			id: 'tele_algae_collection',
 			fields: {
 				algae_net: {
@@ -94,11 +91,10 @@ export const Reefscape: FRCGame = {
 				},
 			},
 		},
-		{
+		tele_coral_scoring: {
 			color: MD2Colors.white,
 			title: "Coral Scoring",
 			icon: "sports-volleyball",
-			phase: 'teleop',
 			id: 'tele_coral_scoring',
 			fields: {
 				corals_scored_l4: {
@@ -131,11 +127,10 @@ export const Reefscape: FRCGame = {
 				}
 			},
 		},
-		{
+		cage_level: {
 			color: MD2Colors.blue500,
 			title: "Cage Level",
 			icon: "water-drop",
-			phase: 'teleop',
 			id: 'cage_level',
 			fields: {
 				cage_level: {
@@ -159,6 +154,22 @@ export const Reefscape: FRCGame = {
 				}
 			},
 		},
+	},
+	pages: [
+		{
+			title: 'Autonomous Phase',
+			description: 'Full auto control',
+			icon: 'sports-esports',
+			phase: 'autonomous',
+			sections: () => ['auto_algae_collection', 'auto_coral_scoring'],
+		},
+		{
+			title: 'Teleop Phase',
+			description: 'Drivers control',
+			icon: 'gamepad',
+			phase: 'teleop',
+			sections: () => ['tele_algae_collection', 'tele_coral_scoring', 'cage_level'],
+		}
 	],
 	fieldCalculations: {
 		teleopCoralScore: ['corals_scored_l1', 'corals_scored_l2', 'corals_scored_l3', 'corals_scored_l4'],

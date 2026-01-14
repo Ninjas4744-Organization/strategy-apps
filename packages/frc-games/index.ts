@@ -18,7 +18,7 @@ export const initGameData = (year: number) => {
 	}
 
 	let data: Record<string, any> = {};
-	for (const section of game.sections) {
+	for (const section of Object.values(game.sections)) {
 		for (const fieldKey in section.fields) {
 			const field = section.fields[fieldKey];
 			if (field?.type === 'counter') {

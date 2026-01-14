@@ -4,7 +4,7 @@ export class Game {
 	[key: string]: any;
 
 	constructor(public game: FRCGame, public data: Record<string, any>) {
-		for (const section of game.sections) {
+		for (const section of Object.values(game.sections)) {
 			for (const id in section.fields) {
 				Object.defineProperty(this, id, {
 					get(): number {
