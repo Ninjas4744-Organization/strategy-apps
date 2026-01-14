@@ -36,6 +36,7 @@ export type Calculations = {
 export type ScoringElement = {
 	type: 'counter'|'enum'|'bool';
 	title: string;
+	description?: string;
 	color: string;
 	getScore: (game: Record<string, any>) => number;
 	missed_key?: string;				// counter

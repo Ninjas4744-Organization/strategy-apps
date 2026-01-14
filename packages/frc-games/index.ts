@@ -1,3 +1,4 @@
+import {Crescendo} from "./games/Crescendo";
 import {Reefscape} from "./games/Reefscape";
 import type {FRCGame} from "./types";
 
@@ -6,6 +7,7 @@ type Games = {
 }
 
 export const games: Games = {
+	2024: Crescendo,
 	2025: Reefscape,
 };
 
@@ -30,22 +32,6 @@ export const initGameData = (year: number) => {
 		}
 	}
 	return data;
-};
-
-export const getPointsAndCalculations = (game: FRCGame, data: Record<string, any>): Record<string, number> => {
-	let points: Record<string, number> = {};
-	for (const section of game.sections) {
-		for (const fieldKey in section.fields) {
-			points[fieldKey] = section.fields[fieldKey]?.getScore(data) ?? 0;
-		}
-	}
-	for (const calculation in game.fieldCalculations) {
-		points[calculation] = game.fieldCalculations[calculation]?.reduce((sum, cur) => sum + (points[cur] ?? 0), 0) ?? 0;
-	}
-	for (const calculation in game.totalCalculations) {
-		points[calculation] = game.totalCalculations[calculation]?.reduce((sum, cur) => sum + (points[cur] ?? 0), 0) ?? 0;
-	}
-	return points;
 };
 
 export * from './calculations';

@@ -5,6 +5,7 @@ import {db} from "@/lib/firebase/firestore";
 import {Team} from "@/lib/models/Team";
 import userStore from "@/lib/stores/userStore";
 import {UserType} from "@/lib/interfaces/UserType";
+import eventsStore from "@/lib/stores/eventsStore";
 
 type Teams = {
 	[id: number]: Team,
@@ -33,6 +34,8 @@ export class EventStore {
 		if (userStore.userData?.type !== UserType.APP_ADMIN)
 			return;
 
+		const event = eventsStore.events[this.eventId];
+
 		const teamsRef = collection(db, 'events', this.eventId, 'teams');
 
 		this._isLoading = true;
@@ -40,7 +43,7 @@ export class EventStore {
 			runInAction(() => {
 				for (const teamDoc of snapshot.docs) {
 					const teamData = teamDoc.data();
-					this.teams[parseInt(teamDoc.id)] = Team.fromMap(teamDoc.id, this.eventId, teamData);
+					this.teams[parseInt(teamDoc.id)] = Team.fromMap(teamDoc.id, this.eventId, event.year, teamData);
 				}
 				this._isLoading = false;
 			});

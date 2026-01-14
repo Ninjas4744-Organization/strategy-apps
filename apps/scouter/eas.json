@@ -15,9 +15,6 @@
 			"autoIncrement": true
 		}
 	},
-	"android": {
-		"releaseStatus": "draft"
-	},
 	"submit": {
 		"production": {}
 	}

@@ -8,6 +8,7 @@ import {useGlobalSearchParams, useRouter} from "expo-router";
 import gameStore from "@/lib/stores/gameStore";
 import {BodyScroll, GameForm} from "@ninjas-strategy/ui";
 import {games} from "@ninjas-strategy/frc-games";
+import eventsStore from "@/lib/stores/eventsStore";
 
 const Container = styled.SafeAreaView`
 	background-color: transparent;
@@ -21,6 +22,9 @@ export default observer(function AutonomousPage() {
 	const {data, updateValue} = gameStore;
 	const [showAutoEndDialog, setShowAutoEndDialog] = useState(false);
 	const {eventId} = useGlobalSearchParams();
+	const {events} = eventsStore;
+
+	const event = events[eventId as string];
 
 	return <>
 		<Container>
@@ -31,7 +35,7 @@ export default observer(function AutonomousPage() {
 				iconRight="arrow-forward"
 				onLeftClick={() => setShowAutoEndDialog(true)}/>
 			<BodyScroll>
-				<GameForm {...games[2025]} phase="autonomous" data={data} setData={(key, value) => updateValue(key, value)} />
+				<GameForm {...games[event.year]} phase="autonomous" data={data} setData={(key, value) => updateValue(key, value)} />
 			</BodyScroll>
 		</Container>
 		<Dialog visible={showAutoEndDialog} onDismiss={() => setShowAutoEndDialog(false)}>

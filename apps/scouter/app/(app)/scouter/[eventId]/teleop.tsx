@@ -50,7 +50,7 @@ export default observer(function TeleopPage() {
 				iconLeft="gamepad"/>
 			<BodyScroll>
 				<GameForm
-					{...games[2025]}
+					{...games[event.year]}
 					phase="teleop"
 					data={data}
 					setData={(key, value) => updateValue(key, value)} />

@@ -1,6 +1,5 @@
 import {Game} from './Game';
 import {Model} from '@/lib/interfaces/Model';
-import {CageLevel} from "@/lib/interfaces/CageLevel";
 import {collection, onSnapshot} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {action, makeObservable, observable, runInAction} from "mobx";
@@ -14,13 +13,14 @@ export class Team extends TeamCalculation implements Model {
 	constructor(
 		public id: string,
 		public eventId: string,
+		public eventYear: number,
 		public teamNumber: number,
 	) {
-		super(games[2025]);
+		super(games[eventYear]);
 		makeObservable(this);
 	}
 
-	static fromMap(id: string, eventId: string, data: Record<string, any>): Team {
+	static fromMap(id: string, eventId: string, eventYear: number, data: Record<string, any>): Team {
 		// Handle team_number as either string or int
 		let teamNumber = 0;
 		const teamNumberData = data['team_number'];
@@ -32,11 +32,13 @@ export class Team extends TeamCalculation implements Model {
 			}
 		}
 
-		return new Team(id, eventId, teamNumber);
+		return new Team(id, eventId, eventYear, teamNumber);
 	}
 
 	toMap(): Record<string, any> {
 		return {
+			event_id: this.eventId,
+			event_year: this.eventYear,
 			team_number: this.teamNumber,
 		};
 	}
@@ -53,7 +55,7 @@ export class Team extends TeamCalculation implements Model {
 			runInAction(() => {
 				this.games = snapshot.docs.map(game => {
 					const data = game.data();
-					return Game.fromMap(game.id, games[2025], data);
+					return Game.fromMap(game.id, games[this.eventYear], data);
 				}).sort((a, b) => Number.parseInt(a.gameNumber) > Number.parseInt(b.gameNumber) ? 1 : -1);
 				this.isLoading = false;
 			});
@@ -66,11 +68,5 @@ export class Team extends TeamCalculation implements Model {
 			this._unsubscribe();
 			this._unsubscribe = null;
 		}
-	}
-
-	// Calculate team statistics
-	get cageGames(): number {
-		if (this.games.length === 0) return 0;
-		return this.games.filter(game => game.cageLevel !== CageLevel.NONE).length;
 	}
 }
