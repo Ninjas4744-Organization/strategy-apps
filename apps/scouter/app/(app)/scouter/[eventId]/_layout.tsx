@@ -6,7 +6,7 @@ export default function GameLayout() {
 	return <StackWrapper>
 		<Stack
 			screenOptions={{
-				header: () => <Header />,
+				header: ({route}) => <Header route={route} />,
 				contentStyle: {backgroundColor: 'transparent'},
 				headerBlurEffect: 'light',
 				gestureEnabled: false

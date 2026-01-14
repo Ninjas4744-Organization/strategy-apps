@@ -1,12 +1,22 @@
 import styled, {css} from "styled-components/native";
-import {TextSection, Title, Subtitle, Icon} from "@ninjas-strategy/ui";
+import {TextSection, Title, Subtitle, Icon, iconContainerStyle} from "@ninjas-strategy/ui";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import type {EdgeInsets} from "react-native-safe-area-context";
 import {MD2Colors} from "react-native-paper";
 import {observer} from "mobx-react-lite";
-import userStore from "@/lib/stores/userStore";
-import {useLocalSearchParams} from "expo-router";
+import {Href, useRouter} from "expo-router";
 import eventsStore from "@/lib/stores/eventsStore";
+import {games} from "@ninjas-strategy/frc-games";
+import {type Route} from "@react-navigation/native";
+
+type HeaderProps = {
+	route: Route<string>;
+};
+
+type RouteParams = {
+	eventId: string;
+	pageNum: string;
+};
 
 const HeaderContainer = styled.View<{insets: EdgeInsets}>`
 	padding-top: ${props => props.insets.top}px;
@@ -16,13 +26,12 @@ const HeaderContainer = styled.View<{insets: EdgeInsets}>`
 	align-items: center;
 `;
 
-const iconContainerStyle = css`
-	background-color: ${MD2Colors.green500}20;
-	border-radius: 16px;
-	padding: 12px;
+const PageIcon = styled(Icon)`
+	font-size: 24px;
+	color: ${MD2Colors.blue500};
 `;
 
-const IconContainer = styled.View`
+const PageIconContainer = styled.TouchableOpacity`
 	${iconContainerStyle};
 `;
 
@@ -30,24 +39,25 @@ const NextPageIconContainer = styled.TouchableOpacity`
 	${iconContainerStyle};
 `;
 
-const AppBarIcon = styled(Icon)`
-	font-size: 24px;
-	color: ${MD2Colors.white};
-`;
-
-export const Header = observer(() => {
-	const {signOut} = userStore;
+export const Header = observer(({route}: HeaderProps) => {
+	const router = useRouter();
 	const insets = useSafeAreaInsets();
-	const {eventId} = useLocalSearchParams();
-	const event = eventsStore.events[eventId as string];
+	const {eventId, pageNum} = route.params as RouteParams;
+	const event = eventsStore.events[eventId];
+
+	const page = parseInt(pageNum);
+	const yearGame = games[event.year];
 
 	return <HeaderContainer insets={insets}>
+		{page > 0 && <PageIconContainer onPress={() => router.push(`/scouter/${eventId}/${parseInt(pageNum) - 1}` as Href)}>
+			<PageIcon name="arrow-back"/>
+		</PageIconContainer>}
 		<TextSection>
 			<Title>{event.name}</Title>
 			<Subtitle>{eventId}</Subtitle>
 		</TextSection>
-		<NextPageIconContainer onPress={() => signOut()}>
-			<AppBarIcon name="logout" />
-		</NextPageIconContainer>
+		{page < yearGame.pages.length - 1 && <NextPageIconContainer onPress={() => router.push(`/scouter/${eventId}/${parseInt(pageNum) + 1}` as Href)}>
+			<PageIcon name="arrow-forward"/>
+		</NextPageIconContainer>}
 	</HeaderContainer>;
 });

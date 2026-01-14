@@ -1,6 +1,7 @@
 import {Crescendo} from "./games/Crescendo";
 import {Reefscape} from "./games/Reefscape";
 import type {FRCGame} from "./types";
+import {REBUILT} from "./games/REBUILT.ts";
 
 type Games = {
 	[year: number]: FRCGame;
@@ -9,6 +10,7 @@ type Games = {
 export const games: Games = {
 	2024: Crescendo,
 	2025: Reefscape,
+	2026: REBUILT,
 };
 
 export const initGameData = (year: number) => {

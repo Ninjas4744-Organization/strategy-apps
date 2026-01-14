@@ -1,6 +1,6 @@
 import styled from "styled-components/native";
 import {observer} from "mobx-react-lite";
-import {SectionTitle} from "@/lib/components/game/SectionTitle";
+import {PageTitle} from "@/lib/components/game/PageTitle";
 import {ScoringCategory} from "@/lib/components/game/ScoringCategory";
 import gameStore from "@/lib/stores/gameStore";
 import {MD2Colors, TextInput} from "react-native-paper";
@@ -52,7 +52,7 @@ export default observer(function TeleopPage() {
 		behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 		style={{ flexGrow: 1, flex: 1 }}>
 		<Container>
-			<SectionTitle
+			<PageTitle
 				title={page.title}
 				subtitle={page.description}
 				icon={page.icon}

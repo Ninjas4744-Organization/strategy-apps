@@ -1,5 +1,5 @@
 import styled from "styled-components/native";
-import {SectionTitle} from "@/lib/components/game/SectionTitle";
+import {PageTitle} from "@/lib/components/game/PageTitle";
 import {Subtitle, Title, Icon, HeaderButtons, CardSurface} from "@ninjas-strategy/ui";
 import {TeamItem} from "@/lib/components/admin/TeamItem";
 import {ScrollView, View} from "react-native";
@@ -27,7 +27,7 @@ export default observer(function AdminIndex() {
 		<ScrollView>
 			{isLoading ? Array.from({length: 5}).map((_, i) => <TeamItemSkeleton key={i} />) : <>
 				{teamsRanked.length > 0 ? <>
-					<SectionTitle
+					<PageTitle
 						title="Team Analytics Dashboard"
 						subtitle={`${teamsRanked.length} teams analyzed • ${totalGamesCount} total games`}/>
 					<IconsRow>
