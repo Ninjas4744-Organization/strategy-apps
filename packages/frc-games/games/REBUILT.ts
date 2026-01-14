@@ -161,11 +161,16 @@ export const REBUILT: FRCGame = {
 	],
 	fieldCalculations: {
 		autonomousScore: ['autonomous_fuel_scored', 'autonomous_climb'],
+		teleopFuelScore: ['teleop_fuel_scored'],
+		fuelScore: ['autonomous_fuel_scored', 'teleop_fuel_scored'],
+		traversalScore: ['autonomous_climb', 'traversal'],
+		teleopScore: ['teleop_fuel_scored', 'traversal'],
 	},
 	totalCalculations: {
 		autonomousScore: ['autonomousScore'],
+		teleopScore: ['teleopScore'],
 	},
-	totalScore: ['autonomousScore'],
+	totalScore: ['autonomousScore', 'teleopScore'],
 	insights: [],
 	recommendations: [],
 	strengths: [],

@@ -10,12 +10,11 @@ enum StageResult {
 }
 
 export const Crescendo: FRCGame = {
-	sections: [
-		{
+	sections: {
+		autonomous_scoring: {
 			color: MD2Colors.orange500,
 			title: "Autonomous Scoring",
 			icon: "auto-awesome",
-			phase: "autonomous",
 			id: "autonomous_scoring",
 			fields: {
 				autonomous_speaker_notes: {
@@ -43,11 +42,10 @@ export const Crescendo: FRCGame = {
 				},
 			},
 		},
-		{
+		teleop_note_scoring: {
 			color: MD2Colors.white,
 			title: "Teleop Note Scoring",
 			icon: "music-note",
-			phase: "teleop",
 			id: "teleop_note_scoring",
 			fields: {
 				teleop_speaker_notes: {
@@ -76,11 +74,10 @@ export const Crescendo: FRCGame = {
 				},
 			},
 		},
-		{
+		stage_endgame: {
 			color: MD2Colors.blue500,
 			title: "Stage & Endgame",
 			icon: "theater-comedy",
-			phase: "teleop",
 			id: "stage_endgame",
 			fields: {
 				stage_result: {
@@ -116,6 +113,29 @@ export const Crescendo: FRCGame = {
 				},
 			},
 		},
+	},
+	pages: [
+		{
+			title: "Autonomous",
+			description: "Full auto control",
+			icon: "sports-esports",
+			phase: "autonomous",
+			sections: () => ["autonomous_scoring"],
+		},
+		{
+			title: "Teleop Notes",
+			description: "Manual note scoring",
+			icon: "music-note",
+			phase: "teleop",
+			sections: () => ["teleop_note_scoring"],
+		},
+		{
+			title: "Endgame & Stage",
+			description: "Stage results and endgame performance",
+			icon: "theater-comedy",
+			phase: "endgame",
+			sections: () => ["stage_endgame"],
+		}
 	],
 	fieldCalculations: {
 		autonomousNoteScore: ["autonomous_speaker_notes", "autonomous_amp_notes"],
