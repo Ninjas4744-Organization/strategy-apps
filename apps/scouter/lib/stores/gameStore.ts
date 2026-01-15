@@ -14,16 +14,24 @@ class GameStore {
 
 	@observable teamNumber: string = '';
 	@observable gameNumber: string = '';
+	@observable year: number = new Date().getFullYear();
 
 	constructor() {
 		makeObservable(this);
-		this.reset();
 	}
 
 	@action
 	reset() {
-		this.data = initGameData(2025);
+		this.data = initGameData(this.year);
 		this.teamNumber = this.gameNumber = '';
+	}
+
+	@action.bound
+	startGame(teamNumber: string, gameNumber: string, year: number) {
+		this.data = initGameData(year);
+		this.teamNumber = teamNumber;
+		this.gameNumber = gameNumber;
+		this.year = year;
 	}
 
 	@action.bound

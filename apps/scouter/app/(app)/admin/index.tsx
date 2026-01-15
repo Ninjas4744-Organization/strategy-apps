@@ -30,7 +30,7 @@ export default observer(function AdminIndex() {
 							]} />
 					)}}/>
 			{events && Object.values(events).map((event) => (
-				<EventItem key={event.id} route={`/admin/${event.id}`} {...event} />
+				<EventItem key={event.id} onClick={() => router.push(`/admin/${event.id}`)} {...event} />
 			))}
 		</ScrollView>
 	);

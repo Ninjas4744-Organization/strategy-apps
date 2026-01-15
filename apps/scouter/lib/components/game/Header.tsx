@@ -8,6 +8,7 @@ import {Href, useRouter} from "expo-router";
 import eventsStore from "@/lib/stores/eventsStore";
 import {games} from "@ninjas-strategy/frc-games";
 import {type Route} from "@react-navigation/native";
+import gameStore from "@/lib/stores/gameStore";
 
 type HeaderProps = {
 	route: Route<string>;
@@ -43,6 +44,7 @@ export const Header = observer(({route}: HeaderProps) => {
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
 	const {eventId, pageNum} = route.params as RouteParams;
+	const {teamNumber} = gameStore;
 	const event = eventsStore.events[eventId];
 
 	const page = parseInt(pageNum);
@@ -53,8 +55,8 @@ export const Header = observer(({route}: HeaderProps) => {
 			<PageIcon name="arrow-back"/>
 		</PageIconContainer>}
 		<TextSection>
-			<Title>{event.name}</Title>
-			<Subtitle>{eventId}</Subtitle>
+			<Title>Now Scouting Team {teamNumber}</Title>
+			<Subtitle>{event.name}</Subtitle>
 		</TextSection>
 		{page < yearGame.pages.length - 1 && <NextPageIconContainer onPress={() => router.push(`/scouter/${eventId}/${parseInt(pageNum) + 1}` as Href)}>
 			<PageIcon name="arrow-forward"/>
