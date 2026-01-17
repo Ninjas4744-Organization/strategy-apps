@@ -7,6 +7,7 @@ export type FRCGame = {
 	sections: Sections;
 	pages: Page[];
 	fieldCalculations: Calculations;
+	amountCalculations: Calculations;
 	totalCalculations: Calculations;
 	totalScore: string[];
 	insights: Insight[];

@@ -59,9 +59,9 @@ export default observer(function ScouterIndex() {
 		</ScrollView>
 			<Portal>
 				<Dialog visible={!!startGameEvent} dismissable onDismiss={() => (reset(), setStartGameEvent(null))}>
+					<ScrollView keyboardShouldPersistTaps="handled">
 					<Dialog.Title>Scout a game - {event?.name}</Dialog.Title>
 					<Dialog.Content>
-						<ScrollView keyboardShouldPersistTaps="handled">
 							<FormGroup>
 								<Controller
 									name="teamNumber"
@@ -88,11 +88,11 @@ export default observer(function ScouterIndex() {
 											error={!!errors.gameNumber}/>
 									)} />
 							</FormGroup>
-						</ScrollView>
 					</Dialog.Content>
 					<Dialog.Actions>
 						<Button onPress={handleSubmit(onSubmit)}>Start Game</Button>
 					</Dialog.Actions>
+					</ScrollView>
 				</Dialog>
 			</Portal>
 		</>

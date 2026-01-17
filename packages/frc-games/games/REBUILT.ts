@@ -160,15 +160,16 @@ export const REBUILT: FRCGame = {
 		}
 	],
 	fieldCalculations: {
-		autonomousScore: ['autonomous_fuel_scored', 'autonomous_climb'],
-		teleopFuelScore: ['teleop_fuel_scored'],
 		fuelScore: ['autonomous_fuel_scored', 'teleop_fuel_scored'],
 		traversalScore: ['autonomous_climb', 'traversal'],
-		teleopScore: ['teleop_fuel_scored', 'traversal'],
+	},
+	amountCalculations: {
+		fuelPassed: ['autonomous_fuel_passed', 'teleop_fuel_passed'],
+		autonomousWon: ['won_auto'],
 	},
 	totalCalculations: {
-		autonomousScore: ['autonomousScore'],
-		teleopScore: ['teleopScore'],
+		autonomousScore: ['autonomous_fuel_scored', 'autonomous_climb'],
+		teleopScore: ['teleop_fuel_scored', 'traversal'],
 	},
 	totalScore: ['autonomousScore', 'teleopScore'],
 	insights: [],

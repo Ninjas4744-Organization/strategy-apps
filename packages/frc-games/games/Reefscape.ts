@@ -178,6 +178,7 @@ export const Reefscape: FRCGame = {
 		autonomousAlgaeScore: ['autonomous_algae_processed', 'autonomous_algae_net'],
 		cageLevel: ['cage_level'],
 	},
+	amountCalculations: {},
 	totalCalculations: {
 		teleopScore: ['teleopCoralScore', 'teleopAlgaeScore'],
 		autonomousScore: ['autonomousCoralScore', 'autonomousAlgaeScore'],

@@ -150,6 +150,8 @@ export const Crescendo: FRCGame = {
 		stageScore: ["stage_result", "stage_harmony", "trap_notes"],
 	},
 
+	amountCalculations: {},
+
 	totalCalculations: {
 		autonomousScore: ["autonomousNoteScore", "autonomousMobilityScore"],
 		teleopScore: ["teleopSpeakerScore", "teleopAmpScore"],
