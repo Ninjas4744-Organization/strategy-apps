@@ -80,6 +80,49 @@ export const REBUILT: FRCGame = {
 				},
 			},
 		},
+		teleop_fuel_passing_inactive: {
+			color: MD2Colors.green500,
+			title: "Fuel Passing",
+			icon: 'swap-horiz',
+			id: 'teleop_fuel_passing_inactive',
+			fields: {
+				teleop_fuel_passed_inactive: {
+					type: 'counter',
+					title: 'Fuel Passed',
+					color: MD2Colors.green500,
+					getScore: () => 0,
+				},
+			},
+		},
+		endgame_fuel_scoring: {
+			color: MD2Colors.white,
+			title: "Fuel Scoring",
+			icon: 'sports-handball',
+			id: 'endgame_fuel_scoring',
+			fields: {
+				endgame_fuel_scored: {
+					type: 'counter',
+					title: 'Fuel Scored',
+					color: MD2Colors.blue500,
+					missed_key: 'endgame_fuel_missed',
+					getScore: (game) => game['endgame_fuel_scored'] ?? 0,
+				}
+			},
+		},
+		endgame_fuel_passing: {
+			color: MD2Colors.green500,
+			title: "Fuel Passing",
+			icon: 'swap-horiz',
+			id: 'endgame_fuel_passing',
+			fields: {
+				endgame_fuel_passed: {
+					type: 'counter',
+					title: 'Fuel Passed',
+					color: MD2Colors.green500,
+					getScore: () => 0,
+				},
+			},
+		},
 		traversal: {
 			color: MD2Colors.blue500,
 			title: "Traversal Level",
@@ -128,50 +171,140 @@ export const REBUILT: FRCGame = {
 			description: 'Your hub is active if you lost autonomous',
 			icon: '1k',
 			phase: 'teleop',
-			sections: () => ['teleop_fuel_passing'],
+			sections: (game) => game.won_auto ? ['teleop_fuel_passing_inactive'] : ['teleop_fuel_scoring', 'teleop_fuel_passing'],
 		},
 		{
 			title: 'Shift 2',
 			description: 'Your hub is active if you won autonomous',
 			icon: '2k',
 			phase: 'teleop',
-			sections: () => ['teleop_fuel_scoring', 'teleop_fuel_passing'],
+			sections: (game) => game.won_auto ? ['teleop_fuel_scoring', 'teleop_fuel_passing'] : ['teleop_fuel_passing_inactive'],
 		},
 		{
 			title: 'Shift 3',
 			description: 'Your hub is active if you lost autonomous',
 			icon: '3k',
 			phase: 'teleop',
-			sections: () => ['teleop_fuel_passing'],
+			sections: (game) => game.won_auto ? ['teleop_fuel_passing_inactive'] : ['teleop_fuel_scoring', 'teleop_fuel_passing'],
 		},
 		{
 			title: 'Shift 4',
 			description: 'Your hub is active if you won autonomous',
 			icon: '4k',
 			phase: 'teleop',
-			sections: () => ['teleop_fuel_scoring', 'teleop_fuel_passing'],
+			sections: (game) => game.won_auto ? ['teleop_fuel_scoring', 'teleop_fuel_passing'] : ['teleop_fuel_passing_inactive'],
 		},
 		{
 			title: 'Endgame',
 			description: 'Climb to the top',
 			icon: 'sports-motorsports',
 			phase: 'teleop',
-			sections: () => ['teleop_fuel_scoring', 'teleop_fuel_passing', 'traversal'],
+			sections: () => ['endgame_fuel_scoring', 'endgame_fuel_passing', 'traversal'],
 		}
 	],
 	fieldCalculations: {
-		fuelScore: ['autonomous_fuel_scored', 'teleop_fuel_scored'],
+		fuelScore: ['autonomous_fuel_scored', 'teleop_fuel_scored', 'endgame_fuel_scored'],
 		traversalScore: ['autonomous_climb', 'traversal'],
 	},
 	amountCalculations: {
-		fuelPassed: ['autonomous_fuel_passed', 'teleop_fuel_passed'],
+		fuelPassed: ['autonomous_fuel_passed', 'teleop_fuel_passed', 'endgame_fuel_passed'],
+		fuelScored: ['autonomous_fuel_scored', 'teleop_fuel_scored', 'endgame_fuel_scored'],
 		autonomousWon: ['won_auto'],
 	},
 	totalCalculations: {
 		autonomousScore: ['autonomous_fuel_scored', 'autonomous_climb'],
-		teleopScore: ['teleop_fuel_scored', 'traversal'],
+		teleopScore: ['teleop_fuel_scored'],
+		endgameScore: ['endgame_fuel_scored', 'traversal'],
 	},
-	totalScore: ['autonomousScore', 'teleopScore'],
+	totalScore: ['autonomousScore', 'teleopScore', 'endgameScore'],
+	mainPageSections: [
+		{
+			title: 'Autonomous',
+			description: '',
+			cards: [
+				{
+					label: 'Avg Auto Score',
+					icon: 'sports-esports',
+					color: MD2Colors.orange500,
+					val: (team) => team.getAverageScore('autonomousScore').toFixed(1),
+				},
+				{
+					label: 'Climbs In Auto',
+					icon: 'directions-run',
+					color: MD2Colors.purple500,
+					val: (team) => team.games.reduce((sum, game) => sum + (game['autonomous_climb'] ? 1 : 0), 0) + '/' + team.games.length,
+				},
+				{
+					label: 'Fuel Scored (Auto)',
+					icon: 'sports-handball',
+					color: MD2Colors.blue500,
+					val: (team) => team.getAverageScore('autonomous_fuel_scored').toFixed(1),
+				}
+			],
+		},
+		{
+			title: 'Teleop - Fuel',
+			description: '',
+			cards: [
+				{
+					label: 'Avg Teleop Score',
+					icon: 'sports-esports',
+					color: MD2Colors.green500,
+					val: (team) => team.getAverageScore('teleopScore').toFixed(1),
+				}
+			],
+		},
+		{
+			title: 'Teleop - Passing',
+			description: '',
+			cards: [
+				{
+					label: 'Fuel Passed - Inactive',
+					icon: 'swap-horiz',
+					color: MD2Colors.green500,
+					val: (team) => team.getAverageValue('teleop_fuel_passed_inactive').toFixed(1),
+				},
+				{
+					label: 'Fuel Passed - Active',
+					icon: 'swap-horiz',
+					color: MD2Colors.green500,
+					val: (team) => team.getAverageValue('teleop_fuel_passed').toFixed(1),
+				},
+			],
+		},
+		{
+			title: 'Endgame',
+			description: '',
+			cards: [
+				{
+					label: 'Avg Endgame Score',
+					icon: 'sports-motorsports',
+					color: MD2Colors.blue500,
+					val: (team) => team.getAverageScore('endgameScore').toFixed(1),
+				},
+				{
+					label: 'Average Traversal Level',
+					icon: 'directions-run',
+					color: MD2Colors.blue500,
+					val: (team) => {
+						const totalLevels = team.games.reduce((sum, game) => {
+							switch (game['traversal_level']) {
+								case TraversalLevel.L1:
+									return sum + 1;
+								case TraversalLevel.L2:
+									return sum + 2;
+								case TraversalLevel.L3:
+									return sum + 3;
+								default:
+									return sum;
+							}
+						}, 0);
+						return (totalLevels / team.games.length).toFixed(1);
+					}
+				}
+			],
+		},
+	],
 	insights: [],
 	recommendations: [],
 	strengths: [],

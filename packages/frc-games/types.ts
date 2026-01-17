@@ -10,6 +10,7 @@ export type FRCGame = {
 	amountCalculations: Calculations;
 	totalCalculations: Calculations;
 	totalScore: string[];
+	mainPageSections: MainPageSection[];
 	insights: Insight[];
 	recommendations: Insight[];
 	strengths: Insight[];
@@ -104,4 +105,17 @@ export type ExtraStat<T> = {
 };
 
 export type Phase = 'autonomous' | 'teleop' | 'endgame';
+
+type MainPageSection = {
+	title: string;
+	description: string;
+	cards: DisplayStatCard[];
+};
+
+type DisplayStatCard = {
+	label: string;
+	icon: MaterialIcon;
+	val: (data: Team) => string | number;
+	color: string;
+};
 

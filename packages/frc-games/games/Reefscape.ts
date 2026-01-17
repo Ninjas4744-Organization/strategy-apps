@@ -186,6 +186,38 @@ export const Reefscape: FRCGame = {
 		algaeScore: ['teleopAlgaeScore', 'autonomousAlgaeScore'],
 	},
 	totalScore: ['teleopScore', 'autonomousScore', 'parkingScore'],
+	mainPageSections: [
+		{
+			title: 'Performance Overview',
+			description: '',
+			cards: [
+				{
+					label: 'Avg Auto',
+					val: team => team.getAverageScore('autonomousScore').toFixed(1),
+					color: MD2Colors.orange500,
+					icon: 'sports-esports',
+				},
+				{
+					label: 'Avg Teleop',
+					val: team => team.getAverageScore('teleopScore').toFixed(1),
+					color: MD2Colors.green500,
+					icon: 'sports',
+				},
+				{
+					label: 'Avg Algae',
+					val: team => team.getAverageScore('algaeScore').toFixed(1),
+					color: MD2Colors.blue500,
+					icon: 'grass',
+				},
+				{
+					label: 'Best Score',
+					val: team => team.bestScore,
+					color: MD2Colors.amber500,
+					icon: 'emoji-events',
+				},
+			],
+		},
+	],
 	insights: [
 		{
 			check: game => game.getAverageScore('autonomousScore') > game.getAverageScore('teleopScore') + 10,

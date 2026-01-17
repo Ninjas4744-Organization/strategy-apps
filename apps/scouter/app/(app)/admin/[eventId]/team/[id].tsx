@@ -1,8 +1,10 @@
+
+
 import {Href, Stack, useGlobalSearchParams, useRouter} from "expo-router";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components/native";
 import {StatItem} from "@/lib/components/admin/StatItem";
-import {Subtitle, Title, Row, Icon, SimpleButton, CardSurface} from "@ninjas-strategy/ui";
+import {Subtitle, Title, Row, Icon, SimpleButton, CardSurface, Col, BeautifulButton} from "@ninjas-strategy/ui";
 import {Insight} from "@/lib/interfaces/Insight";
 import {Tabs} from "@/lib/components/admin/Tabs";
 import {OverviewTab} from "@/lib/components/admin/team/OverviewTab";
@@ -12,6 +14,9 @@ import {AnalysisTab} from "@/lib/components/admin/team/AnalysisTab";
 import {MD2Colors} from "react-native-paper";
 import {useContext} from "react";
 import {EventContext, EventStore} from "@/lib/stores/eventStore";
+import {games} from "@ninjas-strategy/frc-games";
+import eventsStore from "@/lib/stores/eventsStore";
+import {ScrollView} from "react-native";
 
 const Container = styled.SafeAreaView`
 	background-color: transparent;
@@ -45,60 +50,53 @@ export default observer(function () {
 	const {teams} = useContext(EventContext) as EventStore;
 	const team = teams[Number.parseInt(id as string)];
 	const bestGame = team.games.reduce((a, b) => a.totalScore > b.totalScore ? a : b);
+	const {events} = eventsStore;
+
+
+	const game = games[events[eventId as string].year];
 
 	return <Container>
 		<Stack.Screen
 			options={{
 				title: `Team ${id}`,
 				headerRight: () => (
-					<SimpleButton onPress={() => router.push(`/admin/${eventId}/detailed/${id}` as Href)}>
-						<Icon name="analytics" />
-						<Subtitle>Detailed View</Subtitle>
-					</SimpleButton>
+					// <SimpleButton>
+					// 	<Icon name="compare-arrows"/>
+					// 	<Subtitle>Compare</Subtitle>
+					// </SimpleButton>
+					null	// TODO: Implement team comparison feature
 				)
-			}} />
-		<PageHeader>
-			<Row>
-				<Title>Team {id}</Title>
-			</Row>
-			<Row>
-				<StatItem icon="sports-esports" value={team.games.length} title="Games" />
-				<StatItem icon="trending-up" value={team.averageTotalScore.toFixed(1)} title="Avg Score" />
-				<StatItem icon="emoji-events" value={bestGame.totalScore} title="Best Score" />
-				<StatItem icon="speed" value={(team.consistencyScore * 100).toFixed(1) + '%'} title="Consistency" />
-			</Row>
-		</PageHeader>
-		<PageHeader>
-			<Title><AmberIcon name="lightbulb" /> Performance Insights</Title>
-			{team.insights.map((insight, index) => (
-				<PerformanceInsight key={`${id}-inside-${index}`} {...insight} />
+			}}/>
+		<ScrollView>
+			<PageHeader>
+				<Row>
+					<Title>Team {id}</Title>
+				</Row>
+				<Row>
+					<StatItem icon="sports-esports" value={team.games.length} title="Games"/>
+					<StatItem icon="trending-up" value={team.averageTotalScore.toFixed(1)} title="Avg Score"/>
+					<StatItem icon="emoji-events" value={bestGame.totalScore} title="Best Score"/>
+					<StatItem icon="speed" value={(team.consistencyScore * 100).toFixed(1) + '%'} title="Consistency"/>
+				</Row>
+				<BeautifulButton label="Click here to view insights" icon="lightbulb" onPress={() => router.push(`/admin/${eventId}/breakdown/${id}` as Href)} />
+			</PageHeader>
+			{game.mainPageSections.map((section, index) => (
+				<PageHeader key={`${id}-inside-${index}`}>
+					<Row>
+						<Title>{section.title}</Title>
+					</Row>
+					<Row>
+						{section.cards.map((card, index) => (
+							<StatItem
+								key={`${id}-card-${index}`}
+								icon={card.icon}
+								value={card.val(team)}
+								title={card.label}
+								color={card.color}/>
+						))}
+					</Row>
+				</PageHeader>
 			))}
-		</PageHeader>
-		<Tabs
-			tabs={{
-				overview: {
-					label: 'Overview',
-					render: <OverviewTab team={team}/>,
-				},
-				games: {
-					label: 'Games',
-					render: <GamesList team={team}/>,
-				},
-				trends: {
-					label: 'Trends',
-					render: <ScoreTrend team={team}/>,
-				},
-				analysis: {
-					label: 'Analysis',
-					render: <AnalysisTab team={team}/>,
-				},
-			}} />
+		</ScrollView>
 	</Container>;
 });
-
-const PerformanceInsight = ({message, isPositive}: Insight) => {
-	return <Row>
-		{isPositive ? <GreenIcon name="trending-up"/> : <OrangeIcon name="trending-down"/>}
-		<Subtitle>{message}</Subtitle>
-	</Row>;
-};
