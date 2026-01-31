@@ -94,8 +94,8 @@ export default observer(function CompareScreen() {
 				options={{
 					title: `Compare Teams`,
 					headerRight: () => <SimpleButton onPress={() => setShowAddTeamDialog(true)}>
-						<Icon name="add" size={24} color={MD2Colors.white} />
-						<Subtitle>Add Team</Subtitle>
+						<Icon name="add" />
+						<Subtitle>&nbsp;Add Team&nbsp;</Subtitle>
 					</SimpleButton>,
 				}} />
 			<Card>
