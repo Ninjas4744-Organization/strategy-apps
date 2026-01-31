@@ -227,18 +227,21 @@ export const REBUILT: FRCGame = {
 					icon: 'sports-esports',
 					color: MD2Colors.orange500,
 					val: (team) => team.getAverageScore('autonomousScore').toFixed(1),
+					numericVal: (team) => team.getAverageScore('autonomousScore'),
 				},
 				{
 					label: 'Climbs In Auto',
 					icon: 'directions-run',
 					color: MD2Colors.purple500,
 					val: (team) => team.games.reduce((sum, game) => sum + (game['autonomous_climb'] ? 1 : 0), 0) + '/' + team.games.length,
+					numericVal: (team) => team.games.reduce((sum, game) => sum + (game['autonomous_climb'] ? 1 : 0), 0),
 				},
 				{
 					label: 'Fuel Scored (Auto)',
 					icon: 'sports-handball',
 					color: MD2Colors.blue500,
 					val: (team) => team.getAverageScore('autonomous_fuel_scored').toFixed(1),
+					numericVal: (team) => team.getAverageScore('autonomous_fuel_scored'),
 				}
 			],
 		},
@@ -251,6 +254,7 @@ export const REBUILT: FRCGame = {
 					icon: 'sports-esports',
 					color: MD2Colors.green500,
 					val: (team) => team.getAverageScore('teleopScore').toFixed(1),
+					numericVal: team => team.getAverageScore('teleopScore'),
 				}
 			],
 		},
@@ -263,12 +267,14 @@ export const REBUILT: FRCGame = {
 					icon: 'swap-horiz',
 					color: MD2Colors.green500,
 					val: (team) => team.getAverageValue('teleop_fuel_passed_inactive').toFixed(1),
+					numericVal: team => team.getAverageValue('teleop_fuel_passed_inactive'),
 				},
 				{
 					label: 'Fuel Passed - Active',
 					icon: 'swap-horiz',
 					color: MD2Colors.green500,
 					val: (team) => team.getAverageValue('teleop_fuel_passed').toFixed(1),
+					numericVal: team => team.getAverageValue('teleop_fuel_passed'),
 				},
 			],
 		},
@@ -281,6 +287,7 @@ export const REBUILT: FRCGame = {
 					icon: 'sports-motorsports',
 					color: MD2Colors.blue500,
 					val: (team) => team.getAverageScore('endgameScore').toFixed(1),
+					numericVal: team => team.getAverageScore('endgameScore'),
 				},
 				{
 					label: 'Average Traversal Level',
@@ -300,6 +307,21 @@ export const REBUILT: FRCGame = {
 							}
 						}, 0);
 						return (totalLevels / team.games.length).toFixed(1);
+					},
+					numericVal: team => {
+						const totalLevels = team.games.reduce((sum, game) => {
+							switch (game['traversal_level']) {
+								case TraversalLevel.L1:
+									return sum + 1;
+								case TraversalLevel.L2:
+									return sum + 2;
+								case TraversalLevel.L3:
+									return sum + 3;
+								default:
+									return sum;
+							}
+						}, 0);
+						return totalLevels / team.games.length;
 					}
 				}
 			],

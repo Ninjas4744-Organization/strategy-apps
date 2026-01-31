@@ -4,15 +4,8 @@ import {Href, Stack, useGlobalSearchParams, useRouter} from "expo-router";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components/native";
 import {StatItem} from "@/lib/components/admin/StatItem";
-import {Subtitle, Title, Row, Icon, SimpleButton, CardSurface, Col, BeautifulButton} from "@ninjas-strategy/ui";
-import {Insight} from "@/lib/interfaces/Insight";
-import {Tabs} from "@/lib/components/admin/Tabs";
-import {OverviewTab} from "@/lib/components/admin/team/OverviewTab";
-import {GamesList} from "@/lib/components/admin/team/GamesList";
-import {ScoreTrend} from "@/lib/components/admin/analytics/ScoreTrend";
-import {AnalysisTab} from "@/lib/components/admin/team/AnalysisTab";
-import {MD2Colors} from "react-native-paper";
-import {useContext} from "react";
+import {Subtitle, Title, Row, Icon, SimpleButton, CardSurface, BeautifulButton} from "@ninjas-strategy/ui";
+import {useContext, useEffect} from "react";
 import {EventContext, EventStore} from "@/lib/stores/eventStore";
 import {games} from "@ninjas-strategy/frc-games";
 import eventsStore from "@/lib/stores/eventsStore";
@@ -32,40 +25,35 @@ const PageHeader = styled(CardSurface)`
 	flex-direction: column;
 `;
 
-const AmberIcon = styled(Icon)`
-	color: ${MD2Colors.amber500};
-`;
-
-const OrangeIcon = styled(Icon)`
-	color: ${MD2Colors.orange500};
-`;
-
-const GreenIcon = styled(Icon)`
-	color: ${MD2Colors.green500};
-`;
-
 export default observer(function () {
 	const {eventId, id} = useGlobalSearchParams();
 	const router = useRouter();
 	const {teams} = useContext(EventContext) as EventStore;
 	const team = teams[Number.parseInt(id as string)];
-	const bestGame = team.games.reduce((a, b) => a.totalScore > b.totalScore ? a : b);
+	const bestGame = team?.games.reduce((a, b) => a.totalScore > b.totalScore ? a : b);
 	const {events} = eventsStore;
 
-
 	const game = games[events[eventId as string].year];
+
+	useEffect(() => {
+		team?.subscribe();
+		return () => team?.unsubscribe();
+	}, [team]);
+
+	if (!team) {
+		return <Container />;
+	}
 
 	return <Container>
 		<Stack.Screen
 			options={{
 				title: `Team ${id}`,
 				headerRight: () => (
-					// <SimpleButton>
-					// 	<Icon name="compare-arrows"/>
-					// 	<Subtitle>Compare</Subtitle>
-					// </SimpleButton>
-					null	// TODO: Implement team comparison feature
-				)
+					<SimpleButton onPress={() => router.push(`/admin/${eventId}/compare/${id}` as Href)}>
+						<Icon name="compare-arrows"/>
+						<Subtitle>Compare</Subtitle>
+					</SimpleButton>
+				),
 			}}/>
 		<ScrollView>
 			<PageHeader>

@@ -112,10 +112,10 @@ type MainPageSection = {
 	cards: DisplayStatCard[];
 };
 
-type DisplayStatCard = {
+export type DisplayStatCard = {
 	label: string;
 	icon: MaterialIcon;
 	val: (data: Team) => string | number;
+	numericVal: (data: Team) => number;
 	color: string;
 };
-

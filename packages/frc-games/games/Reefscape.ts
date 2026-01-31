@@ -194,24 +194,28 @@ export const Reefscape: FRCGame = {
 				{
 					label: 'Avg Auto',
 					val: team => team.getAverageScore('autonomousScore').toFixed(1),
+					numericVal: team => team.getAverageScore('autonomousScore'),
 					color: MD2Colors.orange500,
 					icon: 'sports-esports',
 				},
 				{
 					label: 'Avg Teleop',
 					val: team => team.getAverageScore('teleopScore').toFixed(1),
+					numericVal: team => team.getAverageScore('teleopScore'),
 					color: MD2Colors.green500,
 					icon: 'sports',
 				},
 				{
 					label: 'Avg Algae',
 					val: team => team.getAverageScore('algaeScore').toFixed(1),
+					numericVal: team => team.getAverageScore('algaeScore'),
 					color: MD2Colors.blue500,
 					icon: 'grass',
 				},
 				{
 					label: 'Best Score',
 					val: team => team.bestScore,
+					numericVal: team => team.bestScore,
 					color: MD2Colors.amber500,
 					icon: 'emoji-events',
 				},

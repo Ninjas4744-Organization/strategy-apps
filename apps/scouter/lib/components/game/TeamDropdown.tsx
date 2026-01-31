@@ -8,9 +8,10 @@ type TeamDropdownProps = {
 	onSelect: (team: string) => void;
 	value: string | null;
 	error: boolean;
+	isAvailable?: (team: number) => boolean;
 };
 
-export const TeamDropdown = ({teams, onSelect, value, error}: TeamDropdownProps) => {
+export const TeamDropdown = ({teams, onSelect, value, error, isAvailable}: TeamDropdownProps) => {
 	const [visible, setVisible] = useState(false);
 	const anchorRef = useRef<View>(null);
 	const [coordinates, setCoordinates] = useState({x: 0, y: 0});
@@ -54,6 +55,7 @@ export const TeamDropdown = ({teams, onSelect, value, error}: TeamDropdownProps)
 								<Menu.Item
 									key={team}
 									title={`Team ${number}`}
+									disabled={isAvailable && !isAvailable(parseInt(number))}
 									onPress={() => {
 										onSelect(number);
 										setVisible(false);
