@@ -53,9 +53,9 @@ class RegistrationCodesStore {
 	}
 
 	@action.bound
-	async generateRegistrationCode(team: string) {
+	async generateRegistrationCode(team: number) {
 		try {
-			const registrationCodesRef = doc(db, 'registration_codes', team);
+			const registrationCodesRef = doc(db, 'registration_codes', team.toString());
 
 			const members_code = getRandomString(10, 'ninja-scout-');
 			const admins_code = getRandomString(10, 'ninja-scout-');

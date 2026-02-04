@@ -1,7 +1,7 @@
 import {useMemo, useRef, useState} from "react";
-import {Pressable, ScrollView, View, StyleSheet} from "react-native";
-import {MD2Colors, Menu, Portal} from "react-native-paper";
-import {TeamInfoInput} from "@/lib/components/game/TeamInfoInput";
+import {Pressable, ScrollView, View} from "react-native";
+import {Menu, Portal} from "react-native-paper";
+import {BasicInput} from "./BasicInput";
 
 type TeamDropdownProps = {
 	teams: string[];
@@ -30,7 +30,7 @@ export const TeamDropdown = ({teams, onSelect, value, error, isAvailable}: TeamD
 		<>
 			<Pressable onPress={() => openMenu()}>
 				<View ref={anchorRef} pointerEvents="box-only">
-					<TeamInfoInput
+					<BasicInput
 						label="Team Number"
 						onFocus={openMenu}
 						showSoftInputOnFocus={false}

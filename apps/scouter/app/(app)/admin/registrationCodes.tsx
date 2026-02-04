@@ -1,14 +1,18 @@
-import {Loading, HeaderButtons, TextInput, Subtitle, Icon, TextInputIcon} from "@ninjas-strategy/ui";
+import {Loading, HeaderButtons, TextInput, Subtitle, Icon, TextInputIcon, FormDialog} from "@ninjas-strategy/ui";
 import {ScrollView} from "react-native";
 import {observer} from "mobx-react-lite";
 import {Stack} from "expo-router";
-import {Button, Dialog, Portal} from "react-native-paper";
+import {Portal} from "react-native-paper";
 import {useEffect, useMemo, useState} from "react";
 import styled from "styled-components/native";
 import Animated, {FadeInUp} from "react-native-reanimated";
 import {RegistrationCodeItem} from "@/lib/components/admin/RegistrationCodeItem";
 import {useDebounce} from "@/lib/hooks/debounce";
 import registrationCodesStore from "@/lib/stores/registrationCodesStore";
+
+type RegistrationCodeFormData = {
+	team: number;
+};
 
 const Container = styled.View`
 	flex: 1;
@@ -29,7 +33,6 @@ const EmptyState = styled.View`
 export default observer(function RegistrationCodesPage() {
 	const {registrationCodes, subscribe, unsubscribe, isLoading, generateRegistrationCode} = registrationCodesStore;
 	const [showAddDialog, setShowAddDialog] = useState(false);
-	const [registrationTeam, setRegistrationTeam] = useState('');
 	const [searchQuery, setSearchQuery] = useState('');
 	const debouncedQuery = useDebounce(searchQuery);
 
@@ -50,10 +53,14 @@ export default observer(function RegistrationCodesPage() {
 				code.membersCode.toLowerCase().includes(q) ||
 				code.adminsCode.toLowerCase().includes(q)
 		);
-	}, [registrationCodes, debouncedQuery, registrationCodes]);
+	}, [isLoading, registrationCodes, debouncedQuery, registrationCodes]);
 
 	if (isLoading)
 		return <Loading />;
+
+	const createRegistrationCode = ({team}: RegistrationCodeFormData) => {
+		generateRegistrationCode(team);
+	}
 
 	return (
 		<Container>
@@ -85,7 +92,7 @@ export default observer(function RegistrationCodesPage() {
 					<Subtitle>No matching teams</Subtitle>
 				</EmptyState>
 			) : (
-				<ScrollView contentContainerStyle={{ paddingVertical: 8 }}>
+				<ScrollView contentContainerStyle={{ paddingVertical: 8 }} keyboardShouldPersistTaps="handled">
 					<Animated.View entering={FadeInUp.duration(400)}>
 						{filteredCodes.map((code, i) => (
 							<Animated.View key={code.id} entering={FadeInUp.delay(i * 50)}>
@@ -97,31 +104,19 @@ export default observer(function RegistrationCodesPage() {
 			)}
 
 			<Portal>
-				<Dialog visible={showAddDialog} onDismiss={() => setShowAddDialog(false)}>
-					<Dialog.Title>Add Team Registration</Dialog.Title>
-					<Dialog.Content>
-						<TextInput
-							label="Team Number"
-							keyboardType="number-pad"
-							value={registrationTeam}
-							onChangeText={setRegistrationTeam}
-						/>
-					</Dialog.Content>
-					<Dialog.Actions>
-						<Button onPress={() => setShowAddDialog(false)}>Cancel</Button>
-						<Button
-							mode="contained"
-							disabled={!registrationTeam}
-							onPress={async () => {
-								setShowAddDialog(false);
-								await generateRegistrationCode(registrationTeam);
-								setRegistrationTeam('');
-							}}
-						>
-							Create
-						</Button>
-					</Dialog.Actions>
-				</Dialog>
+				<FormDialog<RegistrationCodeFormData>
+					visible={showAddDialog}
+					onDismiss={() => setShowAddDialog(false)}
+					title="Add Team Registration"
+					onSubmit={createRegistrationCode}
+					fields={[
+						{
+							name: "team",
+							label: "Team Number",
+							type: 'number',
+							rules: { required: true },
+						}
+					]} />
 			</Portal>
 		</Container>
 	);

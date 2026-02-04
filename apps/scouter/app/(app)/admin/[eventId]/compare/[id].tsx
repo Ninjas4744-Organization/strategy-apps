@@ -1,15 +1,18 @@
 import React, {Fragment, useContext, useEffect, useMemo, useState} from "react";
 import {ScrollView} from "react-native";
 import styled from "styled-components/native";
-import {Card, CardSurface, Icon, Row, SimpleButton, Subtitle, Title} from "@ninjas-strategy/ui";
+import {Card, CardSurface, FormDialog, Icon, Row, SimpleButton, Subtitle, Title} from "@ninjas-strategy/ui";
 import {Stack, useLocalSearchParams} from "expo-router";
 import {observer} from "mobx-react-lite";
 import {EventContext, EventStore} from "@/lib/stores/eventStore";
 import {games} from "@ninjas-strategy/frc-games";
 import eventsStore from "@/lib/stores/eventsStore";
-import {Button, Dialog, MD2Colors} from "react-native-paper";
-import {TeamDropdown} from "@/lib/components/game/TeamDropdown";
+import {MD2Colors} from "react-native-paper";
 import Animated, {LinearTransition} from "react-native-reanimated";
+
+type AddTeamFormData = {
+	team: string;
+}
 
 const Container = styled.SafeAreaView`
 	background-color: transparent;
@@ -41,7 +44,6 @@ const FlexGrow = styled.View`
 
 export default observer(function CompareScreen() {
 	const [showAddTeamDialog, setShowAddTeamDialog] = useState(false);
-	const [teamToAdd, setTeamToAdd] = useState<string | null>(null);
 	const {eventId, id} = useLocalSearchParams<{ eventId: string, id: string }>();
 	const [teamIds, setTeamIds] = useState<string[]>([id])
 	const {teams} = useContext(EventContext) as EventStore;
@@ -81,9 +83,9 @@ export default observer(function CompareScreen() {
 		return () => comparisonTeams.forEach(team => team.unsubscribe());
 	}, [comparisonTeams]);
 
-	const addTeamToComparison = () => {
-		if (teamToAdd && !teamIds.includes(teamToAdd)) {
-			setTeamIds(ids => [...ids, teamToAdd]);
+	const addTeamToComparison = ({team}: AddTeamFormData) => {
+		if (!teamIds.includes(team)) {
+			setTeamIds(ids => [...ids, team]);
 		}
 		setShowAddTeamDialog(false);
 	}
@@ -135,20 +137,20 @@ export default observer(function CompareScreen() {
 					</Animated.View>
 				))}
 			</ScrollView>
-			<Dialog visible={showAddTeamDialog} dismissable onDismiss={() => (setShowAddTeamDialog(false), setTeamToAdd(null))}>
-				<Dialog.Title>Add Team To Comparison</Dialog.Title>
-				<Dialog.Content>
-					<TeamDropdown
-						teams={events[eventId as string].teams}
-						onSelect={setTeamToAdd}
-						value={teamToAdd}
-						error={false}
-						isAvailable={team => !!teams[team]}/>
-				</Dialog.Content>
-				{teamToAdd && <Dialog.Actions>
-					<Button onPress={addTeamToComparison}>Compare</Button>
-				</Dialog.Actions>}
-			</Dialog>
+			<FormDialog<AddTeamFormData>
+				visible={showAddTeamDialog}
+				onDismiss={() => (setShowAddTeamDialog(false))}
+				title="Add Team To Comparison"
+				onSubmit={addTeamToComparison}
+				fields={[
+					{
+						name: "team",
+						label: "Team",
+						type: 'team',
+						rules: {required: true},
+						teams: events[eventId as string].teams,
+					}
+				]} />
 		</Container>
 	);
 });
