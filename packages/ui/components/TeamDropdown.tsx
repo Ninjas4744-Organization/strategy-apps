@@ -1,6 +1,6 @@
 import {useMemo, useRef, useState} from "react";
 import {Pressable, ScrollView, View} from "react-native";
-import {Menu, Portal} from "react-native-paper";
+import {Menu, Portal, Text, TextInput} from "react-native-paper";
 import {BasicInput} from "./BasicInput";
 
 type TeamDropdownProps = {
@@ -31,14 +31,15 @@ export const TeamDropdown = ({teams, onSelect, value, error, isAvailable}: TeamD
 			<Pressable onPress={() => openMenu()}>
 				<View ref={anchorRef} pointerEvents="box-only">
 					<BasicInput
+						style={{ width: "100%", minWidth: 1 }}
+						multiline={false}
+						numberOfLines={1}
 						label="Team Number"
-						onFocus={openMenu}
-						showSoftInputOnFocus={false}
-						editable={editable}
-						value={value ? `Team ${value}` : 'Select team'}
-						iconLeft="group"
+						editable={false}
+						value={value ? `Team ${value}` : "Select team"}
 						iconRight="arrow-drop-down"
-						error={error}/>
+						error={error}
+					/>
 				</View>
 			</Pressable>
 			<Portal>

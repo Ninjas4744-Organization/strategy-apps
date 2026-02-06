@@ -11,21 +11,37 @@ type BasicInputProps = TextInputProps & {
 const BasicInputContainer = styled(TextInput)`
 	background-color: ${MD2Colors.white}70;
 	border-radius: 16px;
+	min-width: 0;
 `;
 
 const BasicInputIcon = styled(Icon)`
 	font-size: 24px;
 	color: #555;
+	min-width: 0;
 `;
 
-export const BasicInput = ({...inputProps}: BasicInputProps) => {
-	if (inputProps.iconLeft) {
-		inputProps.left = <TextInput.Icon icon={() => <BasicInputIcon name={inputProps.iconLeft!} />} pointerEvents="none" />;
-	}
+export const BasicInput = ({iconLeft, iconRight, ...inputProps}: BasicInputProps) => {
+	const left = iconLeft ? (
+		<TextInput.Icon
+			icon={() => <BasicInputIcon name={iconLeft} />}
+			disabled
+			forceTextInputFocus={false}
+			style={{minWidth: 0}}/>
+	) : inputProps.left;
 
-	if (inputProps.iconRight) {
-		inputProps.right = <TextInput.Icon icon={() => <BasicInputIcon name={inputProps.iconRight!} />} pointerEvents="none" />;
-	}
+	const right = iconRight ? (
+		<TextInput.Icon
+			icon={() => <BasicInputIcon name={iconRight} />}
+			disabled
+			forceTextInputFocus={false}
+			style={{minWidth: 0}}/>
+	) : inputProps.right;
 
-	return <BasicInputContainer {...inputProps} underlineStyle={{display: 'none'}} />;
+	return (
+		<BasicInputContainer
+			{...inputProps}
+			left={left}
+			right={right}
+			underlineStyle={{display: 'none'}}/>
+	);
 };

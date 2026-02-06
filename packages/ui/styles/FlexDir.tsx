@@ -11,3 +11,7 @@ export const Col = styled.View`
 	align-items: center;
 	gap: 8px;
 `;
+
+export const FlexGrow = styled.View`
+	flex-grow: 1;
+`;

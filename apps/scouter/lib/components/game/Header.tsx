@@ -43,7 +43,7 @@ const NextPageIconContainer = styled.TouchableOpacity`
 export const Header = observer(({route}: HeaderProps) => {
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
-	const {eventId, pageNum} = route.params as RouteParams;
+	const {eventId, pageNum, teamNum} = route.params as RouteParams;
 	const {teamNumber} = gameStore;
 	const event = eventsStore.events[eventId];
 
@@ -51,15 +51,25 @@ export const Header = observer(({route}: HeaderProps) => {
 	const yearGame = games[event.year];
 
 	return <HeaderContainer insets={insets}>
-		{page > 0 && <PageIconContainer onPress={() => router.push(`/scouter/${eventId}/${parseInt(pageNum) - 1}` as Href)}>
-			<PageIcon name="arrow-back"/>
-		</PageIconContainer>}
-		<TextSection>
-			<Title>Now Scouting Team {teamNumber}</Title>
+		{route.name === 'index' && <TextSection>
+			<Title>{event.name}</Title>
+			<Subtitle>{event.year}</Subtitle>
+		</TextSection>}
+		{route.name.startsWith('game') && <>
+			{page > 0 && <PageIconContainer onPress={() => router.push(`/scouter/game/${eventId}/${parseInt(pageNum) - 1}` as Href)}>
+				<PageIcon name="arrow-back"/>
+			</PageIconContainer>}
+			<TextSection>
+				<Title>Now Scouting Team {teamNumber}</Title>
+				<Subtitle>{event.name}</Subtitle>
+			</TextSection>
+			{page < yearGame.pages.length - 1 && <NextPageIconContainer onPress={() => router.push(`/scouter/game/${eventId}/${parseInt(pageNum) + 1}` as Href)}>
+				<PageIcon name="arrow-forward"/>
+			</NextPageIconContainer>}
+		</>}
+		{route.name.startsWith('pit') && <TextSection>
+			<Title>Now Scouting Team {teamNum}</Title>
 			<Subtitle>{event.name}</Subtitle>
-		</TextSection>
-		{page < yearGame.pages.length - 1 && <NextPageIconContainer onPress={() => router.push(`/scouter/${eventId}/${parseInt(pageNum) + 1}` as Href)}>
-			<PageIcon name="arrow-forward"/>
-		</NextPageIconContainer>}
+		</TextSection>}
 	</HeaderContainer>;
 });
