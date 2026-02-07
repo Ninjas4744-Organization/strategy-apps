@@ -34,16 +34,24 @@ export class OfflineQueue {
 			let sentAny = false;
 			const remaining: GameData[] = [];
 
-			for (const data of unsent) {
+			for (const {type, ...data} of unsent) {
 				try {
-					const teamDoc = doc(collection(db, 'events', data.eventId, 'teams'), data.team_number.toString());
-					const gameDoc = doc(collection(teamDoc, 'games'), data.game_number.toString());
+					if (type === 'game') {
+						const teamDoc = doc(collection(db, 'events', data.eventId, 'teams'), data.team_number.toString());
+						const gameDoc = doc(collection(teamDoc, 'games'), data.game_number.toString());
 
-					await setDoc(gameDoc, {
-						...data,
-						timestamp: serverTimestamp()
-					});
-					sentAny = true;
+						await setDoc(gameDoc, {
+							...data,
+							timestamp: serverTimestamp()
+						});
+						sentAny = true;
+					} else if (type === 'pit') {
+						const teamRef = doc(db, 'events', data.eventId, 'pit', data.team_number.toString());
+						await setDoc(teamRef, {
+							...data,
+							timestamp: serverTimestamp(),
+						});
+					}
 				} catch (e) {
 					console.warn('Failed to resend item:', e);
 					remaining.push(data);

@@ -6,6 +6,7 @@ type Overwrite<T, U> = Pick<T, Exclude<keyof T, keyof U>> & U;
 export type FRCGame = {
 	sections: Sections;
 	pages: Page[];
+	pitScoutingAttributes?: PitAttributes;
 	fieldCalculations: Calculations;
 	amountCalculations: Calculations;
 	totalCalculations: Calculations;
@@ -45,6 +46,19 @@ export type Sections = {
 
 export type Calculations = {
 	[key: string]: string[];
+};
+
+type PitAttributes = {
+	[key: string]: PitAttribute;
+};
+
+export type PitAttribute = {
+	id: string;
+	title: string;
+	description?: string;
+	type: 'text' | 'number' | 'enum' | 'bool';
+	values?: {[key: string]: string};	// enum
+	defaultValue?: string;				// enum
 };
 
 export type ScoringElement = {

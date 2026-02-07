@@ -68,6 +68,7 @@ class GameStore {
 		} catch (e) {
 			await OfflineQueue.saveUnsentGameData({
 				...this.data,
+				type: 'game',
 				team_number: +this.teamNumber,
 				game_number: +this.gameNumber,
 				scouter_id: userStore.user?.uid,

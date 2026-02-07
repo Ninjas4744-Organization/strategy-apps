@@ -17,6 +17,7 @@ type HeaderProps = {
 type RouteParams = {
 	eventId: string;
 	pageNum: string;
+	teamNum: string;
 };
 
 const HeaderContainer = styled.View<{insets: EdgeInsets}>`

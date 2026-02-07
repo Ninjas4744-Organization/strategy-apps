@@ -202,6 +202,84 @@ export const REBUILT: FRCGame = {
 			sections: () => ['endgame_fuel_scoring', 'endgame_fuel_passing', 'traversal'],
 		}
 	],
+	pitScoutingAttributes: {
+		maxBallCapacity: {
+			id: 'max_ball_capacity',
+			title: 'What is the maximum number of balls your robot can hold?',
+			description: 'If the robot can hold 5 balls, type 5',
+			type: 'number',
+		},
+		hopperFillingEfficiency: {
+			id: 'hopper_filling_efficiency',
+			title: 'How fast can your robot fill the hopper?',
+			description: 'balls/seconds',
+			type: 'number',
+		},
+		goesUnderTheTrench: {
+			id: 'goes_under_the_trench',
+			title: 'Can your robot go under the trench?',
+			type: 'bool',
+		},
+		goesOverTheBump: {
+			id: 'goes_over_the_bump',
+			title: 'Can your robot go over the bump?',
+			type: 'bool',
+		},
+		whereDoesItCollectBallsInAuto: {
+			id: 'where_does_it_collect_balls_in_auto',
+			title: 'Where does it collect balls in auto?',
+			description: 'Outpost? Depot? Middle of the field?',
+			type: 'text',
+		},
+		howManyAutoTypes: {
+			id: 'how_many_auto_types',
+			title: 'How many different types of auto does your robot have?',
+			type: 'number',
+		},
+		autoTypesDescription: {
+			id: 'auto_types_description',
+			title: 'Describe the different types of auto your robot has',
+			type: 'text',
+		},
+		canClimbInAuto: {
+			id: 'can_climb_in_auto',
+			title: 'Can your robot climb in auto?',
+			type: 'bool',
+		},
+		canClimbToLevel3: {
+			id: 'can_climb_to_level_3',
+			title: 'Can your robot climb to level 3?',
+			type: 'bool',
+		},
+		climbToLevel3Time: {
+			id: 'climb_to_level_3_time',
+			title: 'If yes, how long does it take to climb to level 3?',
+			description: 'Seconds for the level 3 climb',
+			type: 'number',
+		},
+		canClimbAtAll: {
+			id: 'can_climb_at_all',
+			title: 'Can your robot climb at all?',
+			type: 'bool',
+		},
+		climbToLevel1Time: {
+			id: 'climb_time',
+			title: 'If yes, how long does it take to climb to level 1?',
+			description: 'Seconds for the level 1 climb',
+			type: 'number',
+		},
+		whereDoYouClimb: {
+			id: 'where_do_you_climb',
+			title: 'Where do you climb?',
+			type: 'enum',
+			values: {
+				right: 'right',
+				center: 'center',
+				left: 'left',
+			},
+			defaultValue: 'center',
+		},
+	},
 	fieldCalculations: {
 		fuelScore: ['autonomous_fuel_scored', 'teleop_fuel_scored', 'endgame_fuel_scored'],
 		traversalScore: ['autonomous_climb', 'traversal'],

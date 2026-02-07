@@ -1,13 +1,10 @@
-import {FormDialog, HeaderButtons, Loading} from "@ninjas-strategy/ui";
+import {HeaderButtons, Loading} from "@ninjas-strategy/ui";
 import {ScrollView} from "react-native";
 import {observer} from "mobx-react-lite";
 import {Href, Stack, useRouter} from "expo-router";
 import {EventItem} from "@/lib/components/EventItem";
 import userStore from "@/lib/stores/userStore";
 import eventsStore from "@/lib/stores/eventsStore";
-import {useState} from "react";
-import {Portal} from "react-native-paper";
-import gameStore from "@/lib/stores/gameStore";
 
 
 export default observer(function ScouterIndex() {

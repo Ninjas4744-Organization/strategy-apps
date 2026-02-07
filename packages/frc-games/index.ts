@@ -36,4 +36,22 @@ export const initGameData = (year: number) => {
 	return data;
 };
 
+export const initPitData = (year: number) => {
+	const game = games[year];
+	if (!game || !game.pitScoutingAttributes) {
+		return {};
+	}
+
+	let data: Record<string, any> = {};
+	for (const attributeKey in game.pitScoutingAttributes) {
+		const attribute = game.pitScoutingAttributes[attributeKey];
+		if (attribute?.type === 'enum') {
+			data[attributeKey] = attribute.defaultValue;
+		} else {
+			data[attributeKey] = false;
+		}
+	}
+	return data;
+}
+
 export * from './calculations';
