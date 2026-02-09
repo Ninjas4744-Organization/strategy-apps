@@ -14,7 +14,7 @@ export const GameForm = observer(({data, setData, pageNum, pages, sections}: Gam
 
 	return <>
 		{pageSections.map(section => (
-			<Section key={section?.id} {...section!} data={data} setData={setData} />
+			<Section key={section?.id} {...section!} data={data} setData={setData} pageNum={pageNum} />
 		))}
 	</>;
 });

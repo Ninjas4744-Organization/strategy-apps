@@ -9,15 +9,17 @@ type GameFieldProps = ScoringElement & {
 	id: string;
 	data: Record<string, any>;
 	setData: (key: string, value: any) => void;
+	pageNum: number;
 };
 
-export const GameField = observer(({type, title, color, data, id, missed_key, setData, values}: GameFieldProps) => {
+export const GameField = observer(({type, title, color, data, id, missed_key, setData, values, pageNum}: GameFieldProps) => {
 	if (type === 'batch-shooter') {
 		return (
 			<BatchShooter
 				value={data[id]}
 				onChange={v => setData(id, v)}
-				title={title} />
+				title={title}
+				pageNum={pageNum} />
 		);
 	}
 	if (type === 'counter') {

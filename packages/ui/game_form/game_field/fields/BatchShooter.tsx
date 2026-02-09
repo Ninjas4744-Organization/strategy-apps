@@ -8,13 +8,14 @@ import {Icon, Text} from "../../..";
 export type ShooterBatch = {
 	shotPct: number;
 	missCount: number;
+	pageNum: number;
 };
 
 type BatchShooterProps = {
 	value: ShooterBatch[];
 	onChange: (next: ShooterBatch[]) => void;
 	title: string;
-
+	pageNum: number;
 	shotPresets?: number[];
 };
 
@@ -97,10 +98,11 @@ function parseIntSafe(text: string) {
 	return clampInt(Number(text));
 }
 
-export const BatchShooter = ({value, onChange, title, shotPresets = [0, 25, 50, 75, 100]}: BatchShooterProps) => {
-	const batches = value || [];
+export const BatchShooter = ({value, onChange, title, pageNum, shotPresets = [0, 25, 50, 75, 100]}: BatchShooterProps) => {
+	let batches = value || [];
+	batches = batches.filter(b => b.pageNum === pageNum);
 
-	const add = () => onChange([...batches, {shotPct: 0, missCount: 0}]);
+	const add = () => onChange([...batches, {shotPct: 0, missCount: 0, pageNum}]);
 	const remove = (i: number) => onChange(batches.filter((_, idx) => idx !== i));
 	const update = (i: number, next: ShooterBatch) => onChange(batches.map((b, idx) => (idx === i ? next : b)));
 
@@ -135,7 +137,7 @@ export const BatchShooter = ({value, onChange, title, shotPresets = [0, 25, 50, 
 								<NumberInput
 									keyboardType="numeric"
 									value={String(b.shotPct ?? 0)}
-									onChangeText={(t) => update(i, {shotPct: parsePct(t), missCount: b.missCount ?? 0})} />
+									onChangeText={(t) => update(i, {shotPct: parsePct(t), missCount: b.missCount ?? 0, pageNum})} />
 								<Percent>%</Percent>
 							</InputRow>
 
@@ -143,7 +145,7 @@ export const BatchShooter = ({value, onChange, title, shotPresets = [0, 25, 50, 
 								{shotPresets.map((p) => (
 									<Chip
 										key={`shot-${i}-${p}`}
-										onPress={() => update(i, {shotPct: p, missCount: b.missCount ?? 0})}>
+										onPress={() => update(i, {shotPct: p, missCount: b.missCount ?? 0, pageNum})}>
 										<ChipText>{p}%</ChipText>
 									</Chip>
 								))}
@@ -157,14 +159,14 @@ export const BatchShooter = ({value, onChange, title, shotPresets = [0, 25, 50, 
 								<NumberInput
 									keyboardType="numeric"
 									value={String(b.missCount ?? 0)}
-									onChangeText={(t) => update(i, {shotPct: b.shotPct ?? 0, missCount: parseIntSafe(t)})} />
+									onChangeText={(t) => update(i, {shotPct: b.shotPct ?? 0, missCount: parseIntSafe(t), pageNum})} />
 							</InputRow>
 
 							<PresetsRow>
 								<CounterValue
 									title="Misses"
 									value={b.missCount}
-									onChange={(v) => update(i, {shotPct: b.shotPct ?? 0, missCount: v})}
+									onChange={(v) => update(i, {shotPct: b.shotPct ?? 0, missCount: v, pageNum})}
 									color={MD2Colors.white} />
 							</PresetsRow>
 						</LayoutCol>

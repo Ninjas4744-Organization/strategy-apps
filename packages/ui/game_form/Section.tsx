@@ -7,6 +7,7 @@ import {observer} from "mobx-react-lite";
 type SectionProps = ScoringSection & {
 	data: Record<string, any>;
 	setData: (key: string, value: any) => void;
+	pageNum: number;
 };
 
 const SectionContainer = styled.View<{ color: string }>`
@@ -27,7 +28,7 @@ const SectionHeader = styled.View`
 	align-items: center;
 `;
 
-export const Section = observer(({color, icon, title, fields, data, setData}: SectionProps) => {
+export const Section = observer(({color, icon, title, fields, data, setData, pageNum}: SectionProps) => {
 	return <SectionContainer color={color}>
 		<SectionHeader>
 			<IconContainer>
@@ -36,7 +37,7 @@ export const Section = observer(({color, icon, title, fields, data, setData}: Se
 			<Title>{title}</Title>
 		</SectionHeader>
 		{Object.entries(fields).map(([id, field]) => (
-			<GameField key={id} {...field} id={id} data={data} setData={(key, value) => setData(key, value)} />
+			<GameField key={id} {...field} id={id} data={data} setData={(key, value) => setData(key, value)} pageNum={pageNum} />
 		))}
 	</SectionContainer>;
 });
