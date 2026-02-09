@@ -8,6 +8,15 @@ enum TraversalLevel {
 	L3 = 'Level 3',
 }
 
+const calculateBatchScore = (game: Record<string, any>, field: string) => {
+	let score = 0;
+	const maxBallCapacity = game.max_ball_capacity || 0;
+	for (let batch of game[field] ?? []) {
+		score += ((maxBallCapacity * batch.shotPct / 100) - batch.missCount);
+	}
+	return score;
+}
+
 export const REBUILT: FRCGame = {
 	sections: {
 		auto_fuel: {
@@ -20,7 +29,7 @@ export const REBUILT: FRCGame = {
 					type: 'batch-shooter',
 					title: 'Fuel Scored',
 					color: MD2Colors.blue500,
-					getScore: (game) => game['autonomous_fuel_scored'] ?? 0,
+					getScore: (game) => calculateBatchScore(game, 'autonomous_fuel_scored'),
 				},
 				autonomous_fuel_passed: {
 					type: 'counter',
@@ -60,7 +69,7 @@ export const REBUILT: FRCGame = {
 					type: 'batch-shooter',
 					title: 'Fuel Scored',
 					color: MD2Colors.blue500,
-					getScore: (game) => game['teleop_fuel_scored'] ?? 0,
+					getScore: (game) => calculateBatchScore(game, 'teleop_fuel_scored'),
 				}
 			},
 		},
@@ -102,7 +111,7 @@ export const REBUILT: FRCGame = {
 					type: 'batch-shooter',
 					title: 'Fuel Scored',
 					color: MD2Colors.blue500,
-					getScore: (game) => game['endgame_fuel_scored'] ?? 0,
+					getScore: (game) => calculateBatchScore(game, 'endgame_fuel_scored'),
 				}
 			},
 		},

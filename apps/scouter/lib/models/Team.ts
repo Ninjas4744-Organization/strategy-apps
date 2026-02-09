@@ -1,14 +1,15 @@
 import {Game} from './Game';
 import {Model} from '@/lib/interfaces/Model';
-import {collection, onSnapshot} from "firebase/firestore";
+import {collection, doc, getDoc, onSnapshot, type QueryDocumentSnapshot, type DocumentData} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {action, makeObservable, observable, runInAction} from "mobx";
 import {games, Team as TeamCalculation} from "@ninjas-strategy/frc-games";
+import {combineLatest, Observable, type Subscription} from "rxjs";
 
 export class Team extends TeamCalculation implements Model {
 	@observable games: Game[] = [];
 	@observable isLoading: boolean = true;
-	private _unsubscribe: (() => void) | null = null;
+	private subscription: Subscription | null = null;
 
 	constructor(
 		public id: string,
@@ -45,18 +46,38 @@ export class Team extends TeamCalculation implements Model {
 
 	@action.bound
 	subscribe() {
-		if (this._unsubscribe)
-			this._unsubscribe();
+		if (this.subscription)
+			this.subscription.unsubscribe();
 
 		const gamesRef = collection(db, 'events', this.eventId, 'teams', this.id, 'games');
+		const pitRef = doc(db, 'events', this.eventId, 'pit', this.id);
+
+		const observedGames = new Observable<QueryDocumentSnapshot[]>(subscriber => {
+			const unsubscribe = onSnapshot(gamesRef, snapshot => {
+				subscriber.next(snapshot.docs);
+			})
+			return () => unsubscribe();
+		});
+		const observedPit = new Observable<DocumentData>(subscriber => {
+			const unsubscribe = onSnapshot(pitRef, snapshot => {
+				subscriber.next(snapshot);
+			});
+			return () => unsubscribe();
+		});
 
 		this.isLoading = true;
-		this._unsubscribe = onSnapshot(gamesRef, snapshot => {
+		const listener = combineLatest([observedGames, observedPit]);
+		this.subscription = listener.subscribe(([gamesSnapshot, pitSnapshot]) => {
+			const pitData = pitSnapshot.data() || {};
 			runInAction(() => {
-				this.games = snapshot.docs.map(game => {
-					const data = game.data();
-					return Game.fromMap(game.id, games[this.eventYear], data);
-				}).sort((a, b) => Number.parseInt(a.gameNumber) > Number.parseInt(b.gameNumber) ? 1 : -1);
+				this.games = gamesSnapshot.map(game =>
+				{
+					const gameData = game.data();
+					return Game.fromMap(game.id, games[this.eventYear], {
+						...gameData,
+						...pitData
+					});
+				});
 				this.isLoading = false;
 			});
 		});
@@ -64,9 +85,9 @@ export class Team extends TeamCalculation implements Model {
 
 	@action.bound
 	unsubscribe() {
-		if (this._unsubscribe) {
-			this._unsubscribe();
-			this._unsubscribe = null;
+		if (this.subscription) {
+			this.subscription.unsubscribe();
+			this.subscription = null;
 		}
 	}
 }
