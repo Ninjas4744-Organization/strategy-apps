@@ -62,7 +62,7 @@ export type PitAttribute = {
 };
 
 export type ScoringElement = {
-	type: 'counter'|'enum'|'bool';
+	type: 'counter'|'enum'|'bool'|'batch-shooter';
 	title: string;
 	description?: string;
 	color: string;

@@ -3,6 +3,7 @@ import {Counter} from "./fields/Couter";
 import {Enum} from "./fields/Enum";
 import {observer} from "mobx-react-lite";
 import {Checkbox, MD2Colors} from "react-native-paper";
+import {BatchShooter} from "./fields/BatchShooter";
 
 type GameFieldProps = ScoringElement & {
 	id: string;
@@ -11,6 +12,14 @@ type GameFieldProps = ScoringElement & {
 };
 
 export const GameField = observer(({type, title, color, data, id, missed_key, setData, values}: GameFieldProps) => {
+	if (type === 'batch-shooter') {
+		return (
+			<BatchShooter
+				value={data[id]}
+				onChange={v => setData(id, v)}
+				title={title} />
+		);
+	}
 	if (type === 'counter') {
 		return (
 			<Counter

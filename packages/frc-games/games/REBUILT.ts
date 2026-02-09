@@ -17,10 +17,9 @@ export const REBUILT: FRCGame = {
 			id: 'auto_fuel',
 			fields: {
 				autonomous_fuel_scored: {
-					type: 'counter',
+					type: 'batch-shooter',
 					title: 'Fuel Scored',
 					color: MD2Colors.blue500,
-					missed_key: 'autonomous_fuel_missed',
 					getScore: (game) => game['autonomous_fuel_scored'] ?? 0,
 				},
 				autonomous_fuel_passed: {
@@ -58,10 +57,9 @@ export const REBUILT: FRCGame = {
 			id: 'teleop_fuel_scoring',
 			fields: {
 				teleop_fuel_scored: {
-					type: 'counter',
+					type: 'batch-shooter',
 					title: 'Fuel Scored',
 					color: MD2Colors.blue500,
-					missed_key: 'teleop_fuel_missed',
 					getScore: (game) => game['teleop_fuel_scored'] ?? 0,
 				}
 			},
@@ -101,10 +99,9 @@ export const REBUILT: FRCGame = {
 			id: 'endgame_fuel_scoring',
 			fields: {
 				endgame_fuel_scored: {
-					type: 'counter',
+					type: 'batch-shooter',
 					title: 'Fuel Scored',
 					color: MD2Colors.blue500,
-					missed_key: 'endgame_fuel_missed',
 					getScore: (game) => game['endgame_fuel_scored'] ?? 0,
 				}
 			},

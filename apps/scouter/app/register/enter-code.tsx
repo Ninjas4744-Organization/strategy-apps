@@ -59,7 +59,7 @@ export default function EnterCodePage() {
 			if (registrationCode === data.members_code) {
 				userType = UserType.SCOUTER;
 			} else if (registrationCode === data.admins_code) {
-				userType = UserType.APP_ADMIN;
+				userType = UserType.TEAM_ADMIN;
 			} else {
 				showSnackbar("Invalid registration code");
 				return;

@@ -82,7 +82,7 @@ const CounterButton = styled.TouchableOpacity`
 	border-radius: 8px;
 `;
 
-const CounterValue = observer(({color, title, value, onChange}: CounterValueProps) => {
+export const CounterValue = observer(({color, title, value, onChange}: CounterValueProps) => {
 	return <CounterValueContainer color={color}>
 		<Subtitle>{title}</Subtitle>
 		<CountersContainer>
