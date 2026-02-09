@@ -1,3 +1,6 @@
+import {Observable} from "rxjs";
+import {type DocumentData, type QueryDocumentSnapshot, type CollectionReference, onSnapshot} from "firebase/firestore";
+
 export function pick(obj: any, keys: string[]): object {
 	const res: any = {};
 	keys.forEach(k => {
@@ -25,3 +28,21 @@ export function getRandomString(length: number, prefix = '') {
 
 	return text;
 }
+
+export const observeCollection = (ref: CollectionReference): Observable<QueryDocumentSnapshot[]> => {
+	return new Observable<QueryDocumentSnapshot[]>(subscriber => {
+		const unsubscribe = onSnapshot(ref, snapshot => {
+			subscriber.next(snapshot.docs);
+		})
+		return () => unsubscribe();
+	});
+};
+
+export const observeDoc = (ref:  DocumentReference<DocumentData, DocumentData>): Observable<DocumentData> => {
+	return new Observable<DocumentData>(subscriber => {
+		const unsubscribe = onSnapshot(ref, snapshot => {
+			subscriber.next(snapshot);
+		});
+		return () => unsubscribe();
+	});
+};

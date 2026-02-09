@@ -1,10 +1,11 @@
 import {Game} from './Game';
 import {Model} from '@/lib/interfaces/Model';
-import {collection, doc, getDoc, onSnapshot, type QueryDocumentSnapshot, type DocumentData} from "firebase/firestore";
+import {collection, doc} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {action, makeObservable, observable, runInAction} from "mobx";
 import {games, Team as TeamCalculation} from "@ninjas-strategy/frc-games";
-import {combineLatest, Observable, type Subscription} from "rxjs";
+import {combineLatest, type Subscription} from "rxjs";
+import {observeCollection, observeDoc} from "@/lib/utilities";
 
 export class Team extends TeamCalculation implements Model {
 	@observable games: Game[] = [];
@@ -52,21 +53,11 @@ export class Team extends TeamCalculation implements Model {
 		const gamesRef = collection(db, 'events', this.eventId, 'teams', this.id, 'games');
 		const pitRef = doc(db, 'events', this.eventId, 'pit', this.id);
 
-		const observedGames = new Observable<QueryDocumentSnapshot[]>(subscriber => {
-			const unsubscribe = onSnapshot(gamesRef, snapshot => {
-				subscriber.next(snapshot.docs);
-			})
-			return () => unsubscribe();
-		});
-		const observedPit = new Observable<DocumentData>(subscriber => {
-			const unsubscribe = onSnapshot(pitRef, snapshot => {
-				subscriber.next(snapshot);
-			});
-			return () => unsubscribe();
-		});
+		const gamesObserver = observeCollection(gamesRef);
+		const pitObserver = observeDoc(pitRef)
 
 		this.isLoading = true;
-		const listener = combineLatest([observedGames, observedPit]);
+		const listener = combineLatest([gamesObserver, pitObserver]);
 		this.subscription = listener.subscribe(([gamesSnapshot, pitSnapshot]) => {
 			const pitData = pitSnapshot.data() || {};
 			runInAction(() => {
