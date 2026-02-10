@@ -16,11 +16,11 @@ export const PitField = observer(({type, id, title, description, values, data, s
 		case 'text':
 			return <TextField value={data[id]} onChange={(value) => setData(id, value)} title={title} description={description} />;
 		case 'bool':
-			return <BoolField value={data[id]} onChange={(value) => setData(id, value)} label={title} />;
+			return <BoolField value={data[id]} onChange={(value: boolean) => setData(id, value)} label={title} />;
 		case 'number':
 			return <NumberField value={data[id]} onChange={(value) => setData(id, value)} title={title} description={description} />;
 		case 'enum':
-			return <Enum value={data[id]} onChange={(value) => setData(id, value)} values={values} title={title} />;
+			return <Enum value={data[id]} onChange={(value: string) => setData(id, value)} values={values as {[key: string]: string}} title={title} />;
 		default:
 			return null;
 	}

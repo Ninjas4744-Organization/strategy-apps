@@ -10,7 +10,7 @@ type EnumProps = {
 	title: string
 };
 
-const ValueContainer = styled.View<{isSelected: boolean, color: string}>`
+const ValueContainer = styled.View<{isSelected: boolean}>`
     display: flex;
     flex-direction: row;
     align-items: center;

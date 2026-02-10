@@ -1,25 +1,26 @@
 import {useState} from "react";
-import {TextInput, Title, Subtitle, FormGroup, showSnackbar, BeautifulButton} from "@ninjas-strategy/ui";
+import {BeautifulButton, FormGroup, showSnackbar, Subtitle, TextInput, Title} from "@ninjas-strategy/ui";
 import {useLocalSearchParams, useRouter} from "expo-router";
 import styled from "styled-components/native";
 import {updateProfile} from "firebase/auth";
 import {db} from "@/lib/firebase/firestore";
 import {doc, setDoc} from "firebase/firestore";
 import {z, ZodError} from "zod";
-import {KeyboardAvoidingView, Platform, ScrollView, View} from "react-native";
+import {View} from "react-native";
 import userStore from "@/lib/stores/userStore";
 import {observer} from "mobx-react-lite";
+import {KeyboardAwareScrollView} from "react-native-keyboard-controller";
 
 const userSchema = z
 	.object({
-		email: z.string().email({ message: "Invalid email address" }),
+		email: z.string().email({message: "Invalid email address"}),
 		password: z
 			.string()
-			.min(8, { message: "Password must be at least 8 characters long" })
-			.regex(/[A-Z]/, { message: "Password must contain at least one uppercase letter" })
-			.regex(/[a-z]/, { message: "Password must contain at least one lowercase letter" })
-			.regex(/[0-9]/, { message: "Password must contain at least one number" })
-			.regex(/[^A-Za-z0-9]/, { message: "Password must contain at least one special character" }),
+			.min(8, {message: "Password must be at least 8 characters long"})
+			.regex(/[A-Z]/, {message: "Password must contain at least one uppercase letter"})
+			.regex(/[a-z]/, {message: "Password must contain at least one lowercase letter"})
+			.regex(/[0-9]/, {message: "Password must contain at least one number"})
+			.regex(/[^A-Za-z0-9]/, {message: "Password must contain at least one special character"}),
 		confirmPassword: z.string(),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
@@ -64,65 +65,58 @@ export default observer(function RegistrationDetailsPage() {
 
 			router.replace("/");
 			showSnackbar("Welcome to Team " + teamNumber + "!");
-		} catch (err: any) {
+		}
+		catch (err: any) {
 			if (err instanceof ZodError) {
 				showSnackbar(err.errors[0].message);
 			} else {
 				console.error(err);
 				showSnackbar(err.message || "Failed to register");
 			}
-		} finally {
+		}
+		finally {
 			setLoading(false);
 		}
 	};
 
 	return (
-		<KeyboardAvoidingView
-			style={{flex: 1}}
-			behavior={Platform.OS === "ios" ? "padding" : "height"}
-			keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}>
+		<KeyboardAwareScrollView>
 			<Container>
-				<ScrollView
-					contentContainerStyle={{flexGrow: 1, justifyContent: "center"}}
-					keyboardShouldPersistTaps="handled">
-					<FormGroup>
-						<Title>Register</Title>
-						<Subtitle>
-							Team {teamNumber} ({userType})
-						</Subtitle>
+				<FormGroup>
+					<Title>Register</Title>
+					<Subtitle>
+						Team {teamNumber} ({userType})
+					</Subtitle>
 
-						<TextInput label="Full Name" value={name} onChangeText={setName} />
+					<TextInput label="Full Name" value={name} onChangeText={setName}/>
 
-						<TextInput
-							label="Email"
-							value={email}
-							onChangeText={setEmail}
-							keyboardType="email-address"
-							autoCapitalize="none"/>
+					<TextInput
+						label="Email"
+						value={email}
+						onChangeText={setEmail}
+						keyboardType="email-address"
+						autoCapitalize="none"/>
 
-						<TextInput
-							label="Password"
-							value={password}
-							onChangeText={setPassword}
-							secureTextEntry/>
+					<TextInput
+						label="Password"
+						value={password}
+						onChangeText={setPassword}
+						secureTextEntry/>
 
-						<TextInput
-							label="Confirm Password"
-							value={confirmPassword}
-							onChangeText={setConfirmPassword}
-							secureTextEntry/>
-					</FormGroup>
-				</ScrollView>
+					<TextInput
+						label="Confirm Password"
+						value={confirmPassword}
+						onChangeText={setConfirmPassword}
+						secureTextEntry/>
+				</FormGroup>
 
-				<BottomBar>
-					{name && email && password && confirmPassword && !loading && (
-						<BeautifulButton
-							onPress={handleRegister}
-							label="Register"
-							icon="person-add"/>
-					)}
-				</BottomBar>
+				{name && email && password && confirmPassword && !loading && (
+					<BeautifulButton
+						onPress={handleRegister}
+						label="Register"
+						icon="person-add"/>
+				)}
 			</Container>
-		</KeyboardAvoidingView>
+		</KeyboardAwareScrollView>
 	);
-})
+});

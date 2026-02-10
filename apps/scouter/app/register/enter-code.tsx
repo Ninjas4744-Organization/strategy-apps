@@ -5,11 +5,12 @@ import {doc, getDoc} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {useRouter} from "expo-router";
 import {useDebounce} from "@/lib/hooks/debounce";
-import {KeyboardAvoidingView, Platform, ScrollView, View} from "react-native";
+import {View} from "react-native";
 import {z, ZodError} from "zod";
 import * as Clipboard from "expo-clipboard";
 import {useKeyboardHeight} from "@/lib/hooks/keyboardHeight";
 import {UserType} from "@/lib/interfaces/UserType";
+import {KeyboardAwareScrollView} from "react-native-keyboard-controller";
 
 export const registrationCodeSchema = z
 	.string()
@@ -17,7 +18,7 @@ export const registrationCodeSchema = z
 		message: "Code must start with 'ninja-scout-' and have 10 letters or numbers after it",
 	});
 
-const Container = styled.SafeAreaView`
+const Container = styled.View`
 	flex: 1;
 	padding: 24px;
 `;
@@ -40,7 +41,8 @@ export default function EnterCodePage() {
 			setLoading(true);
 			try {
 				registrationCodeSchema.parse(registrationCode);
-			} catch (err) {
+			}
+			catch (err) {
 				if (err instanceof ZodError) {
 					showSnackbar(err.errors[0].message);
 					return;
@@ -67,12 +69,14 @@ export default function EnterCodePage() {
 
 			router.push({
 				pathname: "/register/details",
-				params: { teamNumber, userType },
+				params: {teamNumber, userType},
 			});
-		} catch (e) {
+		}
+		catch (e) {
 			console.error(e);
 			showSnackbar("Failed to verify code");
-		} finally {
+		}
+		finally {
 			setLoading(false);
 		}
 	};
@@ -83,54 +87,40 @@ export default function EnterCodePage() {
 	};
 
 	return (
-		<KeyboardAvoidingView
-			style={{ flex: 1 }}
-			behavior={Platform.OS === "ios" ? "padding" : "height"}
-			keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}>
+		<KeyboardAwareScrollView>
 			<Container>
-				<ScrollView
-					contentContainerStyle={{
-						flexGrow: 1,
-						justifyContent: "center",
-						paddingBottom: keyboardHeight + 80,
-					}}
-					keyboardShouldPersistTaps="handled">
-					<FormGroup>
-						<Title>Join Your Team</Title>
-						<Subtitle>Enter your team number and registration code</Subtitle>
-						<TextInput
-							label="Team Number"
-							value={teamNumber}
-							onChangeText={setTeamNumber}
-							keyboardType="number-pad"/>
-						<TextInput
-							label="Registration Code"
-							value={registrationCode}
-							onChangeText={setRegistrationCode}
-							right={
-								<TextInputIcon
-									icon="content-paste"
-									onPress={pasteRegistrationCode}
-									forceTextInputFocus={false}/>
-							}/>
+			<FormGroup>
+				<Title>Join Your Team</Title>
+				<Subtitle>Enter your team number and registration code</Subtitle>
+				<TextInput
+					label="Team Number"
+					value={teamNumber}
+					onChangeText={setTeamNumber}
+					keyboardType="number-pad"/>
+				<TextInput
+					label="Registration Code"
+					value={registrationCode}
+					onChangeText={setRegistrationCode}
+					right={
+						<TextInputIcon
+							icon="content-paste"
+							onPress={pasteRegistrationCode}
+							forceTextInputFocus={false}/>
+					}/>
 
-						{registrationCode && !registrationCodeSchema.safeParse(registrationCode).success && (
-							<Subtitle style={{ color: "red" }}>
-								Code format: ninja-scout-XXXXXXXXXX
-							</Subtitle>
-						)}
-					</FormGroup>
-				</ScrollView>
-
-				<BottomBar>
-					{!loading && registrationCode && teamNumber && (
-						<BeautifulButton
-							onPress={handleContinue}
-							label="Continue"
-							icon="check"/>
-					)}
-				</BottomBar>
+				{registrationCode && !registrationCodeSchema.safeParse(registrationCode).success && (
+					<Subtitle style={{color: "red"}}>
+						Code format: ninja-scout-XXXXXXXXXX
+					</Subtitle>
+				)}
+				{!loading && registrationCode && teamNumber && (
+					<BeautifulButton
+						onPress={handleContinue}
+						label="Continue"
+						icon="check"/>
+				)}
+			</FormGroup>
 			</Container>
-		</KeyboardAvoidingView>
+		</KeyboardAwareScrollView>
 	);
 }

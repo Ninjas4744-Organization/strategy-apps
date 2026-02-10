@@ -7,8 +7,10 @@ import {StatusBar} from "expo-status-bar";
 import {Snackbar, StackWrapper} from "@ninjas-strategy/ui";
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import 'react-native-reanimated';
-import {PaperProvider} from "react-native-paper";
+import {MD2Colors, PaperProvider} from "react-native-paper";
 import userStore from "@/lib/stores/userStore";
+import {UserType} from "@/lib/interfaces/UserType";
+import {KeyboardProvider} from "react-native-keyboard-controller";
 
 const queryClient = new QueryClient()
 
@@ -18,13 +20,15 @@ export default observer(function Root() {
 	}, []);
 
 	return (
-		<QueryClientProvider client={queryClient}>
-			<PaperProvider>
-				<SplashScreenController/>
-				<RootNavigator/>
-				<Snackbar/>
-			</PaperProvider>
-		</QueryClientProvider>
+		<KeyboardProvider>
+			<QueryClientProvider client={queryClient}>
+				<PaperProvider>
+					<SplashScreenController/>
+					<RootNavigator/>
+					<Snackbar/>
+				</PaperProvider>
+			</QueryClientProvider>
+		</KeyboardProvider>
 	);
 });
 
@@ -36,16 +40,21 @@ const RootNavigator = observer(function () {
 			<StackWrapper>
 				<Stack
 					screenOptions={{
-						headerShown: false,
-						contentStyle: {backgroundColor: 'transparent'}
+						headerStyle: {backgroundColor: MD2Colors.indigo900},
+						headerTintColor: MD2Colors.white,
+						contentStyle: {backgroundColor: 'transparent'},
 					}}>
 					<Stack.Protected guard={!user}>
-						<Stack.Screen name="index"/>
-						<Stack.Screen name="register/details"/>
-						<Stack.Screen name="register/enter-code"/>
+						<Stack.Screen name="index" options={{headerShown: false}}/>
+						<Stack.Screen name="register/enter-code" options={{headerTitle: 'Register', headerBackButtonDisplayMode: 'minimal'}}/>
+						<Stack.Screen
+							name="register/details"
+							options={({route}) => ({
+								headerTitle: `Register as ${(route.params as Record<string, any>).userType === UserType.SCOUTER ? 'scout' : 'admin'} for team ${(route.params as Record<string, any>).teamNumber}`,
+							})}/>
 					</Stack.Protected>
 					<Stack.Protected guard={!!user}>
-						<Stack.Screen name="(app)" options={{gestureEnabled: false}}/>
+						<Stack.Screen name="(app)" options={{gestureEnabled: false, headerShown: false}}/>
 					</Stack.Protected>
 				</Stack>
 			</StackWrapper>

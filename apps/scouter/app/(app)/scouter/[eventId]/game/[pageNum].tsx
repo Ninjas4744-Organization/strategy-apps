@@ -7,6 +7,7 @@ import {useGlobalSearchParams, useRouter} from "expo-router";
 import {KeyboardAvoidingView, Platform} from "react-native";
 import {games} from "@ninjas-strategy/frc-games";
 import eventsStore from "@/lib/stores/eventsStore";
+import {KeyboardAwareScrollView} from "react-native-keyboard-controller";
 
 const Container = styled.SafeAreaView`
 	background-color: transparent;
@@ -40,7 +41,7 @@ export default observer(function TeleopPage() {
 				title={page.title}
 				subtitle={page.description}
 				icon={page.icon}/>
-			<BodyScroll>
+			<KeyboardAwareScrollView ScrollViewComponent={BodyScroll}>
 				<GameForm
 					{...games[event.year]}
 					pageNum={parseInt(pageNum as string)}
@@ -50,7 +51,7 @@ export default observer(function TeleopPage() {
 					label="Submit to Firebase"
 					icon="cloud-upload"
 					onPress={() => gameStore.submitToFirebase(eventId as string).then(() => router.push('/scouter'))} />}
-			</BodyScroll>
+			</KeyboardAwareScrollView>
 		</Container>
 	</KeyboardAvoidingView>;
 });
