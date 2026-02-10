@@ -1,12 +1,11 @@
 import styled from "styled-components/native";
-import {Game} from "@/lib/models/Game";
 import {Subtitle, Title, Icon, CardSurface} from "@ninjas-strategy/ui";
 import {useGlobalSearchParams, useRouter} from "expo-router";
 import {MD2Colors} from "react-native-paper";
-import {useEffect} from "react";
 import {Team} from "@/lib/models/Team";
 import {observer} from "mobx-react-lite";
 import {TeamItemSkeleton} from "@/lib/components/admin/TeamItemSkeleton";
+import {TouchableOpacity} from "react-native";
 
 type TeamItemProps = {
 	index: number,
@@ -64,19 +63,20 @@ export const TeamItem = observer(({index, team, averageTotalScore}: TeamItemProp
 	if (isLoading)
 		return <TeamItemSkeleton />;
 
-	return <TeamItemContainer>
-		<Rank color={getRankColor(index + 1)}>
-			<Title>{index + 1}</Title>
-		</Rank>
-		<Details>
-			<Title>{teamNumber}</Title>
-			<Subtitle>{`${games.length} games • Avg: ${averageTotalScore} points`}</Subtitle>
-		</Details>
-		<NavigationButtons>
-			<Icon name="analytics" onPress={() => router.push(`/admin/${eventId}/analytics/${teamNumber}`)}/>
-			<Icon
-				name="chevron-right"
-				onPress={() => router.push(`/admin/${eventId}/team/${teamNumber}`)}/>
-		</NavigationButtons>
-	</TeamItemContainer>;
+	return (
+		<TouchableOpacity onPress={() => router.push(`/admin/${eventId}/team/${teamNumber}`)}>
+			<TeamItemContainer>
+				<Rank color={getRankColor(index + 1)}>
+					<Title>{index + 1}</Title>
+				</Rank>
+				<Details>
+					<Title>{teamNumber}</Title>
+					<Subtitle>{`${games.length} games • Avg: ${averageTotalScore} points`}</Subtitle>
+				</Details>
+				<NavigationButtons>
+					<Icon name="chevron-right" />
+				</NavigationButtons>
+			</TeamItemContainer>
+		</TouchableOpacity>
+	);
 });

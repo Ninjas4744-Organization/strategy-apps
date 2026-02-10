@@ -1,8 +1,7 @@
 import styled from "styled-components/native";
 import {Subtitle, Title, Icon, CardSurface} from "@ninjas-strategy/ui";
-import {useRouter} from "expo-router";
 import {flag} from 'country-emoji';
-import {useState} from "react";
+import {TouchableOpacity} from "react-native";
 
 type EventItemProps = {
 	id: string;
@@ -34,17 +33,16 @@ const NavigationButtons = styled.View`
 `;
 
 export const EventItem = ({id, name, startDate, endDate, country, onClick}: EventItemProps) => {
-	const router = useRouter();
-	const [showPreGameDialog, setShowPreGameDialog] = useState(false);
-
-	return <EventItemContainer>
-		<Details>
-			<Title>{flag(country)} {name}</Title>
-			<Subtitle>{id}</Subtitle>
-			<Subtitle>{startDate} → {endDate}</Subtitle>
-		</Details>
-		<NavigationButtons>
-			<Icon name="chevron-right" onPress={onClick}/>
-		</NavigationButtons>
-	</EventItemContainer>;
+	return <TouchableOpacity onPress={onClick}>
+		<EventItemContainer>
+			<Details>
+				<Title>{flag(country)} {name}</Title>
+				<Subtitle>{id}</Subtitle>
+				<Subtitle>{startDate} → {endDate}</Subtitle>
+			</Details>
+			<NavigationButtons>
+				<Icon name="chevron-right"/>
+			</NavigationButtons>
+		</EventItemContainer>
+	</TouchableOpacity>;
 };

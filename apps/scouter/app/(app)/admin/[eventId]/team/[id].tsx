@@ -1,10 +1,8 @@
-
-
 import {Href, Stack, useGlobalSearchParams, useRouter} from "expo-router";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components/native";
 import {StatItem} from "@/lib/components/admin/StatItem";
-import {Subtitle, Title, Row, Icon, SimpleButton, CardSurface, BeautifulButton} from "@ninjas-strategy/ui";
+import {Title, Row, Icon, SimpleButton, CardSurface, BeautifulButton} from "@ninjas-strategy/ui";
 import {useContext, useEffect} from "react";
 import {EventContext, EventStore} from "@/lib/stores/eventStore";
 import {games} from "@ninjas-strategy/frc-games";
@@ -23,6 +21,11 @@ const PageHeader = styled(CardSurface)`
 	padding: 16px 10px;
 	display: flex;
 	flex-direction: column;
+`;
+
+const HeaderButtons = styled(Row)`
+	gap: 20px;
+	margin: 0 10px;
 `;
 
 export default observer(function () {
@@ -49,10 +52,14 @@ export default observer(function () {
 			options={{
 				title: `Team ${id}`,
 				headerRight: () => (
-					<SimpleButton onPress={() => router.push(`/admin/${eventId}/compare/${id}` as Href)}>
-						<Icon name="compare-arrows"/>
-						<Subtitle>Compare</Subtitle>
-					</SimpleButton>
+					<HeaderButtons>
+						<SimpleButton onPress={() => router.push(`/admin/${eventId}/analytics/${id}`)}>
+							<Icon name="analytics"/>
+						</SimpleButton>
+						<SimpleButton onPress={() => router.push(`/admin/${eventId}/compare/${id}` as Href)}>
+							<Icon name="compare-arrows"/>
+						</SimpleButton>
+					</HeaderButtons>
 				),
 			}}/>
 		<ScrollView>
