@@ -4,11 +4,13 @@ import styled from "styled-components/native";
 import {CounterValue} from "./Couter";
 import {MD2Colors} from "react-native-paper";
 import {Icon, Text} from "../../..";
+import Animated, {LinearTransition} from "react-native-reanimated";
 
 export type ShooterBatch = {
 	shotPct: number;
 	missCount: number;
 	pageNum: number;
+	batchNumber: number;
 };
 
 type BatchShooterProps = {
@@ -41,7 +43,7 @@ const Button = styled.Pressable`
 	border-width: 1px;
 `;
 
-const LayoutCard = styled.View`
+const LayoutCard = styled(Animated.View)`
 	border-width: 1px;
 	border-radius: 14px;
 	padding: 12px;
@@ -99,12 +101,20 @@ function parseIntSafe(text: string) {
 }
 
 export const BatchShooter = ({value, onChange, title, pageNum, shotPresets = [0, 25, 50, 75, 100]}: BatchShooterProps) => {
+	const [openedBatch, setOpenedBatch] = React.useState<number | null>(null);
 	let batches = value || [];
 	batches = batches.filter(b => b.pageNum === pageNum);
 
-	const add = () => onChange([...batches, {shotPct: 0, missCount: 0, pageNum}]);
-	const remove = (i: number) => onChange(batches.filter((_, idx) => idx !== i));
-	const update = (i: number, next: ShooterBatch) => onChange(batches.map((b, idx) => (idx === i ? next : b)));
+	const add = () => {
+		const batchNumber = batches.length;
+		onChange([...batches, {shotPct: 0, missCount: 0, batchNumber, pageNum}]);
+		setOpenedBatch(batchNumber);
+	};
+	const remove = (i: number) => onChange(batches.filter(({batchNumber}) => batchNumber !== i));
+	const update = (i: number, next: Partial<ShooterBatch>) => onChange(batches.map((b) => (b.batchNumber === i ? ({
+		...b,
+		...next,
+	}) : b)));
 
 	return (
 		<Container>
@@ -120,16 +130,19 @@ export const BatchShooter = ({value, onChange, title, pageNum, shotPresets = [0,
 
 			{batches.length === 0 ? <SmallNote>No Batches Yet</SmallNote> : null}
 
-			{batches.map((b, i) => (
-				<LayoutCard key={i}>
+			{batches.sort((a, b) => b.batchNumber - a.batchNumber).map((b, i) => (
+				<LayoutCard key={i} layout={LinearTransition}>
 					<HeaderRow>
-						<Label>Batch #{i + 1}</Label>
-						<Button onPress={() => remove(i)}>
+						<Label>Batch #{b.batchNumber + 1}{openedBatch === b.batchNumber ? '' : `: ${b.shotPct ?? 0}% ${b.missCount ?? 0} Misses`}</Label>
+						{openedBatch !== b.batchNumber && <Button onPress={() => setOpenedBatch(b.batchNumber)}>
+							<Icon name="edit" />
+						</Button>}
+						<Button onPress={() => remove(b.batchNumber)}>
 							<Icon name="remove" />
 						</Button>
 					</HeaderRow>
 
-					<LayoutRow>
+					{openedBatch === b.batchNumber && <LayoutRow>
 						<LayoutCol>
 							<LayoutTitle>% Shot (of box)</LayoutTitle>
 
@@ -137,7 +150,7 @@ export const BatchShooter = ({value, onChange, title, pageNum, shotPresets = [0,
 								<NumberInput
 									keyboardType="numeric"
 									value={String(b.shotPct ?? 0)}
-									onChangeText={(t) => update(i, {shotPct: parsePct(t), missCount: b.missCount ?? 0, pageNum})} />
+									onChangeText={(t) => update(b.batchNumber, {shotPct: parsePct(t), missCount: b.missCount ?? 0})} />
 								<Percent>%</Percent>
 							</InputRow>
 
@@ -145,7 +158,7 @@ export const BatchShooter = ({value, onChange, title, pageNum, shotPresets = [0,
 								{shotPresets.map((p) => (
 									<Chip
 										key={`shot-${i}-${p}`}
-										onPress={() => update(i, {shotPct: p, missCount: b.missCount ?? 0, pageNum})}>
+										onPress={() => update(b.batchNumber, {shotPct: p, missCount: b.missCount ?? 0})}>
 										<ChipText>{p}%</ChipText>
 									</Chip>
 								))}
@@ -159,18 +172,18 @@ export const BatchShooter = ({value, onChange, title, pageNum, shotPresets = [0,
 								<NumberInput
 									keyboardType="numeric"
 									value={String(b.missCount ?? 0)}
-									onChangeText={(t) => update(i, {shotPct: b.shotPct ?? 0, missCount: parseIntSafe(t), pageNum})} />
+									onChangeText={(t) => update(b.batchNumber, {shotPct: b.shotPct ?? 0, missCount: parseIntSafe(t)})} />
 							</InputRow>
 
 							<PresetsRow>
 								<CounterValue
 									title="Misses"
 									value={b.missCount}
-									onChange={(v) => update(i, {shotPct: b.shotPct ?? 0, missCount: v, pageNum})}
+									onChange={(v) => update(b.batchNumber, {shotPct: b.shotPct ?? 0, missCount: v})}
 									color={MD2Colors.white} />
 							</PresetsRow>
 						</LayoutCol>
-					</LayoutRow>
+					</LayoutRow>}
 				</LayoutCard>
 			))}
 		</Container>
