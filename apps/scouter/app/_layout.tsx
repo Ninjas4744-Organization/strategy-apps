@@ -1,23 +1,45 @@
-import {Stack, useRouter, useSegments} from 'expo-router';
+import {Stack} from 'expo-router';
 import {SplashScreenController} from '@/lib/components/SplashScreenController';
 import {observer} from "mobx-react-lite";
 import {useEffect} from "react";
 import {OfflineQueue} from "@/lib/OfflineQueue";
 import {StatusBar} from "expo-status-bar";
-import {Snackbar, StackWrapper} from "@ninjas-strategy/ui";
+import {showSnackbar, Snackbar, StackWrapper} from "@ninjas-strategy/ui";
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import 'react-native-reanimated';
 import {MD2Colors, PaperProvider} from "react-native-paper";
 import userStore from "@/lib/stores/userStore";
 import {UserType} from "@/lib/interfaces/UserType";
 import {KeyboardProvider} from "react-native-keyboard-controller";
+import * as Updates from 'expo-updates';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const queryClient = new QueryClient()
 
 export default observer(function Root() {
 	useEffect(() => {
 		OfflineQueue.listenForConnectivityAndResend();
+		checkUpdates();
 	}, []);
+
+	const checkUpdates = async () => {
+		try {
+			const update = await Updates.checkForUpdateAsync();
+			if (update.isAvailable) {
+				await Updates.fetchUpdateAsync();
+				await Updates.reloadAsync();
+			} else {
+				const savedRuntimeVersion = await AsyncStorage.getItem('savedRuntimeVersion');
+				if (savedRuntimeVersion !== Updates.runtimeVersion)
+				{
+					await AsyncStorage.setItem('savedRuntimeVersion', Updates.runtimeVersion ?? '');
+					showSnackbar('App updated to version ' + Updates.runtimeVersion);
+				}
+			}
+		} catch (e) {
+			console.error('Error checking for updates:', e);
+		}
+	}
 
 	return (
 		<KeyboardProvider>
