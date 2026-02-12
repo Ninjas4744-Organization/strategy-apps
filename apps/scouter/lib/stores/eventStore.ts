@@ -6,6 +6,8 @@ import {Team} from "@/lib/models/Team";
 import userStore from "@/lib/stores/userStore";
 import {UserType} from "@/lib/interfaces/UserType";
 import eventsStore from "@/lib/stores/eventsStore";
+import {observeCollection} from "@/lib/utilities";
+import {Subscription} from "rxjs";
 
 type Teams = {
 	[id: number]: Team,
@@ -19,7 +21,7 @@ export class EventStore {
 	@observable _isLoading: boolean = true;
 	@observable error?: string;
 
-	private _unsubscribe: (() => void) | null = null;
+	private subscription: Subscription | null = null;
 
 	constructor(public eventId: string) {
 		makeObservable(this);
@@ -27,8 +29,8 @@ export class EventStore {
 
 	@action.bound
 	async subscribe() {
-		if (this._unsubscribe) {
-			this._unsubscribe();
+		if (this.subscription) {
+			this.subscription.unsubscribe();
 		}
 
 		if (userStore.userData?.type !== UserType.APP_ADMIN)
@@ -36,12 +38,11 @@ export class EventStore {
 
 		const event = eventsStore.events[this.eventId];
 
-		const teamsRef = collection(db, 'events', this.eventId, 'teams');
-
 		this._isLoading = true;
-		this._unsubscribe = onSnapshot(teamsRef, snapshot => {
+		const $teams = observeCollection(collection(db, 'events', this.eventId, 'teams'));
+		this.subscription = $teams.subscribe(teams => {
 			runInAction(() => {
-				for (const teamDoc of snapshot.docs) {
+				for (const teamDoc of teams) {
 					const teamData = teamDoc.data();
 					this.teams[parseInt(teamDoc.id)] = Team.fromMap(teamDoc.id, this.eventId, event.year, teamData);
 				}
@@ -52,9 +53,9 @@ export class EventStore {
 
 	@action.bound
 	unsubscribe() {
-		if (this._unsubscribe) {
-			this._unsubscribe();
-			this._unsubscribe = null;
+		if (this.subscription) {
+			this.subscription.unsubscribe();
+			this.subscription = null;
 		}
 	}
 

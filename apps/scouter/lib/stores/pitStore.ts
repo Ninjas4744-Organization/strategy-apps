@@ -1,7 +1,7 @@
 import {action, makeObservable, observable} from "mobx";
 import {initPitData} from "@ninjas-strategy/frc-games";
 import {showSnackbar} from "@ninjas-strategy/ui";
-import {collection, doc, serverTimestamp, setDoc, updateDoc} from "firebase/firestore";
+import {doc, serverTimestamp, setDoc} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import userStore from "@/lib/stores/userStore";
 import {OfflineQueue} from "@/lib/OfflineQueue";

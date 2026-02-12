@@ -1,11 +1,12 @@
 import {action, makeObservable, observable, runInAction} from "mobx";
 import {RegistrationCode} from "@/lib/models/RegistrationCode";
 import userStore from "@/lib/stores/userStore";
-import {collection, doc, onSnapshot, setDoc} from "firebase/firestore";
+import {collection, doc, setDoc} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {UserType} from "@/lib/interfaces/UserType";
-import {getRandomString} from "@/lib/utilities";
+import {getRandomString, observeCollection} from "@/lib/utilities";
 import {showSnackbar} from "@ninjas-strategy/ui";
+import {type Subscription} from "rxjs";
 
 type RegistrationCodes = {
 	[teamNumber: string]: RegistrationCode;
@@ -14,7 +15,7 @@ type RegistrationCodes = {
 class RegistrationCodesStore {
 	@observable isLoading: boolean = false;
 	@observable registrationCodes: RegistrationCodes = {};
-	private _unsubscribe: (() => void) | null = null;
+	private subscription: Subscription | null = null;
 
 	constructor() {
 		makeObservable(this);
@@ -22,34 +23,34 @@ class RegistrationCodesStore {
 
 	@action.bound
 	async subscribe() {
-		if (this._unsubscribe) {
-			this._unsubscribe();
+		if (this.subscription) {
+			this.subscription.unsubscribe();
 		}
 
 		if (userStore.userData?.type !== UserType.APP_ADMIN)
 			return;
 
-		const registrationCodesRef = collection(db, 'registration_codes');
-
 		this.isLoading = true;
-		this._unsubscribe = onSnapshot(registrationCodesRef, snapshot => {
+
+		const $registrationCodes = observeCollection(collection(db, 'registration_codes'));
+		this.subscription = $registrationCodes.subscribe(registrationCodes => {
 			runInAction(() => {
-				for (const registrationCodeDoc of snapshot.docs) {
+				for (const registrationCodeDoc of registrationCodes) {
 					const registrationCodeData = registrationCodeDoc.data();
 					const registrationCode = RegistrationCode.fromMap(registrationCodeDoc.id, registrationCodeData);
 					this.registrationCodes[registrationCode.id] = RegistrationCode.fromMap(registrationCodeDoc.id, registrationCodeData);
 				}
 				this.isLoading = false;
 			})
-		})
+		});
 	}
 
 	@action.bound
 	unsubscribe() {
-		if (this._unsubscribe) {
-			this._unsubscribe();
-			this._unsubscribe = null;
+		if (this.subscription) {
+			this.subscription.unsubscribe();
 		}
+		this.subscription = null;
 	}
 
 	@action.bound

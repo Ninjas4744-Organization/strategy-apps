@@ -5,13 +5,15 @@ import {doc, onSnapshot} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {UserData} from "@/lib/interfaces/UserData";
 import {UserType} from "@/lib/interfaces/UserType";
+import {Subscription} from "rxjs";
+import {observeDoc} from "@/lib/utilities";
 
 class UserStore {
 	@observable user: User | null = null;
 	@observable isLoading: boolean = true;
 
 	@observable userData: UserData | null = null;
-	private _unsubscribe: (() => void) | null = null;
+	private subscription: Subscription | null = null;
 
 	constructor() {
 		makeObservable(this);
@@ -50,35 +52,36 @@ class UserStore {
 
 	@action.bound
 	subscribe() {
-		if (this._unsubscribe) {
-			this._unsubscribe();
+		if (this.subscription) {
+			this.subscription.unsubscribe();
 		}
 
 		if (!this.user) {
 			return;
 		}
 
-		const userRef = doc(db, 'users', this.user.uid);
-
 		this.isLoading = true;
-		this._unsubscribe = onSnapshot(userRef, snapshot => {
+
+		const $user = observeDoc(doc(db, 'users', this.user.uid));
+
+		this.subscription = $user.subscribe(user => {
 			runInAction(() => {
-				if (snapshot.exists()) {
-					this.userData = snapshot.data() as UserData;
+				if (user.exists()) {
+					this.userData = user.data() as UserData;
 				} else {
 					this.userData = null;
 				}
 				this.isLoading = false;
 			})
-		});
+		})
 	}
 
 	@action.bound
 	unsubscribe() {
-		if (this._unsubscribe) {
-			this._unsubscribe();
-			this._unsubscribe = null;
+		if (this.subscription) {
+			this.subscription.unsubscribe();
 		}
+		this.subscription = null;
 	}
 
 	@computed

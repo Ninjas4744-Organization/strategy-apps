@@ -8,7 +8,8 @@ import {TBAEventSimple} from "@/lib/interfaces/TBAEventSimple";
 import {Router} from "expo-router";
 import {TBA} from "@/lib/hooks/tba";
 import {showSnackbar} from "@ninjas-strategy/ui";
-import games from "@/app/(app)/admin/[eventId]/detailed/[id]/(tabs)/games";
+import {type Subscription} from "rxjs";
+import {observeCollection} from "@/lib/utilities";
 
 type Events = {
 	[eventId: string]: Event;
@@ -17,7 +18,7 @@ type Events = {
 class EventsStore {
 	@observable isLoading: boolean = true;
 	@observable events: Events = {};
-	private eventsUnsubscribe: (() => void) | null = null;
+	private subscription: Subscription | null = null;
 
 	constructor() {
 		makeObservable(this);
@@ -25,8 +26,8 @@ class EventsStore {
 
 	@action.bound
 	subscribe() {
-		if (this.eventsUnsubscribe) {
-			this.eventsUnsubscribe();
+		if (this.subscription) {
+			this.subscription.unsubscribe();
 		}
 
 		if (!userStore.userData)
@@ -37,24 +38,25 @@ class EventsStore {
 			eventsRef = query(eventsRef, where('teams', 'array-contains', `frc${userStore.userData.team}`));
 
 		this.isLoading = true;
-		this.eventsUnsubscribe = onSnapshot(eventsRef, snapshot => {
+		const $events = observeCollection(eventsRef);
+		this.subscription = $events.subscribe(events => {
 			runInAction(() => {
-				for (const eventDoc of snapshot.docs) {
+				for (const eventDoc of events) {
 					const eventData = eventDoc.data();
 					const event = Event.fromMap(eventDoc.id, eventData);
 					this.events[event.id] = Event.fromMap(eventDoc.id, eventData)
 				}
 				this.isLoading = false;
 			})
-		})
+		});
 	}
 
 	@action.bound
 	unsubscribe() {
-		if (this.eventsUnsubscribe) {
-			this.eventsUnsubscribe();
-			this.eventsUnsubscribe = null;
+		if (this.subscription) {
+			this.subscription.unsubscribe();
 		}
+		this.subscription = null;
 	}
 
 	@action.bound
