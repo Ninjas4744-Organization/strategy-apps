@@ -7,39 +7,19 @@ import {StatusBar} from "expo-status-bar";
 import {showSnackbar, Snackbar, StackWrapper} from "@ninjas-strategy/ui";
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import 'react-native-reanimated';
-import {MD2Colors, PaperProvider} from "react-native-paper";
+import {Button, MD2Colors, PaperProvider, Text} from "react-native-paper";
 import userStore from "@/lib/stores/userStore";
 import {UserType} from "@/lib/interfaces/UserType";
 import {KeyboardProvider} from "react-native-keyboard-controller";
-import * as Updates from 'expo-updates';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {AppDialog} from "@ninjas-strategy/ui/components/AppDialog";
+import {Updater} from "@/lib/components/Updater";
 
 const queryClient = new QueryClient()
 
 export default observer(function Root() {
 	useEffect(() => {
 		OfflineQueue.listenForConnectivityAndResend();
-		checkUpdates();
 	}, []);
-
-	const checkUpdates = async () => {
-		try {
-			const update = await Updates.checkForUpdateAsync();
-			if (update.isAvailable) {
-				await Updates.fetchUpdateAsync();
-				await Updates.reloadAsync();
-			} else {
-				const savedRuntimeVersion = await AsyncStorage.getItem('savedRuntimeVersion');
-				if (savedRuntimeVersion !== Updates.runtimeVersion)
-				{
-					await AsyncStorage.setItem('savedRuntimeVersion', Updates.runtimeVersion ?? '');
-					showSnackbar('App updated to version ' + Updates.runtimeVersion);
-				}
-			}
-		} catch (e) {
-			console.error('Error checking for updates:', e);
-		}
-	}
 
 	return (
 		<KeyboardProvider>
@@ -47,7 +27,9 @@ export default observer(function Root() {
 				<PaperProvider>
 					<SplashScreenController/>
 					<RootNavigator/>
+					<AppDialog/>
 					<Snackbar/>
+					<Updater />
 				</PaperProvider>
 			</QueryClientProvider>
 		</KeyboardProvider>
