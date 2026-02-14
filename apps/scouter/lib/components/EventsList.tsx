@@ -280,7 +280,7 @@ const SectionTitle = styled.Text`
 	  font-size: 13px;
 `;
 
-const EventRow = styled.Pressable`
+const EventRow = styled.TouchableOpacity`
 	  padding: 14px;
 	  border-bottom-width: 1px;
 	  border-bottom-color: rgba(255, 255, 255, 0.06);

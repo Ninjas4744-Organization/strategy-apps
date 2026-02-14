@@ -5,7 +5,7 @@ import {observer} from "mobx-react-lite";
 
 type EnumProps = {
 	value: string;
-	setValue: (value: string) => void;
+	onChange: (value: string) => void;
 	values: object;
 	title: string
 };
@@ -22,11 +22,11 @@ const ValueContainer = styled.View<{isSelected: boolean}>`
     margin-bottom: 8px;
 `;
 
-export const Enum = observer(({value, setValue, values, title}: EnumProps) => {
+export const Enum = observer(({value, onChange, values, title}: EnumProps) => {
 	return (
 		<>
 			<Subtitle>{title}</Subtitle>
-			<RadioButton.Group onValueChange={setValue} value={value}>
+			<RadioButton.Group onValueChange={onChange} value={value}>
 				{Object.values(values || {}).map(key => <ValueContainer key={key} isSelected={value === key}>
 					<RadioButton value={key} color={MD2Colors.white} />
 					<Subtitle>{key}</Subtitle>
