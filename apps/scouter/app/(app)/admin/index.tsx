@@ -6,6 +6,7 @@ import {EventItem} from "@/lib/components/EventItem";
 import userStore from "@/lib/stores/userStore";
 import eventsStore from "@/lib/stores/eventsStore";
 import {UserType} from "@/lib/interfaces/UserType";
+import {EventsList} from "@/lib/components/EventsList";
 
 export default observer(function AdminIndex() {
 	const {events, isLoading} = eventsStore;
@@ -16,7 +17,7 @@ export default observer(function AdminIndex() {
 		return <Loading />;
 
 	return (
-		<ScrollView>
+		<>
 			<Stack.Screen
 				options={{
 					headerShown: true,
@@ -29,9 +30,7 @@ export default observer(function AdminIndex() {
 								{onPress: () => signOut().then(() => router.push('/')), icon: 'logout'},
 							]} />
 					)}}/>
-			{events && Object.values(events).map((event) => (
-				<EventItem key={event.id} onClick={() => router.push(`/admin/${event.id}`)} {...event} />
-			))}
-		</ScrollView>
+			{events && <EventsList events={Object.values(events)} onSelect={id => router.push(`/admin/${id}`)} />}
+		</>
 	);
 });

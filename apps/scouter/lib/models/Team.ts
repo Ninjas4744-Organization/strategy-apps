@@ -6,6 +6,7 @@ import {action, makeObservable, observable, runInAction} from "mobx";
 import {games, Team as TeamCalculation} from "@ninjas-strategy/frc-games";
 import {combineLatest, type Subscription} from "rxjs";
 import {observeCollection, observeDoc} from "@/lib/utilities";
+import {showSnackbar} from "@ninjas-strategy/ui";
 
 export class Team extends TeamCalculation implements Model {
 	@observable games: Game[] = [];
@@ -63,11 +64,16 @@ export class Team extends TeamCalculation implements Model {
 			runInAction(() => {
 				this.games = gamesSnapshot.map(game =>
 				{
-					const gameData = game.data();
-					return Game.fromMap(game.id, games[this.eventYear], {
-						...gameData,
-						...pitData
-					});
+					try {
+						const gameData = game.data();
+						return Game.fromMap(game.id, games[this.eventYear], {
+							...gameData,
+							...pitData
+						});
+					} catch (e) {
+						showSnackbar('Error loading game');
+						return Game.fromMap(game.id, games[this.eventYear], {});
+					}
 				});
 				this.isLoading = false;
 			});

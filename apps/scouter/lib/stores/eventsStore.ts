@@ -1,5 +1,5 @@
 import {action, makeObservable, observable, runInAction} from "mobx";
-import {collection, doc, getDoc, getDocs, onSnapshot, query, setDoc, where, updateDoc, deleteField} from "firebase/firestore";
+import {collection, doc, query, setDoc, where} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {UserType} from "@/lib/interfaces/UserType";
 import {Event} from "@/lib/models/Event";
