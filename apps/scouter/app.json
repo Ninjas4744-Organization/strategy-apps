@@ -19,6 +19,9 @@
       "bundleIdentifier": "com.realKfiros.scoutingApp",
       "infoPlist": {
         "ExpoLocalization_supportsRTL": false
+      },
+      "runtimeVersion": {
+        "policy": "appVersion"
       }
     },
     "android": {

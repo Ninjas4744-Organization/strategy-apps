@@ -15,6 +15,13 @@ export const Updater = () => {
 	const {isUpdateAvailable, isUpdatePending} = Updates.useUpdates();
 
 	useEffect(() => {
+		const interval = setInterval(() => {
+			Updates.checkForUpdateAsync();
+		}, 60 * 1000);
+		return () => clearInterval(interval);
+	}, []);
+
+	useEffect(() => {
 		if (isUpdatePending) {
 			Updates.reloadAsync();
 		}
