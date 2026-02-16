@@ -1,8 +1,10 @@
 import * as Updates from "expo-updates";
 import styled from "styled-components/native";
 import {AnimatedFAB, MD2Colors} from "react-native-paper";
-import {Icon} from "@ninjas-strategy/ui";
+import {Icon, showSnackbar} from "@ninjas-strategy/ui";
 import {useEffect} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {observer} from "mobx-react-lite";
 
 const UpdateButton = styled(AnimatedFAB)`
 	bottom: 16px;
@@ -11,10 +13,11 @@ const UpdateButton = styled(AnimatedFAB)`
 	background-color: ${MD2Colors.red500};
 `;
 
-export const Updater = () => {
+export const Updater = observer(() => {
 	const {isUpdateAvailable, isUpdatePending} = Updates.useUpdates();
 
 	useEffect(() => {
+		showUpdatedMessage();
 		const interval = setInterval(() => {
 			Updates.checkForUpdateAsync();
 		}, 60 * 1000);
@@ -26,6 +29,14 @@ export const Updater = () => {
 			Updates.reloadAsync();
 		}
 	}, [isUpdatePending]);
+
+	const showUpdatedMessage = async () => {
+		const currentVersion = await AsyncStorage.getItem('currentVersion');
+		if (currentVersion && currentVersion !== Updates.runtimeVersion) {
+			showSnackbar('App updated to version ' + Updates.runtimeVersion);
+			await AsyncStorage.setItem('currentVersion', Updates.runtimeVersion ?? '');
+		}
+	}
 
 	if (!isUpdateAvailable) {
 		return null;
@@ -39,4 +50,4 @@ export const Updater = () => {
 			extended
 			color={MD2Colors.white}/>
 	);
-}
+});
