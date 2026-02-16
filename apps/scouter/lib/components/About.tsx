@@ -30,5 +30,6 @@ const AboutDialogContent = () => (
 	<Col>
 		<Text variant="bodyLarge">The Ninja Scouter is an FRC scouting app developed by Ninjas 4744</Text>
 		<Text variant="labelSmall">Version: {Updates.runtimeVersion}</Text>
+		<Text variant="labelSmall">Channel: {Updates.channel}</Text>
 	</Col>
 );

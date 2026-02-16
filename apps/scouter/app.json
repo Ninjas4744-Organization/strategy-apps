@@ -1,71 +1,66 @@
 {
-  "expo": {
-    "name": "The Ninja Scouter",
-    "slug": "scouting",
-    "version": "0.3.5",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "scheme": "ninjascouter",
-    "userInterfaceStyle": "light",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true,
-      "icon": "./assets/NinjasAppIcon.icon",
-      "bundleIdentifier": "com.realKfiros.scoutingApp",
-      "infoPlist": {
-        "ExpoLocalization_supportsRTL": false
-      },
-      "runtimeVersion": {
-        "policy": "appVersion"
-      }
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false,
-      "package": "com.ninjas4744.scouter"
-    },
-    "web": {
-      "bundler": "metro",
-      "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      "expo-router",
-      "expo-font",
-      "expo-localization"
-    ],
-    "experiments": {
-      "typedRoutes": true,
-      "reactCompiler": true
-    },
-    "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "ab6c91a9-4edc-4b9a-b50f-032b69ac1395"
-      },
-      "forceRTL": false,
-      "supportsRTL": false
-    },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
-    "updates": {
-      "url": "https://u.expo.dev/ab6c91a9-4edc-4b9a-b50f-032b69ac1395"
-    }
-  },
-  "submit": {
-    "production": {
-      "ios": {
-        "ascAppId": "6753592050"
-      }
-    }
-  }
+	"expo": {
+		"name": "The Ninja Scouter",
+		"slug": "scouting",
+		"version": "0.3.5",
+		"orientation": "portrait",
+		"icon": "./assets/icon.png",
+		"scheme": "ninjascouter",
+		"userInterfaceStyle": "light",
+		"newArchEnabled": true,
+		"splash": {
+			"image": "./assets/splash-icon.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"ios": {
+			"supportsTablet": true,
+			"icon": "./assets/NinjasAppIcon.icon",
+			"bundleIdentifier": "com.realKfiros.scoutingApp",
+			"infoPlist": {
+				"ExpoLocalization_supportsRTL": false
+			}
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/adaptive-icon.png",
+				"backgroundColor": "#ffffff"
+			},
+			"edgeToEdgeEnabled": true,
+			"predictiveBackGestureEnabled": false,
+			"package": "com.ninjas4744.scouter"
+		},
+		"web": {
+			"bundler": "metro",
+			"favicon": "./assets/favicon.png"
+		},
+		"plugins": [
+			"expo-router",
+			"expo-font",
+			"expo-localization"
+		],
+		"experiments": {
+			"typedRoutes": true,
+			"reactCompiler": true
+		},
+		"extra": {
+			"router": {},
+			"eas": {
+				"projectId": "ab6c91a9-4edc-4b9a-b50f-032b69ac1395"
+			},
+			"forceRTL": false,
+			"supportsRTL": false
+		},
+		"runtimeVersion": "0.3.5",
+		"updates": {
+			"url": "https://u.expo.dev/ab6c91a9-4edc-4b9a-b50f-032b69ac1395"
+		}
+	},
+	"submit": {
+		"production": {
+			"ios": {
+				"ascAppId": "6753592050"
+			}
+		}
+	}
 }

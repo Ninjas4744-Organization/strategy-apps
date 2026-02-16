@@ -1,6 +1,6 @@
 import * as Updates from "expo-updates";
 import styled from "styled-components/native";
-import {AnimatedFAB, MD2Colors, MD3Colors} from "react-native-paper";
+import {AnimatedFAB, MD2Colors} from "react-native-paper";
 import {Icon} from "@ninjas-strategy/ui";
 import {useEffect} from "react";
 
