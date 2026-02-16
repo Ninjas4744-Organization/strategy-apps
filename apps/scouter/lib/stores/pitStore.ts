@@ -32,6 +32,11 @@ class PitStore {
 
 	@action.bound
 	async submitToFirebase(teamNumber: string, eventId: string) {
+		if (userStore.user?.isAnonymous) {
+			showSnackbar('Pit scouting data updated successfully!');
+			this.reset();
+			return;
+		}
 		if (+teamNumber! <= 0 || !eventId) {
 			showSnackbar('Team or event is missing.');
 			return;

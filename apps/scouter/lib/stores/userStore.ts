@@ -1,7 +1,7 @@
 import {action, computed, makeObservable, observable, runInAction} from "mobx";
-import {auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut as fbSignOut} from "../firebase/auth";
+import {auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInAnonymously, signOut as fbSignOut} from "../firebase/auth";
 import {User, UserCredential} from "firebase/auth";
-import {doc, onSnapshot} from "firebase/firestore";
+import {doc} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {UserData} from "@/lib/interfaces/UserData";
 import {UserType} from "@/lib/interfaces/UserType";
@@ -38,6 +38,11 @@ class UserStore {
 	@action.bound
 	async signIn(email: string, password: string): Promise<void> {
 		await signInWithEmailAndPassword(auth, email, password);
+	}
+
+	@action.bound
+	async demoSignIn(): Promise<void> {
+		await signInAnonymously(auth);
 	}
 
 	@action.bound

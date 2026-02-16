@@ -41,6 +41,11 @@ class GameStore {
 
 	@action.bound
 	async submitToFirebase(eventId: string) {
+		if (userStore.user?.isAnonymous) {
+			showSnackbar('Data sent! Starting new match...');
+			this.reset();
+			return;
+		}
 		if (+this.teamNumber! <= 0 || +this.gameNumber! <= 0) {
 			showSnackbar('Team or game number is missing.');
 			return;

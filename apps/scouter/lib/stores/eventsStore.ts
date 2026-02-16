@@ -30,12 +30,15 @@ class EventsStore {
 			this.subscription.unsubscribe();
 		}
 
-		if (!userStore.userData)
+		if (!userStore.userData && !userStore.user?.isAnonymous)
 			return;
 
 		let eventsRef = query(collection(db, 'events'));
-		if (userStore.userData.type !== UserType.APP_ADMIN)
-			eventsRef = query(eventsRef, where('teams', 'array-contains', `frc${userStore.userData.team}`));
+		if (userStore.user?.isAnonymous) {
+			eventsRef = query(eventsRef, where('event_code', '==', 'demo'));
+		} else if (userStore.userData?.type !== UserType.APP_ADMIN) {
+			eventsRef = query(eventsRef, where('teams', 'array-contains', `frc${userStore.userData?.team}`));
+		}
 
 		this.isLoading = true;
 		const $events = observeCollection(eventsRef);

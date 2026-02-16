@@ -14,6 +14,10 @@ export default observer(function AppIndex() {
 		return <Redirect href="/" />;
 	}
 
+	if (user.isAnonymous) {
+		return <Redirect href="/(app)/demo" />;
+	}
+
 	if (isAdmin) {
 		return <Redirect href="/(app)/admin" />;
 	}

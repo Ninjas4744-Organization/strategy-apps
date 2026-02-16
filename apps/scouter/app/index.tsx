@@ -32,7 +32,7 @@ const Section = styled.View`
 `;
 
 const LoginForm = observer(() => {
-	const {signIn, user, signOut} = userStore;
+	const {signIn, user, signOut, demoSignIn} = userStore;
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const router = useRouter();
@@ -56,6 +56,17 @@ const LoginForm = observer(() => {
 				showSnackbar(e.message);
 		}
 	};
+
+	const handleDemoLogin = async () => {
+		try {
+			if (user)
+				await signOut();
+			await demoSignIn();
+			router.push('/(app)');
+		} catch (e: any) {
+			showSnackbar(e.message);
+		}
+	}
 
 	return (
 		<Section>
@@ -81,6 +92,7 @@ const LoginForm = observer(() => {
 				onPress={() => router.push('/register/enter-code')}
 				label="Need an account? Register"
 				icon="person-add"/>
+			<BeautifulButton label="Try our app" icon="try" onPress={handleDemoLogin} />
 		</Section>
 	);
 });

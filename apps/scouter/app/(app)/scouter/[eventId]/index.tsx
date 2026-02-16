@@ -1,5 +1,5 @@
 import {observer} from "mobx-react-lite";
-import {Card, FormDialog, CardTitle, Row, IconContainer, Icon, Title, FlexGrow} from "@ninjas-strategy/ui";
+import {Card, FormDialog, Row, IconContainer, Icon, Title, FlexGrow} from "@ninjas-strategy/ui";
 import {Portal} from "react-native-paper";
 import {useState} from "react";
 import gameStore from "@/lib/stores/gameStore";
@@ -103,4 +103,4 @@ export default observer(function ScouterIndex() {
 				]} />
 		</Portal>
 	</>;
-})
+});

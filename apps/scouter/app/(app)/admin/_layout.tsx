@@ -15,7 +15,7 @@ export default observer(function AdminLayout() {
 		return () => unsubscribe();
 	}, [user]);
 
-	if (!isAdmin) {
+	if (!isAdmin && !user?.isAnonymous) {
 		return <Redirect href="/(app)/scouter" />;
 	}
 

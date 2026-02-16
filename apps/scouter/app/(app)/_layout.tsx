@@ -26,11 +26,11 @@ export default observer(function AppLayout() {
 				screenOptions={{
 					headerShown: false,
 					contentStyle: {backgroundColor: 'transparent'},
-					gestureEnabled: false,
 				}}>
-				<Stack.Screen name="index" />
-				<Stack.Screen name="admin" />
-				<Stack.Screen name="scouter" />
+				<Stack.Screen name="index" options={{gestureEnabled: false}} />
+				<Stack.Screen name="admin" options={{gestureEnabled: user.isAnonymous}} />
+				<Stack.Screen name="scouter" options={{gestureEnabled: user.isAnonymous}} />
+				<Stack.Screen name="demo" options={{gestureEnabled: false}} />
 			</Stack>
 		</StackWrapper>
 	);

@@ -33,7 +33,7 @@ export class EventStore {
 			this.subscription.unsubscribe();
 		}
 
-		if (userStore.userData?.type !== UserType.APP_ADMIN)
+		if (userStore.userData?.type !== UserType.APP_ADMIN && !userStore.user?.isAnonymous)
 			return;
 
 		const event = eventsStore.events[this.eventId];
