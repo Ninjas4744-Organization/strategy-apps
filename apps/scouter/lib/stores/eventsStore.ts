@@ -30,8 +30,9 @@ class EventsStore {
 			this.subscription.unsubscribe();
 		}
 
-		if (!userStore.userData && !userStore.user?.isAnonymous)
+		if (!userStore.userData && !userStore.user?.isAnonymous) {
 			return;
+		}
 
 		let eventsRef = query(collection(db, 'events'));
 		if (userStore.user?.isAnonymous) {
@@ -40,10 +41,15 @@ class EventsStore {
 			eventsRef = query(eventsRef, where('teams', 'array-contains', `frc${userStore.userData?.team}`));
 		}
 
+		if (!userStore.user?.isAnonymous) {
+			eventsRef = query(eventsRef, where('event_code', '!=', 'demo'));
+		}
+
 		this.isLoading = true;
 		const $events = observeCollection(eventsRef);
 		this.subscription = $events.subscribe(events => {
 			runInAction(() => {
+				this.events = {};
 				for (const eventDoc of events) {
 					const eventData = eventDoc.data();
 					const event = Event.fromMap(eventDoc.id, eventData);

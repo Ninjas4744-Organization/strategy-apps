@@ -13,7 +13,7 @@ export default observer(function AdminLayout() {
 	useEffect(() => {
 		subscribe();
 		return () => unsubscribe();
-	}, [user]);
+	}, [user?.uid]);
 
 	if (!isAdmin && !user?.isAnonymous) {
 		return <Redirect href="/(app)/scouter" />;
