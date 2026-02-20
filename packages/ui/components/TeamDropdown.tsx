@@ -1,6 +1,6 @@
-import {useMemo, useRef, useState} from "react";
-import {Pressable, ScrollView, View} from "react-native";
-import {Menu, Portal, Text, TextInput} from "react-native-paper";
+import {useRef, useState} from "react";
+import {ScrollView, TouchableOpacity, View} from "react-native";
+import {Menu, Portal} from "react-native-paper";
 import {BasicInput} from "./BasicInput";
 
 type TeamDropdownProps = {
@@ -14,13 +14,13 @@ type TeamDropdownProps = {
 export const TeamDropdown = ({teams, onSelect, value, error, isAvailable}: TeamDropdownProps) => {
 	const [visible, setVisible] = useState(false);
 	const anchorRef = useRef<View>(null);
+	const [inputWidth, setInputWidth] = useState(0);
 	const [coordinates, setCoordinates] = useState({x: 0, y: 0});
-	const editable = useMemo(() => !visible, [visible]);
 
 	const openMenu = () => {
 		requestAnimationFrame(() => {
 			anchorRef.current?.measureInWindow((x, y, _, height) => {
-				setCoordinates({x, y: y + height});
+				setCoordinates({x, y: y + height + 25});
 				setVisible(true);
 			});
 		});
@@ -28,8 +28,8 @@ export const TeamDropdown = ({teams, onSelect, value, error, isAvailable}: TeamD
 
 	return (
 		<>
-			<Pressable onPress={() => openMenu()}>
-				<View ref={anchorRef} pointerEvents="box-only">
+			<TouchableOpacity onPress={() => openMenu()}>
+				<View ref={anchorRef} pointerEvents="box-none">
 					<BasicInput
 						style={{ width: "100%", minWidth: 1 }}
 						multiline={false}
@@ -39,16 +39,16 @@ export const TeamDropdown = ({teams, onSelect, value, error, isAvailable}: TeamD
 						value={value ? `Team ${value}` : "Select team"}
 						iconRight="arrow-drop-down"
 						error={error}
-					/>
+						onLayout={event => setInputWidth(event.nativeEvent.layout.width)} />
 				</View>
-			</Pressable>
+			</TouchableOpacity>
 			<Portal>
 				<Menu
 					key={String(visible)}
 					visible={visible}
 					onDismiss={() => setVisible(false)}
 					anchor={coordinates}
-					contentStyle={{maxHeight: 300}}>
+					contentStyle={{maxHeight: 300, width: inputWidth}}>
 					<ScrollView style={{maxHeight: 300}}>
 						{teams.map((team) => {
 							const number = team.replace("frc", "");
