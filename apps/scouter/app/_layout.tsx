@@ -29,7 +29,7 @@ export default observer(function Root() {
 					<RootNavigator/>
 					<AppDialog/>
 					<Snackbar/>
-					<Updater />
+					{!__DEV__ && <Updater/>}
 				</PaperProvider>
 			</QueryClientProvider>
 		</KeyboardProvider>
