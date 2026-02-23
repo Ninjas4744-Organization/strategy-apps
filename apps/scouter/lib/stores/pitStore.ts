@@ -5,6 +5,7 @@ import {doc, serverTimestamp, setDoc} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import userStore from "@/lib/stores/userStore";
 import {OfflineQueue} from "@/lib/OfflineQueue";
+import bleStore from "@/lib/stores/bleStore";
 
 class PitStore {
 	@observable data: Record<string, any> = {};
@@ -17,12 +18,14 @@ class PitStore {
 	@action
 	reset() {
 		this.data = initPitData(this.year);
+		bleStore.stop();
 	}
 
 	@action.bound
-	startPit(year: number) {
+	startPit(year: number, teamNumber: string) {
 		this.data = initPitData(year);
 		this.year = year;
+		bleStore.advertise('pit_scouting', +teamNumber);
 	}
 
 	@action.bound

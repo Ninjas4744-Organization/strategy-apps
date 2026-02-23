@@ -7,6 +7,7 @@ import {UserData} from "@/lib/interfaces/UserData";
 import {UserType} from "@/lib/interfaces/UserType";
 import {Subscription} from "rxjs";
 import {observeDoc} from "@/lib/utilities";
+import bleStore from "@/lib/stores/bleStore";
 
 class UserStore {
 	@observable user: User | null = null;
@@ -26,6 +27,9 @@ class UserStore {
 			runInAction(() => {
 				this.user = u;
 				this.isLoading = false;
+				if (!u) {
+					bleStore.clearId();
+				}
 			});
 		});
 	}
@@ -73,6 +77,7 @@ class UserStore {
 			runInAction(() => {
 				if (user.exists()) {
 					this.userData = user.data() as UserData;
+					bleStore.setId(this.userData.type + '-' + this.user?.uid);
 				} else {
 					this.userData = null;
 				}

@@ -13,7 +13,9 @@
 			"icon": "./assets/NinjasAppIcon.icon",
 			"bundleIdentifier": "com.realKfiros.scoutingApp",
 			"infoPlist": {
-				"ExpoLocalization_supportsRTL": false
+				"ExpoLocalization_supportsRTL": false,
+				"NSBluetoothAlwaysUsageDescription": "This app uses Bluetooth for nearby scouting coordination",
+				"NSBluetoothPeripheralUsageDescription": "This app uses Bluetooth to broadcast scouting status"
 			}
 		},
 		"android": {
@@ -23,7 +25,16 @@
 			},
 			"edgeToEdgeEnabled": true,
 			"predictiveBackGestureEnabled": false,
-			"package": "com.ninjas4744.scouter"
+			"package": "com.ninjas4744.scouter",
+			"permissions": [
+				"android.permission.BLUETOOTH",
+				"android.permission.BLUETOOTH_ADMIN",
+				"android.permission.BLUETOOTH_ADVERTISE",
+				"android.permission.BLUETOOTH_SCAN",
+				"android.permission.BLUETOOTH_CONNECT",
+				"android.permission.ACCESS_FINE_LOCATION",
+				"android.permission.ACCESS_COARSE_LOCATION"
+			]
 		},
 		"web": {
 			"bundler": "metro",

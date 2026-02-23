@@ -36,7 +36,7 @@ export default observer(function ScouterIndex() {
 
 	const scoutPit = (data: PitInputFormData) => {
 		setShowPitDialog(false);
-		startPit(event?.year!);
+		startPit(event?.year!, data.teamNumber);
 		router.push(`/scouter/${eventId}/pit/${data.teamNumber}` as Href);
 	};
 

@@ -1,5 +1,6 @@
 import {Observable} from "rxjs";
 import {type DocumentData, type QueryDocumentSnapshot, type CollectionReference, type Query, type DocumentReference, onSnapshot} from "firebase/firestore";
+import Constants from "expo-constants";
 
 export function pick(obj: any, keys: string[]): object {
 	const res: any = {};
@@ -46,3 +47,7 @@ export const observeDoc = (ref:  DocumentReference<DocumentData, DocumentData>):
 		return () => unsubscribe();
 	});
 };
+
+export const isExpoGo = () => {
+	return Constants.executionEnvironment === 'storeClient';
+}

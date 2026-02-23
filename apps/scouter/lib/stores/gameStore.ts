@@ -5,6 +5,7 @@ import {OfflineQueue} from "@/lib/OfflineQueue";
 import {showSnackbar} from "@ninjas-strategy/ui";
 import userStore from "@/lib/stores/userStore";
 import {initGameData} from "@ninjas-strategy/frc-games";
+import bleStore from "@/lib/stores/bleStore";
 
 const MAX_TEAM_NUMBER = 20000;
 const MAX_QUALIFICATION_MATCH_NUMBER = 150;
@@ -24,6 +25,7 @@ class GameStore {
 	reset() {
 		this.data = initGameData(this.year);
 		this.teamNumber = this.gameNumber = '';
+		bleStore.stop();
 	}
 
 	@action.bound
@@ -32,6 +34,7 @@ class GameStore {
 		this.teamNumber = teamNumber;
 		this.gameNumber = gameNumber;
 		this.year = year;
+		bleStore.advertise('game_scouting', +teamNumber, +gameNumber);
 	}
 
 	@action.bound
