@@ -8,11 +8,6 @@
 		"scheme": "ninjascouter",
 		"userInterfaceStyle": "light",
 		"newArchEnabled": true,
-		"splash": {
-			"image": "./assets/splash-icon.png",
-			"resizeMode": "contain",
-			"backgroundColor": "#ffffff"
-		},
 		"ios": {
 			"supportsTablet": true,
 			"icon": "./assets/NinjasAppIcon.icon",
@@ -37,7 +32,15 @@
 		"plugins": [
 			"expo-router",
 			"expo-font",
-			"expo-localization"
+			"expo-localization",
+			[
+				"expo-splash-screen",
+				{
+					"image": "./assets/splash-icon.png",
+					"resizeMode": "contain",
+					"backgroundColor": "#ffffff"
+				}
+			]
 		],
 		"experiments": {
 			"typedRoutes": true,
