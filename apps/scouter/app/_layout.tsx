@@ -1,18 +1,25 @@
 import {Stack} from 'expo-router';
-import {SplashScreenController} from '@/lib/components/SplashScreenController';
 import {observer} from "mobx-react-lite";
 import {useEffect} from "react";
 import {OfflineQueue} from "@/lib/OfflineQueue";
 import {StatusBar} from "expo-status-bar";
-import {showSnackbar, Snackbar, StackWrapper} from "@ninjas-strategy/ui";
+import {Snackbar, StackWrapper} from "@ninjas-strategy/ui";
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import 'react-native-reanimated';
-import {Button, MD2Colors, PaperProvider, Text} from "react-native-paper";
+import {MD2Colors, PaperProvider} from "react-native-paper";
 import userStore from "@/lib/stores/userStore";
 import {UserType} from "@/lib/interfaces/UserType";
 import {KeyboardProvider} from "react-native-keyboard-controller";
 import {AppDialog} from "@ninjas-strategy/ui/components/AppDialog";
 import {Updater} from "@/lib/components/Updater";
+import * as SplashScreen from 'expo-splash-screen';
+
+if (!__DEV__) {
+	SplashScreen.setOptions({
+		duration: 1000,
+		fade: true,
+	});
+}
 
 const queryClient = new QueryClient()
 
@@ -25,7 +32,6 @@ export default observer(function Root() {
 		<KeyboardProvider>
 			<QueryClientProvider client={queryClient}>
 				<PaperProvider>
-					<SplashScreenController/>
 					<RootNavigator/>
 					<AppDialog/>
 					<Snackbar/>
