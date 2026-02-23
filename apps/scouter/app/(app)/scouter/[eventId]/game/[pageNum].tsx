@@ -8,6 +8,7 @@ import {KeyboardAvoidingView, Platform} from "react-native";
 import {games} from "@ninjas-strategy/frc-games";
 import eventsStore from "@/lib/stores/eventsStore";
 import {KeyboardAwareScrollView} from "react-native-keyboard-controller";
+import {useDisableGestures} from "@/lib/hooks/disableGestures";
 
 const Container = styled.SafeAreaView`
 	background-color: transparent;
@@ -22,6 +23,8 @@ export default observer(function TeleopPage() {
 	const {eventId, pageNum} = useGlobalSearchParams();
 	const {data, updateValue} = gameStore;
 	const {events} = eventsStore;
+
+	useDisableGestures();
 
 	const event = events[eventId as string];
 

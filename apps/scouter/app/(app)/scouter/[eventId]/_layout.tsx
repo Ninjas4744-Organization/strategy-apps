@@ -9,7 +9,7 @@ export default function GameLayout() {
 				header: ({route}) => <Header route={route} />,
 				contentStyle: {backgroundColor: 'transparent'},
 				headerBlurEffect: 'light',
-				gestureEnabled: false
+				gestureEnabled: false,
 			}}
 		/>
 	</StackWrapper>;

@@ -57,7 +57,7 @@ export const Header = observer(({route}: HeaderProps) => {
 			<Subtitle>{event.year}</Subtitle>
 		</TextSection>}
 		{route.name.startsWith('game') && <>
-			{page > 0 && <PageIconContainer onPress={() => router.push(`/scouter/game/${eventId}/${parseInt(pageNum) - 1}` as Href)}>
+			{page > 0 && <PageIconContainer onPress={() => router.back()}>
 				<PageIcon name="arrow-back"/>
 			</PageIconContainer>}
 			<TextSection>

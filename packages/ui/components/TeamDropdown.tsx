@@ -1,5 +1,5 @@
 import {useRef, useState} from "react";
-import {ScrollView, TouchableOpacity, View} from "react-native";
+import {Platform, ScrollView, TouchableOpacity, View} from "react-native";
 import {Menu, Portal} from "react-native-paper";
 import {BasicInput} from "./BasicInput";
 
@@ -20,7 +20,10 @@ export const TeamDropdown = ({teams, onSelect, value, error, isAvailable}: TeamD
 	const openMenu = () => {
 		requestAnimationFrame(() => {
 			anchorRef.current?.measureInWindow((x, y, _, height) => {
-				setCoordinates({x, y: y + height + 25});
+				let coorY = y + height;
+				if (Platform.OS === 'android')
+					coorY += 25;
+				setCoordinates({x, y: coorY});
 				setVisible(true);
 			});
 		});
