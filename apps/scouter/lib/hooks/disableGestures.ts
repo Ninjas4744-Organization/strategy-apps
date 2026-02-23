@@ -1,5 +1,5 @@
 import {useEffect} from "react";
-import { useNavigation } from "expo-router";
+import {useNavigation} from "expo-router";
 
 export const useDisableGestures = () => {
 	const navigation = useNavigation();
