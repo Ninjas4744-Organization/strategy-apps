@@ -32,7 +32,7 @@ export const TeamDropdown = ({teams, onSelect, value, error, isAvailable}: TeamD
 	return (
 		<>
 			<TouchableOpacity onPress={() => openMenu()}>
-				<View ref={anchorRef} pointerEvents="box-none">
+				<View ref={anchorRef} pointerEvents="none">
 					<BasicInput
 						style={{ width: "100%", minWidth: 1 }}
 						multiline={false}
