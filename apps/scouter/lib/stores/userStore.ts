@@ -1,5 +1,5 @@
 import {action, computed, makeObservable, observable, runInAction} from "mobx";
-import {auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInAnonymously, signOut as fbSignOut} from "../firebase/auth";
+import {auth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signInAnonymously, signOut as fbSignOut, deleteUser} from "../firebase/auth";
 import {User, UserCredential} from "firebase/auth";
 import {doc} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
@@ -47,6 +47,9 @@ class UserStore {
 
 	@action.bound
 	async signOut(): Promise<void> {
+		if (this.user?.isAnonymous) {
+			await deleteUser(this.user);
+		}
 		await fbSignOut(auth);
 	}
 
