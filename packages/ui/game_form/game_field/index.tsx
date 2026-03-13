@@ -4,6 +4,7 @@ import {Enum} from "./fields/Enum";
 import {observer} from "mobx-react-lite";
 import {Checkbox, MD2Colors} from "react-native-paper";
 import {BatchShooter} from "./fields/BatchShooter";
+import {Adder} from "./fields/Adder";
 
 type GameFieldProps = ScoringElement & {
 	id: string;
@@ -12,7 +13,7 @@ type GameFieldProps = ScoringElement & {
 	pageNum: number;
 };
 
-export const GameField = observer(({type, title, color, data, id, missed_key, setData, values, pageNum}: GameFieldProps) => {
+export const GameField = observer(({type, title, color, data, id, missed_key, adderValues = [], setData, values, pageNum}: GameFieldProps) => {
 	if (type === 'batch-shooter') {
 		return (
 			<BatchShooter
@@ -31,6 +32,16 @@ export const GameField = observer(({type, title, color, data, id, missed_key, se
 				scored={data[id]}
 				setMissed={(value) => setData(missed_key!, value)}
 				setScored={(value) => setData(id, value)}/>
+		);
+	}
+	if (type === 'adder') {
+		return (
+			<Adder
+				title={title}
+				color={color}
+				value={data[id]}
+				onChange={(value) => setData(id, value)}
+				values={adderValues} />
 		);
 	}
 	if (type === 'enum') {

@@ -62,7 +62,7 @@ export type PitAttribute = {
 };
 
 export type ScoringElement = {
-	type: 'counter'|'enum'|'bool'|'batch-shooter';
+	type: 'counter'|'enum'|'bool'|'batch-shooter'|'adder';
 	title: string;
 	description?: string;
 	color: string;
@@ -70,6 +70,7 @@ export type ScoringElement = {
 	missed_key?: string;				// counter
 	values?: {[key: string]: string};	// enum
 	defaultValue?: string;				// enum
+	adderValues?: number[];				// adder
 };
 
 type ScoringElements = {

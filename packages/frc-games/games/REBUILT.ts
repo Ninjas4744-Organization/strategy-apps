@@ -32,9 +32,10 @@ export const REBUILT: FRCGame = {
 					getScore: (game) => calculateBatchScore(game, 'autonomous_fuel_scored'),
 				},
 				autonomous_fuel_passed: {
-					type: 'counter',
+					type: 'adder',
 					title: 'Fuel Passed',
 					color: MD2Colors.green500,
+					adderValues: [1, 3, 5, 10, 15, 20],
 					getScore: () => 0,
 				}
 			}
@@ -80,9 +81,10 @@ export const REBUILT: FRCGame = {
 			id: 'teleop_fuel_passing',
 			fields: {
 				teleop_fuel_passed: {
-					type: 'counter',
+					type: 'adder',
 					title: 'Fuel Passed',
 					color: MD2Colors.green500,
+					adderValues: [1, 3, 5, 10, 15, 20],
 					getScore: () => 0,
 				},
 			},
@@ -94,9 +96,10 @@ export const REBUILT: FRCGame = {
 			id: 'teleop_fuel_passing_inactive',
 			fields: {
 				teleop_fuel_passed_inactive: {
-					type: 'counter',
+					type: 'adder',
 					title: 'Fuel Passed',
 					color: MD2Colors.green500,
+					adderValues: [1, 3, 5, 10, 15, 20],
 					getScore: () => 0,
 				},
 			},
@@ -122,9 +125,10 @@ export const REBUILT: FRCGame = {
 			id: 'endgame_fuel_passing',
 			fields: {
 				endgame_fuel_passed: {
-					type: 'counter',
+					type: 'adder',
 					title: 'Fuel Passed',
 					color: MD2Colors.green500,
+					adderValues: [1, 3, 5, 10, 15, 20],
 					getScore: () => 0,
 				},
 			},
