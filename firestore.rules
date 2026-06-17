@@ -1,0 +1,61 @@
+rules_version = '2';
+service cloud.firestore {
+	match /databases/{database}/documents {
+		function isSignedIn() {
+			return request.auth != null;
+		}
+
+		function isAppAdmin() {
+			return isSignedIn()
+				&& exists(/databases/$(database)/documents/users/$(request.auth.uid))
+				&& get(/databases/$(database)/documents/users/$(request.auth.uid)).data.type == 'app_admin';
+		}
+
+		// Allow only app admins to manage registration codes.
+		match /registration_codes/{teamId} {
+			allow read: if true;
+			allow write: if isAppAdmin();
+		}
+
+    // Allow read/write access to users collection
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.firebase.sign_in_provider != 'anonymous';
+    }
+
+    // Allow reading and writing to the "teams" collection
+    match /teams/{teamId} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.firebase.sign_in_provider != 'anonymous';
+
+      // Allow subcollection access like /teams/{teamId}/games/{gameId}
+      match /games/{gameId} {
+        allow read: if true;
+        allow write: if request.auth != null && request.auth.token.firebase.sign_in_provider != 'anonymous';
+      }
+    }
+
+    // Allow reading and writing to the "events" collection
+    match /events/{eventId} {
+    	allow read: if true;
+      allow write: if request.auth != null && request.auth.token.firebase.sign_in_provider != 'anonymous';
+
+      // Allow reading and writing to the "teams" collection
+    	match /teams/{teamId} {
+      	allow read: if true;
+        allow write: if request.auth != null && request.auth.token.firebase.sign_in_provider != 'anonymous';
+
+      	// Allow subcollection access like /teams/{teamId}/games/{gameId}
+      	match /games/{gameId} {
+        	allow read: if true;
+          allow write: if request.auth != null && request.auth.token.firebase.sign_in_provider != 'anonymous';
+      	}
+    	}
+      // Allow reading and writing to the "pit" collection
+      match /pit/{teamId} {
+      	allow read, write: if true;
+        allow write: if request.auth != null && request.auth.token.firebase.sign_in_provider != 'anonymous';
+      }
+    }
+  }
+}
