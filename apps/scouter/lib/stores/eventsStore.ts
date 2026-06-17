@@ -5,7 +5,6 @@ import {UserType} from "@/lib/interfaces/UserType";
 import {Event} from "@/lib/models/Event";
 import userStore from "@/lib/stores/userStore";
 import {TBAEventSimple} from "@/lib/interfaces/TBAEventSimple";
-import {Router} from "expo-router";
 import {TBA} from "@/lib/hooks/tba";
 import {showSnackbar} from "@ninjas-strategy/ui";
 import {type Subscription} from "rxjs";
@@ -15,16 +14,25 @@ type Events = {
 	[eventId: string]: Event;
 };
 
+type RouterLike = {
+	back: () => void;
+};
+
 class EventsStore {
-	@observable isLoading: boolean = true;
-	@observable events: Events = {};
+	isLoading: boolean = true;
+	events: Events = {};
 	private subscription: Subscription | null = null;
 
 	constructor() {
-		makeObservable(this);
+		makeObservable(this, {
+			isLoading: observable,
+			events: observable.ref,
+			subscribe: action.bound,
+			unsubscribe: action.bound,
+			createEvent: action.bound,
+		});
 	}
 
-	@action.bound
 	subscribe() {
 		if (this.subscription) {
 			this.subscription.unsubscribe();
@@ -49,18 +57,18 @@ class EventsStore {
 		const $events = observeCollection(eventsRef);
 		this.subscription = $events.subscribe(events => {
 			runInAction(() => {
-				this.events = {};
+				const nextEvents: Events = {};
 				for (const eventDoc of events) {
 					const eventData = eventDoc.data();
 					const event = Event.fromMap(eventDoc.id, eventData);
-					this.events[event.id] = Event.fromMap(eventDoc.id, eventData)
+					nextEvents[event.id] = event;
 				}
+				this.events = nextEvents;
 				this.isLoading = false;
 			})
 		});
 	}
 
-	@action.bound
 	unsubscribe() {
 		if (this.subscription) {
 			this.subscription.unsubscribe();
@@ -68,8 +76,7 @@ class EventsStore {
 		this.subscription = null;
 	}
 
-	@action.bound
-	async createEvent(eventData: TBAEventSimple, router: Router) {
+	async createEvent(eventData: TBAEventSimple, router: RouterLike) {
 		try {
 			const teamsRes = await TBA(`/event/${eventData.key}/teams/keys`);
 			const eventsRef = doc(db, 'events', eventData.key);

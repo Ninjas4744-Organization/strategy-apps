@@ -9,19 +9,32 @@ import {Subscription} from "rxjs";
 import {observeDoc} from "@/lib/utilities";
 
 class UserStore {
-	@observable user: User | null = null;
-	@observable isLoading: boolean = true;
+	user: User | null = null;
+	isLoading: boolean = true;
 
-	@observable userData: UserData | null = null;
+	userData: UserData | null = null;
 	private subscription: Subscription | null = null;
 
 	constructor() {
-		makeObservable(this);
+		makeObservable(this, {
+			user: observable.ref,
+			isLoading: observable,
+			userData: observable.ref,
+			listenToAuthChanges: action.bound,
+			signUp: action.bound,
+			signIn: action.bound,
+			demoSignIn: action.bound,
+			signOut: action.bound,
+			isConnected: computed,
+			subscribe: action.bound,
+			unsubscribe: action.bound,
+			isAdmin: computed,
+			isAppAdmin: computed,
+		});
 		this.listenToAuthChanges();
 	}
 
-	@action.bound
-	private listenToAuthChanges() {
+	listenToAuthChanges() {
 		onAuthStateChanged(auth, (u) => {
 			runInAction(() => {
 				this.user = u;
@@ -30,22 +43,18 @@ class UserStore {
 		});
 	}
 
-	@action.bound
 	async signUp(email: string, password: string): Promise<UserCredential> {
 		return await createUserWithEmailAndPassword(auth, email, password);
 	}
 
-	@action.bound
 	async signIn(email: string, password: string): Promise<void> {
 		await signInWithEmailAndPassword(auth, email, password);
 	}
 
-	@action.bound
 	async demoSignIn(): Promise<void> {
 		await signInAnonymously(auth);
 	}
 
-	@action.bound
 	async signOut(): Promise<void> {
 		if (this.user?.isAnonymous) {
 			await deleteUser(this.user);
@@ -53,12 +62,10 @@ class UserStore {
 		await fbSignOut(auth);
 	}
 
-	@computed
 	get isConnected(): boolean {
 		return !!this.user;
 	}
 
-	@action.bound
 	subscribe() {
 		if (this.subscription) {
 			this.subscription.unsubscribe();
@@ -84,7 +91,6 @@ class UserStore {
 		})
 	}
 
-	@action.bound
 	unsubscribe() {
 		if (this.subscription) {
 			this.subscription.unsubscribe();
@@ -92,14 +98,12 @@ class UserStore {
 		this.subscription = null;
 	}
 
-	@computed
 	get isAdmin() {
 		if (!this.userData)
 			return false;
 		return this.userData.type !== UserType.SCOUTER;
 	}
 
-	@computed
 	get isAppAdmin() {
 		if (!this.userData)
 			return false;

@@ -52,9 +52,6 @@
     "styled-components": "^6.1.19"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.18.6",
-    "@babel/plugin-proposal-decorators": "^7.28.0",
-    "@babel/plugin-proposal-private-methods": "^7.18.6",
     "@eslint/eslintrc": "^3",
     "@stylistic/eslint-plugin": "3",
     "@types/react": "~19.2.14",

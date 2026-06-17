@@ -13,15 +13,20 @@ type RegistrationCodes = {
 };
 
 class RegistrationCodesStore {
-	@observable isLoading: boolean = false;
-	@observable registrationCodes: RegistrationCodes = {};
+	isLoading: boolean = false;
+	registrationCodes: RegistrationCodes = {};
 	private subscription: Subscription | null = null;
 
 	constructor() {
-		makeObservable(this);
+		makeObservable(this, {
+			isLoading: observable,
+			registrationCodes: observable.ref,
+			subscribe: action.bound,
+			unsubscribe: action.bound,
+			generateRegistrationCode: action.bound,
+		});
 	}
 
-	@action.bound
 	async subscribe() {
 		if (this.subscription) {
 			this.subscription.unsubscribe();
@@ -35,17 +40,18 @@ class RegistrationCodesStore {
 		const $registrationCodes = observeCollection(collection(db, 'registration_codes'));
 		this.subscription = $registrationCodes.subscribe(registrationCodes => {
 			runInAction(() => {
+				const nextRegistrationCodes: RegistrationCodes = {};
 				for (const registrationCodeDoc of registrationCodes) {
 					const registrationCodeData = registrationCodeDoc.data();
 					const registrationCode = RegistrationCode.fromMap(registrationCodeDoc.id, registrationCodeData);
-					this.registrationCodes[registrationCode.id] = RegistrationCode.fromMap(registrationCodeDoc.id, registrationCodeData);
+					nextRegistrationCodes[registrationCode.id] = registrationCode;
 				}
+				this.registrationCodes = nextRegistrationCodes;
 				this.isLoading = false;
 			})
 		});
 	}
 
-	@action.bound
 	unsubscribe() {
 		if (this.subscription) {
 			this.subscription.unsubscribe();
@@ -53,7 +59,6 @@ class RegistrationCodesStore {
 		this.subscription = null;
 	}
 
-	@action.bound
 	async generateRegistrationCode(team: number) {
 		try {
 			const registrationCodesRef = doc(db, 'registration_codes', team.toString());

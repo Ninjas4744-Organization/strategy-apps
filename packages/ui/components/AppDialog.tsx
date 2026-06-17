@@ -4,17 +4,24 @@ import {observer} from "mobx-react-lite";
 import type {MaterialIcon} from "@/interfaces/MaterialIcon.ts";
 
 class DialogStore {
-	@observable visible: boolean = false;
-	@observable icon?: MaterialIcon;
-	@observable title: string = ''
-	@observable content: React.ReactNode = null;
-	@observable buttons: React.ReactNode = null;
+	visible: boolean = false;
+	icon: MaterialIcon | undefined = undefined;
+	title: string = ''
+	content: React.ReactNode = null;
+	buttons: React.ReactNode = null;
 
 	constructor() {
-		makeObservable(this);
+		makeObservable(this, {
+			visible: observable,
+			icon: observable,
+			title: observable,
+			content: observable,
+			buttons: observable,
+			open: action,
+			close: action.bound,
+		});
 	}
 
-	@action
 	open(title: string, content: React.ReactNode, icon?: MaterialIcon, buttons: React.ReactNode = null) {
 		this.icon = icon;
 		this.title = title;
@@ -23,7 +30,6 @@ class DialogStore {
 		this.visible = true;
 	}
 
-	@action.bound
 	close() {
 		this.visible = false;
 	}

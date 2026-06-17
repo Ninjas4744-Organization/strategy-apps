@@ -12,22 +12,26 @@ const EmptyAction = {
 };
 
 class SnackbarStore {
-	@observable visible = false;
-	@observable title = '';
-	@observable action: SnackbarAction = EmptyAction;
+	visible = false;
+	title = '';
+	action: SnackbarAction = EmptyAction;
 
 	constructor() {
-		makeObservable(this);
+		makeObservable(this, {
+			visible: observable,
+			title: observable,
+			action: observable,
+			show: action,
+			hide: action.bound,
+		});
 	}
 
-	@action
 	show(title: string, action: SnackbarAction = EmptyAction) {
 		this.title = title;
 		this.action = action;
 		this.visible = true;
 	}
 
-	@action.bound
 	hide() {
 		this.visible = false;
 	}

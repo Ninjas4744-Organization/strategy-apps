@@ -7,30 +7,33 @@ import userStore from "@/lib/stores/userStore";
 import {OfflineQueue} from "@/lib/OfflineQueue";
 
 class PitStore {
-	@observable data: Record<string, any> = {};
-	@observable year: number = new Date().getFullYear();
+	data: Record<string, any> = {};
+	year: number = new Date().getFullYear();
 
 	constructor() {
-		makeObservable(this);
+		makeObservable(this, {
+			data: observable,
+			year: observable,
+			reset: action,
+			startPit: action.bound,
+			updateValue: action.bound,
+			submitToFirebase: action.bound,
+		});
 	}
 
-	@action
 	reset() {
 		this.data = initPitData(this.year);
 	}
 
-	@action.bound
 	startPit(year: number) {
 		this.data = initPitData(year);
 		this.year = year;
 	}
 
-	@action.bound
 	updateValue(field: string, value: any) {
 		this.data[field] = value;
 	}
 
-	@action.bound
 	async submitToFirebase(teamNumber: string, eventId: string) {
 		if (userStore.user?.isAnonymous) {
 			showSnackbar('Pit scouting data updated successfully!');

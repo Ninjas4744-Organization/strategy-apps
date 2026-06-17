@@ -16,18 +16,28 @@ type Teams = {
 export const EventContext = createContext<EventStore | null>(null);
 
 export class EventStore {
-	@observable loaded: boolean = false;
-	@observable teams: Teams = {};
-	@observable _isLoading: boolean = true;
-	@observable error?: string;
+	loaded: boolean = false;
+	teams: Teams = {};
+	_isLoading: boolean = true;
+	error: string | undefined = undefined;
 
 	private subscription: Subscription | null = null;
 
 	constructor(public eventId: string) {
-		makeObservable(this);
+		makeObservable(this, {
+			loaded: observable,
+			teams: observable.ref,
+			_isLoading: observable,
+			error: observable,
+			subscribe: action.bound,
+			unsubscribe: action.bound,
+			rank: computed,
+			totalGamesCount: computed,
+			teamsRanked: computed,
+			isLoading: computed,
+		});
 	}
 
-	@action.bound
 	async subscribe() {
 		if (this.subscription) {
 			this.subscription.unsubscribe();
@@ -42,16 +52,17 @@ export class EventStore {
 		const $teams = observeCollection(collection(db, 'events', this.eventId, 'teams'));
 		this.subscription = $teams.subscribe(teams => {
 			runInAction(() => {
+				const nextTeams: Teams = {};
 				for (const teamDoc of teams) {
 					const teamData = teamDoc.data();
-					this.teams[parseInt(teamDoc.id)] = Team.fromMap(teamDoc.id, this.eventId, event.year, teamData);
+					nextTeams[parseInt(teamDoc.id)] = Team.fromMap(teamDoc.id, this.eventId, event.year, teamData);
 				}
+				this.teams = nextTeams;
 				this._isLoading = false;
 			});
 		});
 	}
 
-	@action.bound
 	unsubscribe() {
 		if (this.subscription) {
 			this.subscription.unsubscribe();
@@ -59,23 +70,19 @@ export class EventStore {
 		}
 	}
 
-	@computed
 	get rank() {
 		return Object.values(this.teams)
 			.sort((a, b) => b.averageTotalScore > a.averageTotalScore ? 1 : -1)
 			.map(team => team.teamNumber);
 	}
-	@computed
 	get totalGamesCount() {
 		return Object.values(this.teams).reduce((sum, team) => sum + team.games.length, 0);
 	}
 
-	@computed
 	get teamsRanked() {
 		return this.rank.map(team => this.teams[team]);
 	}
 
-	@computed
 	get isLoading() {
 		return this._isLoading || Object.values(this.teams).some(team => team.isLoading);
 	}

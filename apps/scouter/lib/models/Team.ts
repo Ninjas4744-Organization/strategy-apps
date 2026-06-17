@@ -9,8 +9,8 @@ import {observeCollection, observeDoc} from "@/lib/utilities";
 import {showSnackbar} from "@ninjas-strategy/ui";
 
 export class Team extends TeamCalculation implements Model {
-	@observable games: Game[] = [];
-	@observable isLoading: boolean = true;
+	games: Game[] = [];
+	isLoading: boolean = true;
 	private subscription: Subscription | null = null;
 
 	constructor(
@@ -20,7 +20,12 @@ export class Team extends TeamCalculation implements Model {
 		public teamNumber: number,
 	) {
 		super(games[eventYear]);
-		makeObservable(this);
+		makeObservable(this, {
+			games: observable.ref,
+			isLoading: observable,
+			subscribe: action.bound,
+			unsubscribe: action.bound,
+		});
 	}
 
 	static fromMap(id: string, eventId: string, eventYear: number, data: Record<string, any>): Team {
@@ -46,7 +51,6 @@ export class Team extends TeamCalculation implements Model {
 		};
 	}
 
-	@action.bound
 	subscribe() {
 		if (this.subscription)
 			this.subscription.unsubscribe();
@@ -80,7 +84,6 @@ export class Team extends TeamCalculation implements Model {
 		});
 	}
 
-	@action.bound
 	unsubscribe() {
 		if (this.subscription) {
 			this.subscription.unsubscribe();

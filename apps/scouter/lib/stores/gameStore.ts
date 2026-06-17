@@ -10,23 +10,30 @@ const MAX_TEAM_NUMBER = 20000;
 const MAX_QUALIFICATION_MATCH_NUMBER = 150;
 
 class GameStore {
-	@observable data: Record<string, any> = {};
+	data: Record<string, any> = {};
 
-	@observable teamNumber: string = '';
-	@observable gameNumber: string = '';
-	@observable year: number = new Date().getFullYear();
+	teamNumber: string = '';
+	gameNumber: string = '';
+	year: number = new Date().getFullYear();
 
 	constructor() {
-		makeObservable(this);
+		makeObservable(this, {
+			data: observable,
+			teamNumber: observable,
+			gameNumber: observable,
+			year: observable,
+			reset: action,
+			startGame: action.bound,
+			updateValue: action.bound,
+			submitToFirebase: action.bound,
+		});
 	}
 
-	@action
 	reset() {
 		this.data = initGameData(this.year);
 		this.teamNumber = this.gameNumber = '';
 	}
 
-	@action.bound
 	startGame(teamNumber: string, gameNumber: string, year: number) {
 		this.data = initGameData(year);
 		this.teamNumber = teamNumber;
@@ -34,12 +41,10 @@ class GameStore {
 		this.year = year;
 	}
 
-	@action.bound
 	updateValue(field: string, value: any) {
 		this.data[field] = value;
 	}
 
-	@action.bound
 	async submitToFirebase(eventId: string) {
 		if (userStore.user?.isAnonymous) {
 			showSnackbar('Data sent! Starting new match...');
