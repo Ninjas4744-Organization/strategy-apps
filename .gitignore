@@ -40,11 +40,20 @@ yarn-error.*
 /ios
 /android
 
+# nv
 .nx
 
+# Custom local run scripts
 /local_scripts
 
+# IntelliJ
 .idea
+
+# Obsidian
+.obsidian
+
+# Syncthing
+.stfolder
 
 # graphify
 /graphify-out/
