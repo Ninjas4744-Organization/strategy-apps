@@ -5,9 +5,10 @@ import {Controller, type FieldValues, type UseFormReturn} from "react-hook-form"
 import type {Field} from "./types/fields";
 import type {FieldType} from './types/common.ts'
 import {Text} from "../../styles/Text";
-import {TextInput, TextInputIcon} from "../../styles/TextInput";
 import {TeamDropdown} from "../TeamDropdown";
-import {BasicInput} from "../BasicInput";
+import {NativeSelect} from "../NativeSelect";
+import {NativeTextField} from "../NativeTextField";
+import {Switch} from "../Switch";
 
 type FormProps<TValues extends FieldValues> = {
 	form: UseFormReturn<TValues>;
@@ -24,41 +25,42 @@ const FieldBox = styled.View`
 	gap: 6px;
 `;
 
-const Label = styled(Text)`
-	font-weight: 700;
-`;
-
 const Desc = styled(Text)`
 	opacity: 0.8;
 `;
 
-const SwitchRow = styled.View`
+const SwitchRow = styled.View<{ $disabled: boolean }>`
+	min-height: 62px;
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
+	gap: 12px;
+	opacity: ${({$disabled}) => $disabled ? 0.45 : 1};
+`;
+
+const SwitchCopy = styled.View`
+	flex: 1;
+	min-width: 0;
+	gap: 2px;
+`;
+
+const SwitchTitle = styled.Text`
+	color: ${({theme}) => theme.text};
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 20px;
+`;
+
+const SwitchDescription = styled.Text`
+	color: ${({theme}) => theme.textMuted};
+	font-size: 13px;
+	line-height: 17px;
 `;
 
 const HelperText = styled.Text<{ $visible: boolean }>`
 	min-height: ${({$visible}) => $visible ? "18px" : "0px"};
 	color: ${({theme}) => theme.danger};
 	font-size: 12px;
-`;
-
-const SwitchTrack = styled.Pressable<{ $active: boolean; $disabled: boolean }>`
-	width: 48px;
-	height: 28px;
-	border-radius: 14px;
-	padding: 3px;
-	background-color: ${({theme, $active}) => $active ? theme.primary : theme.border};
-	opacity: ${({$disabled}) => $disabled ? 0.55 : 1};
-	align-items: ${({$active}) => $active ? "flex-end" : "flex-start"};
-`;
-
-const SwitchThumb = styled.View`
-	width: 22px;
-	height: 22px;
-	border-radius: 11px;
-	background-color: ${({theme}) => theme.surface};
 `;
 
 function keyboardTypeFor(type: FieldType) {
@@ -89,8 +91,7 @@ export function FormInline<TValues extends FieldValues>({form, fields}: FormProp
 
 				return (
 					<FieldBox key={f.name}>
-						{f.label ? <Label>{f.label}</Label> : null}
-						{f.description ? <Desc>{f.description}</Desc> : null}
+						{f.type !== "switch" && f.description ? <Desc>{f.description}</Desc> : null}
 
 						<Controller
 							control={control}
@@ -100,15 +101,17 @@ export function FormInline<TValues extends FieldValues>({form, fields}: FormProp
 								if (f.type === "switch") {
 									return (
 										<>
-											<SwitchRow>
-												<Text>{f.placeholder ?? f.label ?? ""}</Text>
-												<SwitchTrack
-													$active={!!field.value}
-													$disabled={disabled}
+											<SwitchRow $disabled={disabled} accessibilityState={{disabled}}>
+												<SwitchCopy>
+													<SwitchTitle numberOfLines={1}>{f.placeholder ?? f.label ?? ""}</SwitchTitle>
+													{f.description ? (
+														<SwitchDescription numberOfLines={2}>{f.description}</SwitchDescription>
+													) : null}
+												</SwitchCopy>
+												<Switch
+													value={!!field.value}
 													disabled={disabled}
-													onPress={() => field.onChange(!field.value)}>
-													<SwitchThumb />
-												</SwitchTrack>
+													onValueChange={field.onChange}/>
 											</SwitchRow>
 											<HelperText $visible={!!errorMessage}>{errorMessage ?? ""}</HelperText>
 										</>
@@ -128,17 +131,14 @@ export function FormInline<TValues extends FieldValues>({form, fields}: FormProp
 								if (f.type === "select") {
 									return (
 										<>
-											<TextInput
+											<NativeSelect
 												label={f.label}
-												value={String(field.value ?? "")}
-												placeholder={f.placeholder ?? "Select..."}
-												editable={false}
 												disabled={disabled}
 												error={!!errorMessage}
-												right={<TextInputIcon icon="chevron-down" disabled />}
-												onPressIn={() => {
-													// TODO implement as custom (Menu/Dialog/TeamDropdown)
-												}}
+												value={field.value == null ? null : String(field.value)}
+												placeholder={f.placeholder ?? "Select..."}
+												options={f.options ?? []}
+												onSelect={field.onChange}
 											/>
 											<HelperText $visible={!!errorMessage}>{errorMessage ?? ""}</HelperText>
 										</>
@@ -164,7 +164,7 @@ export function FormInline<TValues extends FieldValues>({form, fields}: FormProp
 
 								return (
 									<>
-										<BasicInput
+										<NativeTextField
 											label={f.label}
 											value={value}
 											onChangeText={onChangeText}

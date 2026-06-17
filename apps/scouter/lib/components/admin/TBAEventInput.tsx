@@ -1,8 +1,8 @@
 import {useCallback, useMemo, useState} from "react";
-import {ActivityIndicator, FlatList, Modal, TouchableOpacity, View} from "react-native";
+import {ActivityIndicator, FlatList, TouchableOpacity, View} from "react-native";
 import axios from "axios";
-import {Icon, Text, TextInput, TextInputIcon} from "@ninjas-strategy/ui";
-import styled, {useTheme} from "styled-components/native";
+import {BottomSheet, Icon, NativeTextField, Text, TextInput, TextInputIcon} from "@ninjas-strategy/ui";
+import styled from "styled-components/native";
 import {TBAEventSimple} from "@/lib/interfaces/TBAEventSimple";
 import {useDebounce} from "@/lib/hooks/debounce";
 
@@ -48,27 +48,6 @@ const NoResultsContainer = styled.View`
 	padding: 16px;
 `;
 
-const CloseContainer = styled.View`
-	padding: 8px;
-	align-items: flex-end;
-`;
-
-const ModalBackdrop = styled.View`
-	flex: 1;
-	justify-content: center;
-	padding: 16px;
-	background-color: rgba(0, 0, 0, 0.42);
-`;
-
-const ModalPanel = styled.View`
-	max-height: 80%;
-	border-radius: 12px;
-	background-color: ${({theme}) => theme.card};
-	border: 1px solid ${({theme}) => theme.border};
-	padding-vertical: 8px;
-	overflow: hidden;
-`;
-
 const Divider = styled.View`
 	height: 1px;
 	background-color: ${({theme}) => theme.border};
@@ -103,20 +82,7 @@ const RetryText = styled.Text`
 	font-weight: 700;
 `;
 
-const CloseButton = styled.Pressable`
-	min-height: 40px;
-	border-radius: 12px;
-	padding: 9px 14px;
-	background-color: ${({theme}) => theme.inputBackground};
-`;
-
-const CloseText = styled.Text`
-	color: ${({theme}) => theme.text};
-	font-weight: 700;
-`;
-
 export const TBAEventInput: React.FC<TBAEventInputProps> = ({year, label = "FRC Event", placeholder = "Search by name / city / code…", initialValue = null, onSelect, disabled}) => {
-	const theme = useTheme();
 	const [allEvents, setAllEvents] = useState<TBAEventSimple[] | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [err, setErr] = useState<string | null>(null);
@@ -196,71 +162,62 @@ export const TBAEventInput: React.FC<TBAEventInputProps> = ({year, label = "FRC 
 				disabled={disabled}
 			/>
 
-			<Modal visible={modalVisible} transparent animationType="fade" onRequestClose={closeModal}>
-				<ModalBackdrop>
-					<ModalPanel>
-					<TitleContainer>
-						<Text>Choose FRC Event • {year}</Text>
-						<TextInput
-							placeholder={placeholder}
-							value={query}
-							onChangeText={setQuery}
-							autoFocus
-							left={<TextInputIcon icon="magnify" />}
-						/>
-					</TitleContainer>
+			<BottomSheet
+				isPresented={modalVisible}
+				onDismiss={closeModal}
+				title={`Choose FRC Event • ${year}`}>
+				<TitleContainer>
+					<NativeTextField
+						placeholder={placeholder}
+						value={query}
+						onChangeText={setQuery}
+						left={<TextInputIcon icon="magnify" />}
+					/>
+				</TitleContainer>
 
-					<Divider />
+				<Divider />
 
-					{loading ? (
-						<LoadingContainer>
-							<ActivityIndicator />
-						</LoadingContainer>
-					) : err ? (
-						<ErrorContainer>
-							<ErrorText>{err}</ErrorText>
-							<RetryButton onPress={loadEvents}>
-								<RetryText>Retry</RetryText>
-							</RetryButton>
-						</ErrorContainer>
-					) : (
-						<ResultsList
-							data={filtered}
-							keyExtractor={(item) => item.key}
-							keyboardShouldPersistTaps="always"
-							initialNumToRender={20}
-							renderItem={({item}) => (
-								<TouchableOpacity onPress={() => handlePick(item)}>
-									<ResultRow>
-										<Icon name="calendar-today" size={22} />
-										<ResultText>
-											<ResultTitle numberOfLines={1}>{item.name}</ResultTitle>
-											<Text numberOfLines={2}>
-												{item.city ?? ""}{item.city ? ", " : ""}{item.country ?? ""} • {item.start_date} → {item.end_date} • {item.key}
-											</Text>
-										</ResultText>
-										<ResultContainer>
-											<Text>{item.event_code.toUpperCase()}</Text>
-										</ResultContainer>
-									</ResultRow>
-								</TouchableOpacity>
-							)}
-							ListEmptyComponent={
-								<NoResultsContainer>
-									<Text>No events match “{debouncedQuery}”.</Text>
-								</NoResultsContainer>
-							}
-							ItemSeparatorComponent={Divider}/>
-					)}
-
-					<CloseContainer>
-						<CloseButton onPress={closeModal}>
-							<CloseText>Close</CloseText>
-						</CloseButton>
-					</CloseContainer>
-					</ModalPanel>
-				</ModalBackdrop>
-			</Modal>
+				{loading ? (
+					<LoadingContainer>
+						<ActivityIndicator />
+					</LoadingContainer>
+				) : err ? (
+					<ErrorContainer>
+						<ErrorText>{err}</ErrorText>
+						<RetryButton onPress={loadEvents}>
+							<RetryText>Retry</RetryText>
+						</RetryButton>
+					</ErrorContainer>
+				) : (
+					<ResultsList
+						data={filtered}
+						keyExtractor={(item) => item.key}
+						keyboardShouldPersistTaps="always"
+						initialNumToRender={20}
+						renderItem={({item}) => (
+							<TouchableOpacity onPress={() => handlePick(item)}>
+								<ResultRow>
+									<Icon name="calendar-today" size={22} />
+									<ResultText>
+										<ResultTitle numberOfLines={1}>{item.name}</ResultTitle>
+										<Text numberOfLines={2}>
+											{item.city ?? ""}{item.city ? ", " : ""}{item.country ?? ""} • {item.start_date} → {item.end_date} • {item.key}
+										</Text>
+									</ResultText>
+									<ResultContainer>
+										<Text>{item.event_code.toUpperCase()}</Text>
+									</ResultContainer>
+								</ResultRow>
+							</TouchableOpacity>
+						)}
+						ListEmptyComponent={
+							<NoResultsContainer>
+								<Text>No events match “{debouncedQuery}”.</Text>
+							</NoResultsContainer>
+						}
+						ItemSeparatorComponent={Divider}/>
+				)}
+			</BottomSheet>
 		</View>
 	);
 };
