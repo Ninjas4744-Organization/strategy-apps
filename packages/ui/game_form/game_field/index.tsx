@@ -6,6 +6,7 @@ import {BatchShooter} from "./fields/BatchShooter";
 import {Adder} from "./fields/Adder";
 import styled from "styled-components/native";
 import {Subtitle} from "../../styles/Text";
+import {Switch} from "../../components/Switch";
 
 type GameFieldProps = ScoringElement & {
 	id: string;
@@ -55,36 +56,40 @@ export const GameField = observer(({type, title, color, data, id, missed_key, ad
 		);
 	}
 	if (type === 'bool') {
+		const isActive = !!data[id];
+
 		return (
 			<CheckRow
-				onPress={() => setData(id, !data[id])}
-				$active={!!data[id]}
-				$color={color}>
-				<CheckMark $active={!!data[id]} $color={color} />
-				<Subtitle style={{color: data[id] ? color : undefined}}>{title}</Subtitle>
+				accessibilityRole="switch"
+				accessibilityState={{checked: isActive}}
+				onPress={() => setData(id, !isActive)}
+			>
+				<CheckCopy>
+					<CheckLabel $active={isActive} $color={color}>{title}</CheckLabel>
+				</CheckCopy>
+				<Switch value={isActive} activeColor={color} pointerEvents="none" />
 			</CheckRow>
 		);
 	}
 	return <></>;
 });
 
-const CheckRow = styled.Pressable<{ $active: boolean; $color: string }>`
-	min-height: 48px;
+const CheckRow = styled.Pressable`
+	min-height: 58px;
 	flex-direction: row;
 	align-items: center;
+	justify-content: space-between;
 	gap: 12px;
-	padding: 8px 10px;
-	border-radius: 12px;
-	border-width: 1px;
-	border-color: ${({$active, $color, theme}) => $active ? $color : theme.border};
-	background-color: ${({$active, $color}) => $active ? `${$color}20` : "transparent"};
+	padding: 8px 0;
 `;
 
-const CheckMark = styled.View<{ $active: boolean; $color: string }>`
-	width: 22px;
-	height: 22px;
-	border-radius: 6px;
-	border-width: 2px;
-	border-color: ${({$color}) => $color};
-	background-color: ${({$active, $color}) => $active ? $color : "transparent"};
+const CheckCopy = styled.View`
+	flex: 1;
+	min-width: 0;
+`;
+
+const CheckLabel = styled(Subtitle)<{ $active: boolean; $color: string }>`
+	color: ${({theme, $active, $color}) => $active ? $color : theme.text};
+	font-size: 16px;
+	font-weight: 700;
 `;

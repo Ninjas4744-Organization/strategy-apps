@@ -1,6 +1,7 @@
 import {Subtitle} from "../../..";
 import styled from "styled-components/native";
 import {observer} from "mobx-react-lite";
+import {Radio} from "../../../components/Radio";
 
 type EnumProps = {
 	value: string;
@@ -9,33 +10,30 @@ type EnumProps = {
 	color: string;
 };
 
-const ValueContainer = styled.Pressable<{isSelected: boolean, color: string}>`
+const ValueContainer = styled.Pressable<{ $selected: boolean; $color: string }>`
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 16px;
-    background-color: ${props => props.isSelected ? (props.color + '20') : 'transparent'};
+    background-color: ${({theme, $selected, $color}) => $selected ? `${$color}20` : theme.inputBackground};
     border-radius: 12px;
     border-width: 1px;
-    border-color: ${props => props.color + (props.isSelected ? '' : '20')};
+    border-color: ${({theme, $selected, $color}) => $selected ? $color : theme.border};
     margin-bottom: 8px;
     padding: 10px 12px;
 `;
 
 export const Enum = observer(({value, setValue, values, color}: EnumProps) => {
 	return <>
-		{Object.values(values || {}).map(key => <ValueContainer key={key} isSelected={value === key} color={color} onPress={() => setValue(key)}>
-			<RadioDot isSelected={value === key} color={color} />
-			<Subtitle>{key}</Subtitle>
+		{Object.values(values || {}).map(key => <ValueContainer key={key} $selected={value === key} $color={color} onPress={() => setValue(key)}>
+			<Radio selected={value === key} color={color} inactiveColor={`${color}33`} />
+			<OptionText $selected={value === key} $color={color}>{key}</OptionText>
 		</ValueContainer>)}
 	</>;
 });
 
-const RadioDot = styled.View<{isSelected: boolean, color: string}>`
-	width: 22px;
-	height: 22px;
-	border-radius: 11px;
-	border-width: 2px;
-	border-color: ${({color}) => color};
-	background-color: ${({isSelected, color}) => isSelected ? color : "transparent"};
+const OptionText = styled(Subtitle)<{ $selected: boolean; $color: string }>`
+	color: ${({theme, $selected, $color}) => $selected ? $color : theme.text};
+	font-size: 16px;
+	font-weight: 700;
 `;

@@ -1,6 +1,7 @@
 import {Subtitle} from "../../..";
 import styled from "styled-components/native";
 import {observer} from "mobx-react-lite";
+import {Radio} from "../../../components/Radio";
 
 type EnumProps = {
 	value: string;
@@ -27,18 +28,9 @@ export const Enum = observer(({value, onChange, values, title}: EnumProps) => {
 		<>
 			<Subtitle>{title}</Subtitle>
 			{Object.values(values || {}).map(key => <ValueContainer key={key} isSelected={value === key} onPress={() => onChange(key)}>
-					<RadioDot isSelected={value === key} />
+					<Radio selected={value === key} />
 					<Subtitle>{key}</Subtitle>
 				</ValueContainer>)}
 		</>
 	);
 });
-
-const RadioDot = styled.View<{isSelected: boolean}>`
-	width: 22px;
-	height: 22px;
-	border-radius: 11px;
-	border-width: 2px;
-	border-color: ${({theme}) => theme.primary};
-	background-color: ${({theme, isSelected}) => isSelected ? theme.primary : "transparent"};
-`;
