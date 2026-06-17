@@ -48,3 +48,6 @@ yarn-error.*
 
 # graphify
 /graphify-out/
+
+# codex local context cache
+/.codex/context/

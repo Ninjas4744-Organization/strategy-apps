@@ -10,3 +10,12 @@ Rules:
 - If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
 - Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
 - After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+
+## local context cache
+
+This repo may have an ignored context cache at `.codex/context/`.
+
+Rules:
+- Before broad source browsing for project purpose, architecture, data flow, routes, state, Firebase, scoring, analytics, or "where should I change X" questions, read `.codex/context/PROJECT_OVERVIEW.md` if it exists.
+- Treat the context cache as a token-saving map, not a source of truth. Verify behavior in source files before editing.
+- If project structure changes substantially, update `.codex/context/PROJECT_OVERVIEW.md`.
