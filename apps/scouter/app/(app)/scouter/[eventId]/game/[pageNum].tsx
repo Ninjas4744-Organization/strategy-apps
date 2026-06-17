@@ -20,15 +20,17 @@ const Container = styled.SafeAreaView`
 
 export default observer(function TeleopPage() {
 	const router = useRouter();
-	const {eventId, pageNum} = useGlobalSearchParams();
+	const {eventId: eventIdParam, pageNum: pageNumParam} = useGlobalSearchParams();
+	const eventId = Array.isArray(eventIdParam) ? eventIdParam[0] : eventIdParam;
+	const pageNum = Array.isArray(pageNumParam) ? pageNumParam[0] : pageNumParam;
 	const {data, updateValue} = gameStore;
 	const {events} = eventsStore;
 
 	useDisableGestures();
 
-	const event = events[eventId as string];
+	const event = eventId ? events[eventId] : undefined;
 
-	if (!event) {
+	if (!event || !pageNum) {
 		return <Container />;
 	}
 
@@ -53,7 +55,7 @@ export default observer(function TeleopPage() {
 				{isLastPage && <BeautifulButton
 					label="Submit to Firebase"
 					icon="cloud-upload"
-					onPress={() => gameStore.submitToFirebase(eventId as string).then(() => router.push('/scouter'))} />}
+					onPress={() => gameStore.submitToFirebase(eventId).then(() => router.push('/scouter'))} />}
 			</KeyboardAwareScrollView>
 		</Container>
 	</KeyboardAvoidingView>;

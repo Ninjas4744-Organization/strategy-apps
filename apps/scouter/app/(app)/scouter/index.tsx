@@ -23,8 +23,14 @@ export default observer(function ScouterIndex() {
 				title="Events"
 				right={<HeaderButtons buttons={[{onPress: () => signOut().then(() => router.replace('/')), icon: 'logout'}]}/>} />
 			<ScrollView>
-				{events && Object.values(events).map((event) => (
-					<EventItem key={event.id} onClick={() => router.push(`/scouter/${event.id}` as Href)} {...event} />
+				{events && Object.values(events).filter(event => event.id && event.id !== 'undefined').map((event) => (
+					<EventItem
+						key={event.id}
+						onClick={() => {
+							if (!event.id || event.id === 'undefined') return;
+							router.push(`/scouter/${event.id}` as Href);
+						}}
+						{...event} />
 				))}
 			</ScrollView>
 		</>

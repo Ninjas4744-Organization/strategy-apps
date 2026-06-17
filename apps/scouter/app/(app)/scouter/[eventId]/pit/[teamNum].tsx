@@ -9,13 +9,15 @@ import {KeyboardAwareScrollView} from "react-native-keyboard-controller";
 
 export default observer(function ScouterEvent() {
 	const router = useRouter();
-	const {eventId, teamNum} = useGlobalSearchParams();
-	const event = eventsStore.events[eventId as string];
+	const {eventId: eventIdParam, teamNum: teamNumParam} = useGlobalSearchParams();
+	const eventId = Array.isArray(eventIdParam) ? eventIdParam[0] : eventIdParam;
+	const teamNum = Array.isArray(teamNumParam) ? teamNumParam[0] : teamNumParam;
+	const event = eventId ? eventsStore.events[eventId] : undefined;
 	const game = event ? games[event?.year!] : null;
 	const {pitScoutingAttributes} = game || {};
 	const {data, updateValue} = pitStore;
 
-	if (!event || !game || !pitScoutingAttributes) {
+	if (!eventId || !teamNum || !event || !game || !pitScoutingAttributes) {
 		return null;
 	}
 
@@ -24,6 +26,6 @@ export default observer(function ScouterEvent() {
 		<BeautifulButton
 			label="Submit to Firebase"
 			icon="cloud-upload"
-			onPress={() => pitStore.submitToFirebase(teamNum as string, eventId as string).then(() => router.push('/scouter'))} />
+			onPress={() => pitStore.submitToFirebase(teamNum, eventId).then(() => router.push('/scouter'))} />
 	</KeyboardAwareScrollView>;
 });

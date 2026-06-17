@@ -20,21 +20,28 @@ type PitInputFormData = {
 
 export default observer(function ScouterIndex() {
 	const router = useRouter();
-	const {eventId} = useGlobalSearchParams();
+	const {eventId: eventIdParam} = useGlobalSearchParams();
+	const eventId = Array.isArray(eventIdParam) ? eventIdParam[0] : eventIdParam;
 	const {startGame} = gameStore;
 	const {startPit} = pitStore;
 	const [showGameDialog, setShowGameDialog] = useState<boolean>(false);
 	const [showPitDialog, setShowPitDialog] = useState<boolean>(false);
 
-	const event = eventsStore.events[eventId as string];
+	const event = eventId ? eventsStore.events[eventId] : undefined;
 
 	const scoutGame = (data: GameInputFormData) => {
+		if (!eventId || eventId === 'undefined' || !event)
+			return;
+
 		startGame(data.teamNumber, data.gameNumber, event?.year!);
 		setShowGameDialog(false);
 		router.push(`/scouter/${eventId}/game/0`);
 	};
 
 	const scoutPit = (data: PitInputFormData) => {
+		if (!eventId || eventId === 'undefined' || !event)
+			return;
+
 		setShowPitDialog(false);
 		startPit(event?.year!);
 		router.push(`/scouter/${eventId}/pit/${data.teamNumber}` as Href);
