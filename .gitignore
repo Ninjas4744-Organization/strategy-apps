@@ -43,3 +43,8 @@ yarn-error.*
 .nx
 
 /local_scripts
+
+.idea
+
+# graphify
+/graphify-out/
