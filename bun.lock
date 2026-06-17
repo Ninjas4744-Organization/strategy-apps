@@ -16,6 +16,7 @@
       "version": "1.0.0",
       "dependencies": {
         "@expo/metro-runtime": "~56.0.15",
+        "@expo/ui": "~56.0.14",
         "@expo/vector-icons": "^15.0.3",
         "@ninjas-strategy/frc-games": "workspace:*",
         "@ninjas-strategy/ui": "workspace:*",
@@ -95,6 +96,7 @@
       "name": "@ninjas-strategy/ui",
       "version": "1.0.0",
       "dependencies": {
+        "@expo/ui": "~56.0.14",
         "@expo/vector-icons": "^15.0.3",
         "@ninjas-strategy/frc-games": "workspace:*",
         "expo-linear-gradient": "~56.0.4",

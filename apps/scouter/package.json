@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@expo/metro-runtime": "~56.0.15",
+    "@expo/ui": "~56.0.14",
     "@expo/vector-icons": "^15.0.3",
     "@ninjas-strategy/frc-games": "workspace:*",
     "@ninjas-strategy/ui": "workspace:*",

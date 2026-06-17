@@ -3,6 +3,7 @@
 	"private": true,
 	"version": "1.0.0",
 	"dependencies": {
+		"@expo/ui": "~56.0.14",
 		"@expo/vector-icons": "^15.0.3",
 		"@ninjas-strategy/frc-games": "workspace:*",
 		"expo-linear-gradient": "~56.0.4",
