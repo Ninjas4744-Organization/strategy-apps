@@ -1,22 +1,35 @@
 import {observer} from "mobx-react-lite";
-import {Stack, useGlobalSearchParams} from "expo-router";
+import {Redirect, Stack, useGlobalSearchParams} from "expo-router";
 import {useEffect, useMemo} from "react";
-import {StackWrapper} from "@ninjas-strategy/ui";
+import {Loading, StackWrapper} from "@ninjas-strategy/ui";
 import {MD2Colors} from "react-native-paper";
 import {EventContext, EventStore} from "@/lib/stores/eventStore";
 import eventsStore from "@/lib/stores/eventsStore";
 
 export default observer(function EventLayout() {
 	const {eventId, id} = useGlobalSearchParams();
-	const {events} = eventsStore;
-	const event = events[eventId as string];
-	const eventStore = useMemo(() => new EventStore(eventId as string), []);
+	const eventIdString = Array.isArray(eventId) ? eventId[0] : eventId;
+	const {events, isLoading: areEventsLoading} = eventsStore;
+	const event = eventIdString ? events[eventIdString] : undefined;
+	const eventStore = useMemo(() => new EventStore(eventIdString ?? ''), [eventIdString]);
 	const {subscribe, unsubscribe} = eventStore;
 
 	useEffect(() => {
 		subscribe();
 		return () => unsubscribe();
-	}, []);
+	}, [eventStore, event?.id]);
+
+	if (!eventIdString || eventIdString === 'undefined') {
+		return <Redirect href="/(app)/admin" />;
+	}
+
+	if (!event && !areEventsLoading) {
+		return <Redirect href="/(app)/admin" />;
+	}
+
+	if (!event) {
+		return <Loading />;
+	}
 
 	return (
 		<EventContext.Provider value={eventStore}>

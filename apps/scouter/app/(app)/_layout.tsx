@@ -10,7 +10,7 @@ export default observer(function AppLayout() {
 	useEffect(() => {
 		subscribe();
 		return () => unsubscribe();
-	}, []);
+	}, [user?.uid]);
 
 	if (isLoading) {
 		return null;

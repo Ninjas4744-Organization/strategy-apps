@@ -43,7 +43,7 @@ export default observer(function DemoRouter() {
 				</Row>
 			</Card>
 		</TouchableOpacity>
-		<TouchableOpacity onPress={() => signOut().then(() => router.push('/'))}>
+		<TouchableOpacity onPress={() => signOut().then(() => router.replace('/'))}>
 			<Card>
 				<Row>
 					<IconContainer>

@@ -9,9 +9,12 @@ import userStore from "@/lib/stores/userStore";
 import {About} from "@/lib/components/About";
 import {shouldUseFirebaseEmulator} from "@/lib/firebase/emulator";
 import {sandboxUserPassword, sandboxUsers} from "@/lib/firebase/sandboxUsers";
+import {SafeAreaView} from "react-native-safe-area-context";
 
-const Container = styled.SafeAreaView`
-	padding: 50px 12px 12px;
+const Container = styled(SafeAreaView).attrs({
+	edges: ['top', 'bottom'],
+})`
+	padding: 12px;
 	background-color: transparent;
 	display: flex;
 	flex-direction: column;
@@ -96,7 +99,7 @@ const LoginForm = observer(() => {
 			await signIn(email, password);
 			setEmail('');
 			setPassword('');
-			router.push('/(app)');
+			router.replace('/(app)');
 		} catch (e: any) {
 			if (e.code === 'auth/invalid-email')
 				showSnackbar('Invalid email');
@@ -114,7 +117,7 @@ const LoginForm = observer(() => {
 			if (user)
 				await signOut();
 			await demoSignIn();
-			router.push('/(app)');
+			router.replace('/(app)');
 		} catch (e: any) {
 			showSnackbar(e.message);
 		}

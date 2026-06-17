@@ -56,15 +56,19 @@ const NavigationButtons = styled.View`
 `;
 
 export const TeamItem = observer(({index, team, averageTotalScore}: TeamItemProps) => {
-	const {eventId} = useGlobalSearchParams();
+	const {eventId: eventIdParam} = useGlobalSearchParams();
 	const router = useRouter();
 	const {teamNumber, games, isLoading} = team;
+	const eventId = Array.isArray(eventIdParam) ? eventIdParam[0] : eventIdParam;
 
 	if (isLoading)
 		return <TeamItemSkeleton />;
 
 	return (
-		<TouchableOpacity onPress={() => router.push(`/admin/${eventId}/team/${teamNumber}`)}>
+		<TouchableOpacity onPress={() => {
+			if (!eventId || eventId === 'undefined') return;
+			router.push(`/admin/${eventId}/team/${teamNumber}`);
+		}}>
 			<TeamItemContainer>
 				<Rank color={getRankColor(index + 1)}>
 					<Title>{index + 1}</Title>

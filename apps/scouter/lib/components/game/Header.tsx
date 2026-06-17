@@ -15,13 +15,13 @@ type HeaderProps = {
 };
 
 type RouteParams = {
-	eventId: string;
-	pageNum: string;
-	teamNum: string;
+	eventId?: string | string[];
+	pageNum?: string | string[];
+	teamNum?: string | string[];
 };
 
 const HeaderContainer = styled.View<{insets: EdgeInsets}>`
-	padding-top: ${props => props.insets.top}px;
+	padding-top: ${props => Math.max(props.insets.top, 8)}px;
 	margin: 12px;
 	display: flex;
 	flex-direction: row;
@@ -44,11 +44,22 @@ const NextPageIconContainer = styled.TouchableOpacity`
 export const Header = observer(({route}: HeaderProps) => {
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
-	const {eventId, pageNum, teamNum} = route.params as RouteParams;
+	const {eventId: eventIdParam, pageNum: pageNumParam, teamNum: teamNumParam} = (route.params ?? {}) as RouteParams;
+	const eventId = Array.isArray(eventIdParam) ? eventIdParam[0] : eventIdParam;
+	const pageNum = Array.isArray(pageNumParam) ? pageNumParam[0] : pageNumParam;
+	const teamNum = Array.isArray(teamNumParam) ? teamNumParam[0] : teamNumParam;
 	const {teamNumber} = gameStore;
-	const event = eventsStore.events[eventId];
+	const event = eventId ? eventsStore.events[eventId] : undefined;
 
-	const page = parseInt(pageNum);
+	if (!event) {
+		return <HeaderContainer insets={insets}>
+			<TextSection>
+				<Title>Loading event</Title>
+			</TextSection>
+		</HeaderContainer>;
+	}
+
+	const page = parseInt(pageNum ?? '0');
 	const yearGame = games[event.year];
 
 	return <HeaderContainer insets={insets}>
@@ -64,7 +75,7 @@ export const Header = observer(({route}: HeaderProps) => {
 				<Title>Now Scouting Team {teamNumber}</Title>
 				<Subtitle>{event.name}</Subtitle>
 			</TextSection>
-			{page < yearGame.pages.length - 1 && <NextPageIconContainer onPress={() => router.push(`/scouter/${eventId}/game/${parseInt(pageNum) + 1}` as Href)}>
+			{page < yearGame.pages.length - 1 && <NextPageIconContainer onPress={() => router.push(`/scouter/${eventId}/game/${page + 1}` as Href)}>
 				<PageIcon name="arrow-forward"/>
 			</NextPageIconContainer>}
 		</>}

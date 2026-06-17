@@ -13,6 +13,7 @@ import {KeyboardProvider} from "react-native-keyboard-controller";
 import {AppDialog} from "@ninjas-strategy/ui/components/AppDialog";
 import {Updater} from "@/lib/components/Updater";
 import * as SplashScreen from 'expo-splash-screen';
+import {SafeAreaProvider} from "react-native-safe-area-context";
 
 if (!__DEV__) {
 	SplashScreen.setOptions({
@@ -29,16 +30,18 @@ export default observer(function Root() {
 	}, []);
 
 	return (
-		<KeyboardProvider>
-			<QueryClientProvider client={queryClient}>
-				<PaperProvider>
-					<RootNavigator/>
-					<AppDialog/>
-					<Snackbar/>
-					{!__DEV__ && <Updater/>}
-				</PaperProvider>
-			</QueryClientProvider>
-		</KeyboardProvider>
+		<SafeAreaProvider>
+			<KeyboardProvider>
+				<QueryClientProvider client={queryClient}>
+					<PaperProvider>
+						<RootNavigator/>
+						<AppDialog/>
+						<Snackbar/>
+						{!__DEV__ && <Updater/>}
+					</PaperProvider>
+				</QueryClientProvider>
+			</KeyboardProvider>
+		</SafeAreaProvider>
 	);
 });
 

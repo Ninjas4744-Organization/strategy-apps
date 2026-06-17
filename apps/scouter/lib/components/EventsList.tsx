@@ -136,7 +136,7 @@ type EventsListProps = {
 	onSelect: (id: string) => void;
 }
 export function EventsList({events, onSelect}: EventsListProps) {
-	const allEvents = useMemo<ScoutingEvent[]>(() => events, []);
+	const allEvents = useMemo<ScoutingEvent[]>(() => events.filter(event => event.id && event.id !== 'undefined'), [events]);
 
 	const [search, setSearch] = useState("");
 	const listRef = useRef<SectionList<ScoutingEvent, Section>>(null);
@@ -199,7 +199,7 @@ export function EventsList({events, onSelect}: EventsListProps) {
 					</SectionHeader>
 				)}
 				renderItem={({item}) => (
-					<EventRow onPress={() => onSelect(item.id)}>
+					<EventRow onPress={() => item.id && item.id !== 'undefined' && onSelect(item.id)}>
 						<EventTopLine>
 							<EventName numberOfLines={1}>{item.name}</EventName>
 							<Badge status={getEventStatus(new Date(), new Date(item.startDate), new Date(item.endDate))}>

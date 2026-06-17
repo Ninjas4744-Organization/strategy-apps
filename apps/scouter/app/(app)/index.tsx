@@ -4,9 +4,9 @@ import userStore from "@/lib/stores/userStore";
 import {Loading} from "@ninjas-strategy/ui";
 
 export default observer(function AppIndex() {
-	const {user, isAdmin, isLoading} = userStore;
+	const {user, userData, isAdmin, isLoading, isProfileLoading} = userStore;
 
-	if (isLoading) {
+	if (isLoading || isProfileLoading) {
 		return <Loading />;
 	}
 
@@ -16,6 +16,10 @@ export default observer(function AppIndex() {
 
 	if (user.isAnonymous) {
 		return <Redirect href="/(app)/demo" />;
+	}
+
+	if (!userData) {
+		return <Loading />;
 	}
 
 	if (isAdmin) {

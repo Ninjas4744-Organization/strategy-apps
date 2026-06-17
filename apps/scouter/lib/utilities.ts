@@ -1,5 +1,5 @@
 import {Observable} from "rxjs";
-import {type DocumentData, type QueryDocumentSnapshot, type CollectionReference, type Query, type DocumentReference, onSnapshot} from "firebase/firestore";
+import {type DocumentData, type QueryDocumentSnapshot, type CollectionReference, type Query, type DocumentReference, type DocumentSnapshot, onSnapshot} from "firebase/firestore";
 
 export function pick(obj: any, keys: string[]): object {
 	const res: any = {};
@@ -33,15 +33,19 @@ export const observeCollection = (ref: CollectionReference|Query): Observable<Qu
 	return new Observable<QueryDocumentSnapshot[]>(subscriber => {
 		const unsubscribe = onSnapshot(ref, snapshot => {
 			subscriber.next(snapshot.docs);
-		})
+		}, error => {
+			subscriber.error(error);
+		});
 		return () => unsubscribe();
 	});
 };
 
-export const observeDoc = (ref:  DocumentReference<DocumentData, DocumentData>): Observable<DocumentData> => {
-	return new Observable<DocumentData>(subscriber => {
+export const observeDoc = (ref:  DocumentReference<DocumentData, DocumentData>): Observable<DocumentSnapshot<DocumentData>> => {
+	return new Observable<DocumentSnapshot<DocumentData>>(subscriber => {
 		const unsubscribe = onSnapshot(ref, snapshot => {
 			subscriber.next(snapshot);
+		}, error => {
+			subscriber.error(error);
 		});
 		return () => unsubscribe();
 	});

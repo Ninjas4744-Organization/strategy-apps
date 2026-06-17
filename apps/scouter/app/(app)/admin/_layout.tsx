@@ -8,19 +8,27 @@ import userStore from "@/lib/stores/userStore";
 
 export default observer(function AdminLayout() {
 	const {isLoading, subscribe, unsubscribe} = eventsStore;
-	const {user, isAdmin} = userStore;
+	const {user, userData, isAdmin, isProfileLoading} = userStore;
 
 	useEffect(() => {
 		subscribe();
 		return () => unsubscribe();
-	}, [user?.uid]);
+	}, [user?.uid, user?.isAnonymous, userData?.type, userData?.team]);
 
-	if (!isAdmin && !user?.isAnonymous) {
-		return <Redirect href="/(app)/scouter" />;
+	if (!user?.isAnonymous)
+	{
+		if (isProfileLoading || !userData) {
+			return <Loading/>;
+		}
+
+		if (!isAdmin) {
+			return <Redirect href="/(app)/scouter" />;
+		}
 	}
 
-	if (isLoading)
-		return <Loading />;
+	if (isLoading) {
+		return <Loading/>;
+	}
 
 	return (
 		<StackWrapper>

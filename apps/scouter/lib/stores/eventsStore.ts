@@ -1,5 +1,5 @@
 import {action, makeObservable, observable, runInAction} from "mobx";
-import {collection, doc, query, setDoc, where} from "firebase/firestore";
+import {collection, doc, DocumentData, QueryDocumentSnapshot, query, setDoc, where} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {UserType} from "@/lib/interfaces/UserType";
 import {Event} from "@/lib/models/Event";
@@ -29,24 +29,45 @@ class EventsStore {
 			events: observable.ref,
 			subscribe: action.bound,
 			unsubscribe: action.bound,
+			reset: action.bound,
+			applyEvents: action.bound,
 			createEvent: action.bound,
 		});
+	}
+
+	reset() {
+		this.events = {};
+		this.isLoading = false;
+	}
+
+	applyEvents(docs: QueryDocumentSnapshot<DocumentData>[]) {
+		const nextEvents: Events = {};
+		for (const eventDoc of docs) {
+			const eventData = eventDoc.data();
+			const event = Event.fromMap(eventDoc.id, eventData);
+			nextEvents[event.id] = event;
+		}
+		this.events = nextEvents;
+		this.isLoading = false;
 	}
 
 	subscribe() {
 		if (this.subscription) {
 			this.subscription.unsubscribe();
+			this.subscription = null;
 		}
 
-		if (!userStore.userData && !userStore.user?.isAnonymous) {
+		const userData = userStore.userData;
+		if (!userData && !userStore.user?.isAnonymous) {
+			this.reset();
 			return;
 		}
 
 		let eventsRef = query(collection(db, 'events'));
 		if (userStore.user?.isAnonymous) {
 			eventsRef = query(eventsRef, where('event_code', '==', 'demo'));
-		} else if (userStore.userData?.type !== UserType.APP_ADMIN) {
-			eventsRef = query(eventsRef, where('teams', 'array-contains', `frc${userStore.userData?.team}`));
+		} else if (userData?.type !== UserType.APP_ADMIN) {
+			eventsRef = query(eventsRef, where('teams', 'array-contains', `frc${userData?.team}`));
 		}
 
 		if (!userStore.user?.isAnonymous) {
@@ -55,17 +76,19 @@ class EventsStore {
 
 		this.isLoading = true;
 		const $events = observeCollection(eventsRef);
-		this.subscription = $events.subscribe(events => {
-			runInAction(() => {
-				const nextEvents: Events = {};
-				for (const eventDoc of events) {
-					const eventData = eventDoc.data();
-					const event = Event.fromMap(eventDoc.id, eventData);
-					nextEvents[event.id] = event;
-				}
-				this.events = nextEvents;
-				this.isLoading = false;
-			})
+		this.subscription = $events.subscribe({
+			next: events => {
+				runInAction(() => {
+					this.applyEvents(events);
+				})
+			},
+			error: error => {
+				showSnackbar(`Failed to load events: ${error.message}`);
+				runInAction(() => {
+					this.events = {};
+					this.isLoading = false;
+				});
+			},
 		});
 	}
 
@@ -74,6 +97,7 @@ class EventsStore {
 			this.subscription.unsubscribe();
 		}
 		this.subscription = null;
+		this.reset();
 	}
 
 	async createEvent(eventData: TBAEventSimple, router: RouterLike) {
