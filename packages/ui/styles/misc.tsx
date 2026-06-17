@@ -1,5 +1,5 @@
 import styled from "styled-components/native";
-import {useIsFocused} from "@react-navigation/core";
+import {useIsFocused} from "expo-router/react-navigation";
 import {View} from "react-native";
 
 export const BodyScroll = styled.ScrollView`

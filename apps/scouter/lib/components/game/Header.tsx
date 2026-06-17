@@ -7,7 +7,7 @@ import {observer} from "mobx-react-lite";
 import {Href, useRouter} from "expo-router";
 import eventsStore from "@/lib/stores/eventsStore";
 import {games} from "@ninjas-strategy/frc-games";
-import {type Route} from "@react-navigation/native";
+import {type Route} from "expo-router/react-navigation";
 import gameStore from "@/lib/stores/gameStore";
 
 type HeaderProps = {
