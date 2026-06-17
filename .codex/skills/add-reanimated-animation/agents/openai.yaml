@@ -1,0 +1,4 @@
+interface:
+  display_name: "Add Reanimated Animation"
+  short_description: "Port animations from the local Make It Animated repo."
+  default_prompt: "Use $add-reanimated-animation to add a Make It Animated Reanimated demo into this project."

@@ -1,0 +1,3 @@
+[submodule "utils/makeitanimated"]
+	path = utils/makeitanimated
+	url = git@github.com:make-it-animated/rn-makeitanimated.git
