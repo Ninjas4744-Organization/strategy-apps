@@ -2,7 +2,7 @@ import styled from "styled-components/native";
 import {observer} from "mobx-react-lite";
 import {PageTitle} from "@/lib/components/game/PageTitle";
 import gameStore from "@/lib/stores/gameStore";
-import {BodyScroll, BeautifulButton, GameForm} from "@ninjas-strategy/ui";
+import {BodyScroll, BeautifulButton, BottomSafeArea, GameForm} from "@ninjas-strategy/ui";
 import {useGlobalSearchParams, useRouter} from "expo-router";
 import {KeyboardAvoidingView, Platform} from "react-native";
 import {games} from "@ninjas-strategy/frc-games";
@@ -52,10 +52,14 @@ export default observer(function TeleopPage() {
 					pageNum={parseInt(pageNum as string)}
 					data={data}
 					setData={(key, value) => updateValue(key, value)} />
-				{isLastPage && <BeautifulButton
-					label="Submit to Firebase"
-					icon="cloud-upload"
-					onPress={() => gameStore.submitToFirebase(eventId).then(() => router.push('/scouter'))} />}
+				{isLastPage && (
+					<BottomSafeArea>
+						<BeautifulButton
+							label="Submit to Firebase"
+							icon="cloud-upload"
+							onPress={() => gameStore.submitToFirebase(eventId).then(() => router.push('/scouter'))} />
+					</BottomSafeArea>
+				)}
 			</KeyboardAwareScrollView>
 		</Container>
 	</KeyboardAvoidingView>;

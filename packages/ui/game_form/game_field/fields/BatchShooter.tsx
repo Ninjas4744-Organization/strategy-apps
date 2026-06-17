@@ -2,7 +2,6 @@ import React from "react";
 import {View} from "react-native";
 import styled from "styled-components/native";
 import {CounterValue} from "./Couter";
-import {appColors} from "../../../styles";
 import {Icon, Text} from "../../..";
 import Animated, {LinearTransition} from "react-native-reanimated";
 
@@ -23,7 +22,6 @@ type BatchShooterProps = {
 
 const Container = styled.View`
 	gap: 10px;
-	color: ${appColors.white};
 `;
 const HeaderRow = styled.View`
   flex-direction: row;
@@ -31,16 +29,21 @@ const HeaderRow = styled.View`
   justify-content: space-between;
 `;
 const LayoutText = styled.Text`
-	color: ${appColors.white};
+	color: ${({theme}) => theme.text};
 `;
 const Label = styled(LayoutText)`font-size: 16px; font-weight: 800;`;
-const SmallNote = styled(LayoutText)`font-size: 12px; opacity: 0.7;`;
+const SmallNote = styled.Text`
+	color: ${({theme}) => theme.textMuted};
+	font-size: 12px;
+	font-weight: 600;
+`;
 
 const Button = styled.Pressable`
 	padding: 8px 12px;
-	border-color: ${appColors.white}50;
+	border-color: ${({theme}) => theme.border};
 	border-radius: 10px;
 	border-width: 1px;
+	background-color: ${({theme}) => theme.inputBackground};
 `;
 
 const LayoutCard = styled(Animated.View)`
@@ -48,7 +51,8 @@ const LayoutCard = styled(Animated.View)`
 	border-radius: 14px;
 	padding: 12px;
 	gap: 10px;
-	border-color: ${appColors.white}50;
+	border-color: ${({theme}) => theme.border};
+	background-color: ${({theme}) => theme.inputBackground};
 `;
 
 const LayoutRow = styled.View`flex-direction: row; gap: 10px; align-items: flex-start;`;
@@ -62,8 +66,9 @@ const NumberInput = styled.TextInput`
 	border-radius: 12px;
 	padding: 10px 12px;
 	font-size: 16px;
-	border-color: ${appColors.white}50;
-	color: ${appColors.white};
+	border-color: ${({theme}) => theme.border};
+	color: ${({theme}) => theme.text};
+	background-color: ${({theme}) => theme.card};
 `;
 const Percent = styled(Text)`font-weight: 900; opacity: 0.8;`;
 
@@ -76,7 +81,8 @@ const Chip = styled.Pressable`
 	padding: 6px 10px;
 	border-radius: 999px;
 	border-width: 1px;
-	border-color: ${appColors.white}50;
+	border-color: ${({theme}) => theme.border};
+	background-color: ${({theme}) => theme.card};
 `;
 const ChipText = styled(Text)`
 	font-weight: 800;
@@ -180,7 +186,7 @@ export const BatchShooter = ({value, onChange, title, pageNum, shotPresets = [0,
 									title="Misses"
 									value={b.missCount}
 									onChange={(v) => update(b.batchNumber, {shotPct: b.shotPct ?? 0, missCount: v})}
-									color={appColors.white} />
+									color="#ef4444" />
 							</PresetsRow>
 						</LayoutCol>
 					</LayoutRow>}

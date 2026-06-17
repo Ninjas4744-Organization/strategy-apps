@@ -1,7 +1,7 @@
 import {observer} from "mobx-react-lite";
 import {useGlobalSearchParams, useRouter} from "expo-router";
 import eventsStore from "@/lib/stores/eventsStore";
-import {BeautifulButton, BodyScroll} from "@ninjas-strategy/ui";
+import {BeautifulButton, BodyScroll, BottomSafeArea} from "@ninjas-strategy/ui";
 import {games} from "@ninjas-strategy/frc-games";
 import {PitForm} from "@ninjas-strategy/ui/pit_form";
 import pitStore from "@/lib/stores/pitStore";
@@ -23,9 +23,11 @@ export default observer(function ScouterEvent() {
 
 	return <KeyboardAwareScrollView ScrollViewComponent={BodyScroll} bottomOffset={60}>
 		<PitForm {...game} data={data} setData={updateValue} />
-		<BeautifulButton
-			label="Submit to Firebase"
-			icon="cloud-upload"
-			onPress={() => pitStore.submitToFirebase(teamNum, eventId).then(() => router.push('/scouter'))} />
+		<BottomSafeArea>
+			<BeautifulButton
+				label="Submit to Firebase"
+				icon="cloud-upload"
+				onPress={() => pitStore.submitToFirebase(teamNum, eventId).then(() => router.push('/scouter'))} />
+		</BottomSafeArea>
 	</KeyboardAwareScrollView>;
 });

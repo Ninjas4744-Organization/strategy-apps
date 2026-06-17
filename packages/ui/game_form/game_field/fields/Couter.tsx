@@ -15,7 +15,7 @@ type CounterProps = {
 const CounterContainer = styled.View<{ color: string, themeColor: string }>`
 	margin: 8px;
 	padding: 12px;
-	background-color: ${props => props.color}50;
+	background-color: ${({theme}) => theme.inputBackground};
 	gap: 16px;
 	border-width: 1px;
 	border-color: ${props => props.themeColor};
@@ -60,7 +60,9 @@ const CounterValueContainer = styled.View<{color: string}>`
 	padding: 8px;
 	margin: 4px;
 	border-radius: 8px;
-	background-color: ${props => props.color}50;
+	background-color: ${({color}) => color}22;
+	border-width: 1px;
+	border-color: ${({color}) => color}66;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -77,8 +79,8 @@ const CountersContainer = styled.View`
 const CounterButton = styled.TouchableOpacity`
 	padding: 8px;
 	margin: 4px;
-	background-color: ${appColors.white}10;
-	border: ${appColors.white}20;
+	background-color: ${({theme}) => theme.card};
+	border: 1px solid ${({theme}) => theme.border};
 	border-radius: 8px;
 `;
 

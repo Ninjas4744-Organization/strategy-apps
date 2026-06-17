@@ -1,6 +1,5 @@
 import styled from "styled-components/native";
 import {Icon, Subtitle} from "../../..";
-import {appColors} from "../../../styles";
 
 type AdderProps = {
 	title: string;
@@ -10,13 +9,13 @@ type AdderProps = {
 	values: number[];
 };
 
-const AdderContainer = styled.View<{ color: string, themeColor: string }>`
+const AdderContainer = styled.View<{ $themeColor: string }>`
 	margin: 8px;
 	padding: 12px;
-	background-color: ${props => props.color}50;
+	background-color: ${({theme}) => theme.inputBackground};
 	gap: 16px;
 	border-width: 1px;
-	border-color: ${props => props.themeColor};
+	border-color: ${({$themeColor}) => $themeColor};
 	border-radius: 12px;
 	display: flex;
 	flex-direction: column;
@@ -37,14 +36,14 @@ const AdderValuesRow = styled.View`
 const AdderValueButton = styled.TouchableOpacity`
 	padding: 8px;
 	margin: 4px;
-	background-color: ${appColors.white}10;
-	border: ${appColors.white}20;
+	background-color: ${({theme}) => theme.card};
+	border: 1px solid ${({theme}) => theme.border};
 	border-radius: 8px;
 `;
 
 export const Adder = ({title, color, value, onChange, values}: AdderProps) => {
 	return (
-		<AdderContainer color={color} themeColor={color}>
+		<AdderContainer $themeColor={color}>
 			<AdderHeader>
 				<Icon name="star" color={color} size={24} />
 				<Subtitle>{title}</Subtitle>

@@ -10,12 +10,14 @@ type SectionProps = ScoringSection & {
 	pageNum: number;
 };
 
-const SectionContainer = styled.View<{ color: string }>`
+const SectionContainer = styled.View<{ $color: string }>`
 	margin: 16px;
 	padding: 20px;
-	background-color: ${props => props.color}20;
+	background-color: ${({theme}) => theme.card};
 	gap: 16px;
 	border-radius: 16px;
+	border-width: 1px;
+	border-color: ${({$color}) => $color}66;
 	display: flex;
 	flex-direction: column;
 `;
@@ -29,7 +31,7 @@ const SectionHeader = styled.View`
 `;
 
 export const Section = observer(({color, icon, title, fields, data, setData, pageNum}: SectionProps) => {
-	return <SectionContainer color={color}>
+	return <SectionContainer $color={color}>
 		<SectionHeader>
 			<IconContainer>
 				<Icon name={icon} size={24} color={color} />
