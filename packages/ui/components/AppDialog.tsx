@@ -15,8 +15,8 @@ class DialogStore {
 			visible: observable,
 			icon: observable,
 			title: observable,
-			content: observable,
-			buttons: observable,
+			content: observable.ref,
+			buttons: observable.ref,
 			open: action,
 			close: action.bound,
 		});
