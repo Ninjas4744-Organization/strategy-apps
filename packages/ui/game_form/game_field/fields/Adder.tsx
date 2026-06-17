@@ -1,6 +1,6 @@
 import styled from "styled-components/native";
 import {Icon, Subtitle} from "../../..";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "../../../styles";
 
 type AdderProps = {
 	title: string;
@@ -37,8 +37,8 @@ const AdderValuesRow = styled.View`
 const AdderValueButton = styled.TouchableOpacity`
 	padding: 8px;
 	margin: 4px;
-	background-color: ${MD2Colors.white}10;
-	border: ${MD2Colors.white}20;
+	background-color: ${appColors.white}10;
+	border: ${appColors.white}20;
 	border-radius: 8px;
 `;
 

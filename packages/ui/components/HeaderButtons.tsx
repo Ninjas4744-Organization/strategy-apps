@@ -1,5 +1,5 @@
 import styled from "styled-components/native";
-import {Icon} from "@ninjas-strategy/ui";
+import {Icon} from "./Icon";
 import type {MaterialIcon} from "../interfaces/MaterialIcon";
 
 type HeaderButtonsProps = {

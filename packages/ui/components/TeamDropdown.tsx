@@ -1,7 +1,8 @@
 import {useRef, useState} from "react";
-import {Platform, ScrollView, TouchableOpacity, View} from "react-native";
-import {Menu, Portal} from "react-native-paper";
+import {ScrollView, TouchableOpacity, View} from "react-native";
+import styled from "styled-components/native";
 import {BasicInput} from "./BasicInput";
+import {Text} from "../styles/Text";
 
 type TeamDropdownProps = {
 	teams: string[];
@@ -15,18 +16,9 @@ export const TeamDropdown = ({teams, onSelect, value, error, isAvailable}: TeamD
 	const [visible, setVisible] = useState(false);
 	const anchorRef = useRef<View>(null);
 	const [inputWidth, setInputWidth] = useState(0);
-	const [coordinates, setCoordinates] = useState({x: 0, y: 0});
 
 	const openMenu = () => {
-		requestAnimationFrame(() => {
-			anchorRef.current?.measureInWindow((x, y, _, height) => {
-				let coorY = y + height;
-				if (Platform.OS === 'android')
-					coorY += 25;
-				setCoordinates({x, y: coorY});
-				setVisible(true);
-			});
-		});
+		setVisible(true);
 	};
 
 	return (
@@ -45,30 +37,44 @@ export const TeamDropdown = ({teams, onSelect, value, error, isAvailable}: TeamD
 						onLayout={event => setInputWidth(event.nativeEvent.layout.width)} />
 				</View>
 			</TouchableOpacity>
-			<Portal>
-				<Menu
-					key={String(visible)}
-					visible={visible}
-					onDismiss={() => setVisible(false)}
-					anchor={coordinates}
-					contentStyle={{maxHeight: 300, width: inputWidth}}>
-					<ScrollView style={{maxHeight: 300}}>
+			{visible ? (
+				<DropdownPanel style={{width: inputWidth || undefined}}>
+					<ScrollView style={{maxHeight: 300}} keyboardShouldPersistTaps="handled">
 						{teams.map((team) => {
 							const number = team.replace("frc", "");
+							const disabled = !!isAvailable && !isAvailable(parseInt(number));
 							return (
-								<Menu.Item
+								<DropdownItem
 									key={team}
-									title={`Team ${number}`}
-									disabled={isAvailable && !isAvailable(parseInt(number))}
+									disabled={disabled}
+									$disabled={disabled}
 									onPress={() => {
 										onSelect(number);
 										setVisible(false);
-									}}/>
+									}}>
+									<Text>Team {number}</Text>
+								</DropdownItem>
 							);
 						})}
 					</ScrollView>
-				</Menu>
-			</Portal>
+				</DropdownPanel>
+			) : null}
 		</>
 	);
 };
+
+const DropdownPanel = styled.View`
+	margin-top: 6px;
+	max-height: 300px;
+	border-radius: 12px;
+	background-color: ${({theme}) => theme.card};
+	border: 1px solid ${({theme}) => theme.border};
+	overflow: hidden;
+`;
+
+const DropdownItem = styled.Pressable<{ $disabled: boolean }>`
+	padding: 12px 14px;
+	opacity: ${({$disabled}) => $disabled ? 0.45 : 1};
+	border-bottom-width: 1px;
+	border-bottom-color: ${({theme}) => theme.border};
+`;

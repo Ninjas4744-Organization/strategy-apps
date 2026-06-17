@@ -1,9 +1,9 @@
 import {type FieldValues, useForm} from "react-hook-form";
 import {Dialog} from "../Dialog";
-import {Button} from "react-native-paper";
 import {FormInline} from "./FormInline.tsx";
 import type {Field} from "./types/fields.ts";
 import {useEffect} from "react";
+import styled from "styled-components/native";
 
 type FormDialogProps<TValues extends FieldValues> = {
 	visible: boolean;
@@ -34,6 +34,20 @@ export function FormDialog<T extends FieldValues>({fields, visible, onDismiss, t
 			onDismiss={() => (reset(), onDismiss())}
 			title={title}
 			content={<FormInline form={form} fields={fields} />}
-			actions={<Button onPress={handleSubmit(onSubmit)}>Submit</Button>} />
+			actions={<SubmitButton onPress={handleSubmit(onSubmit)}><SubmitText>Submit</SubmitText></SubmitButton>} />
 	)
 }
+
+const SubmitButton = styled.Pressable`
+	min-height: 44px;
+	padding: 10px 16px;
+	border-radius: 12px;
+	align-items: center;
+	justify-content: center;
+	background-color: ${({theme}) => theme.primary};
+`;
+
+const SubmitText = styled.Text`
+	color: ${({theme}) => theme.primaryText};
+	font-weight: 700;
+`;

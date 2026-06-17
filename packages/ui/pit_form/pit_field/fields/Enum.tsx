@@ -1,4 +1,3 @@
-import {MD2Colors, RadioButton} from "react-native-paper";
 import {Subtitle} from "../../..";
 import styled from "styled-components/native";
 import {observer} from "mobx-react-lite";
@@ -10,28 +9,36 @@ type EnumProps = {
 	title: string
 };
 
-const ValueContainer = styled.View<{isSelected: boolean}>`
+const ValueContainer = styled.Pressable<{isSelected: boolean}>`
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 16px;
-    background-color: ${props => props.isSelected ? (MD2Colors.white + '20') : 'transparent'};
+    background-color: ${({theme, isSelected}) => isSelected ? `${theme.primary}20` : 'transparent'};
     border-radius: 12px;
     border-width: 1px;
-    border-color: ${MD2Colors.white}${props => (props.isSelected ? '' : '20')};
+    border-color: ${({theme, isSelected}) => isSelected ? theme.primary : theme.border};
     margin-bottom: 8px;
+    padding: 10px 12px;
 `;
 
 export const Enum = observer(({value, onChange, values, title}: EnumProps) => {
 	return (
 		<>
 			<Subtitle>{title}</Subtitle>
-			<RadioButton.Group onValueChange={onChange} value={value}>
-				{Object.values(values || {}).map(key => <ValueContainer key={key} isSelected={value === key}>
-					<RadioButton value={key} color={MD2Colors.white} />
+			{Object.values(values || {}).map(key => <ValueContainer key={key} isSelected={value === key} onPress={() => onChange(key)}>
+					<RadioDot isSelected={value === key} />
 					<Subtitle>{key}</Subtitle>
 				</ValueContainer>)}
-			</RadioButton.Group>
 		</>
 	);
 });
+
+const RadioDot = styled.View<{isSelected: boolean}>`
+	width: 22px;
+	height: 22px;
+	border-radius: 11px;
+	border-width: 2px;
+	border-color: ${({theme}) => theme.primary};
+	background-color: ${({theme, isSelected}) => isSelected ? theme.primary : "transparent"};
+`;

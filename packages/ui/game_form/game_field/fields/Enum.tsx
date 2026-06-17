@@ -1,4 +1,3 @@
-import {RadioButton} from "react-native-paper";
 import {Subtitle} from "../../..";
 import styled from "styled-components/native";
 import {observer} from "mobx-react-lite";
@@ -10,7 +9,7 @@ type EnumProps = {
 	color: string;
 };
 
-const ValueContainer = styled.View<{isSelected: boolean, color: string}>`
+const ValueContainer = styled.Pressable<{isSelected: boolean, color: string}>`
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -20,14 +19,23 @@ const ValueContainer = styled.View<{isSelected: boolean, color: string}>`
     border-width: 1px;
     border-color: ${props => props.color + (props.isSelected ? '' : '20')};
     margin-bottom: 8px;
+    padding: 10px 12px;
 `;
 
 export const Enum = observer(({value, setValue, values, color}: EnumProps) => {
-	return <RadioButton.Group
-		onValueChange={setValue} value={value}>
-		{Object.values(values || {}).map(key => <ValueContainer key={key} isSelected={value === key} color={color}>
-			<RadioButton value={key} color={color} />
+	return <>
+		{Object.values(values || {}).map(key => <ValueContainer key={key} isSelected={value === key} color={color} onPress={() => setValue(key)}>
+			<RadioDot isSelected={value === key} color={color} />
 			<Subtitle>{key}</Subtitle>
 		</ValueContainer>)}
-	</RadioButton.Group>;
+	</>;
 });
+
+const RadioDot = styled.View<{isSelected: boolean, color: string}>`
+	width: 22px;
+	height: 22px;
+	border-radius: 11px;
+	border-width: 2px;
+	border-color: ${({color}) => color};
+	background-color: ${({isSelected, color}) => isSelected ? color : "transparent"};
+`;

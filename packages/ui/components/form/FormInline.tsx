@@ -1,11 +1,12 @@
 import React from "react";
 import styled from "styled-components/native";
 import {Controller, type FieldValues, type UseFormReturn} from "react-hook-form";
-import {HelperText, Switch, Text, TextInput} from "react-native-paper";
 
 import type {Field} from "./types/fields";
 import type {FieldType} from './types/common.ts'
-import {TeamDropdown} from "../";
+import {Text} from "../../styles/Text";
+import {TextInput, TextInputIcon} from "../../styles/TextInput";
+import {TeamDropdown} from "../TeamDropdown";
 import {BasicInput} from "../BasicInput";
 
 type FormProps<TValues extends FieldValues> = {
@@ -35,6 +36,29 @@ const SwitchRow = styled.View`
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
+`;
+
+const HelperText = styled.Text<{ $visible: boolean }>`
+	min-height: ${({$visible}) => $visible ? "18px" : "0px"};
+	color: ${({theme}) => theme.danger};
+	font-size: 12px;
+`;
+
+const SwitchTrack = styled.Pressable<{ $active: boolean; $disabled: boolean }>`
+	width: 48px;
+	height: 28px;
+	border-radius: 14px;
+	padding: 3px;
+	background-color: ${({theme, $active}) => $active ? theme.primary : theme.border};
+	opacity: ${({$disabled}) => $disabled ? 0.55 : 1};
+	align-items: ${({$active}) => $active ? "flex-end" : "flex-start"};
+`;
+
+const SwitchThumb = styled.View`
+	width: 22px;
+	height: 22px;
+	border-radius: 11px;
+	background-color: ${({theme}) => theme.surface};
 `;
 
 function keyboardTypeFor(type: FieldType) {
@@ -78,11 +102,15 @@ export function FormInline<TValues extends FieldValues>({form, fields}: FormProp
 										<>
 											<SwitchRow>
 												<Text>{f.placeholder ?? f.label ?? ""}</Text>
-												<Switch value={!!field.value} onValueChange={field.onChange} disabled={disabled} />
+												<SwitchTrack
+													$active={!!field.value}
+													$disabled={disabled}
+													disabled={disabled}
+													onPress={() => field.onChange(!field.value)}>
+													<SwitchThumb />
+												</SwitchTrack>
 											</SwitchRow>
-											<HelperText type="error" visible={!!errorMessage}>
-												{errorMessage ?? ""}
-											</HelperText>
+											<HelperText $visible={!!errorMessage}>{errorMessage ?? ""}</HelperText>
 										</>
 									);
 								}
@@ -101,21 +129,18 @@ export function FormInline<TValues extends FieldValues>({form, fields}: FormProp
 									return (
 										<>
 											<TextInput
-												mode="outlined"
 												label={f.label}
 												value={String(field.value ?? "")}
 												placeholder={f.placeholder ?? "Select..."}
 												editable={false}
 												disabled={disabled}
 												error={!!errorMessage}
-												right={<TextInput.Icon icon="chevron-down" />}
+												right={<TextInputIcon icon="chevron-down" disabled />}
 												onPressIn={() => {
 													// TODO implement as custom (Menu/Dialog/TeamDropdown)
 												}}
 											/>
-											<HelperText type="error" visible={!!errorMessage}>
-												{errorMessage ?? ""}
-											</HelperText>
+											<HelperText $visible={!!errorMessage}>{errorMessage ?? ""}</HelperText>
 										</>
 									);
 								}
@@ -150,9 +175,7 @@ export function FormInline<TValues extends FieldValues>({form, fields}: FormProp
 											secureTextEntry={isPassword}
 											multiline={isMultiline}
 											keyboardType={keyboardTypeFor(f.type)}/>
-										<HelperText type="error" visible={!!errorMessage}>
-											{errorMessage ?? ""}
-										</HelperText>
+										<HelperText $visible={!!errorMessage}>{errorMessage ?? ""}</HelperText>
 									</>
 								);
 							}}

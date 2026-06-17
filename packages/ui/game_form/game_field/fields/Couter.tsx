@@ -1,6 +1,6 @@
 import styled from "styled-components/native";
 import {Icon, Subtitle} from "../../..";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "../../../styles";
 import {observer} from "mobx-react-lite";
 
 type CounterProps = {
@@ -37,14 +37,14 @@ const CounterValuesRow = styled.View`
 `;
 
 export const Counter = ({title, color, missed, setMissed, scored, setScored}: CounterProps) => {
-	return <CounterContainer color={MD2Colors.white} themeColor={color}>
+	return <CounterContainer color={appColors.white} themeColor={color}>
 		<CounterHeader>
 			<Icon name="star" color={color} size={24} />
 			<Subtitle>{title}</Subtitle>
 		</CounterHeader>
 		<CounterValuesRow>
-			<CounterValue color={MD2Colors.red500} title="Missed" value={missed} onChange={setMissed} />
-			<CounterValue color={MD2Colors.green500} title="Scored" value={scored} onChange={setScored} />
+			<CounterValue color={appColors.red500} title="Missed" value={missed} onChange={setMissed} />
+			<CounterValue color={appColors.green500} title="Scored" value={scored} onChange={setScored} />
 		</CounterValuesRow>
 	</CounterContainer>;
 };
@@ -77,8 +77,8 @@ const CountersContainer = styled.View`
 const CounterButton = styled.TouchableOpacity`
 	padding: 8px;
 	margin: 4px;
-	background-color: ${MD2Colors.white}10;
-	border: ${MD2Colors.white}20;
+	background-color: ${appColors.white}10;
+	border: ${appColors.white}20;
 	border-radius: 8px;
 `;
 

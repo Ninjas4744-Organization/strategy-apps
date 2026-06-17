@@ -1,5 +1,5 @@
 import styled from "styled-components/native";
-import {ActivityIndicator, MD2Colors} from "react-native-paper";
+import {ActivityIndicator} from "react-native";
 
 const Container = styled.SafeAreaView`
 	flex: 1;
@@ -9,6 +9,6 @@ const Container = styled.SafeAreaView`
 `;
 export const Loading = () => {
 	return <Container>
-		<ActivityIndicator size="large" color={MD2Colors.white} />
+		<ActivityIndicator size="large" />
 	</Container>;
 };

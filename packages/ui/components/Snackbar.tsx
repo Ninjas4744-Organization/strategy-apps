@@ -1,10 +1,10 @@
-import {Snackbar as PaperSnackbar, Button} from 'react-native-paper';
-import type {$RemoveChildren} from "react-native-paper/lib/typescript/types";
 import {action, makeObservable, observable} from "mobx";
 import {observer} from "mobx-react-lite";
+import styled from "styled-components/native";
 
-type SnackbarAction = $RemoveChildren<typeof Button> & {
+type SnackbarAction = {
 	label: string;
+	onPress?: () => void;
 };
 
 const EmptyAction = {
@@ -42,14 +42,20 @@ const snackbar = new SnackbarStore()
 export const Snackbar = observer(() => {
 	const {visible, hide, title, action} = snackbar;
 
-	return (
-		<PaperSnackbar
-			visible={visible}
-			onDismiss={hide}
-			action={action}>
-			{title}
-		</PaperSnackbar>
-	);
+	if (!visible)
+		return null;
+
+	return <SnackbarContainer>
+		<SnackbarText>{title}</SnackbarText>
+		{action.label ? (
+			<SnackbarActionButton onPress={() => {
+				action.onPress?.();
+				hide();
+			}}>
+				<SnackbarActionText>{action.label}</SnackbarActionText>
+			</SnackbarActionButton>
+		) : null}
+	</SnackbarContainer>;
 });
 
 export const showSnackbar = (title: string, action: SnackbarAction = EmptyAction) => {
@@ -59,3 +65,33 @@ export const showSnackbar = (title: string, action: SnackbarAction = EmptyAction
 export const hideSnackbar = () => {
 	snackbar.hide();
 };
+
+const SnackbarContainer = styled.View`
+	position: absolute;
+	left: 12px;
+	right: 12px;
+	bottom: 24px;
+	min-height: 48px;
+	flex-direction: row;
+	align-items: center;
+	gap: 12px;
+	padding: 12px 14px;
+	border-radius: 12px;
+	background-color: ${({theme}) => theme.card};
+	border: 1px solid ${({theme}) => theme.border};
+`;
+
+const SnackbarText = styled.Text`
+	flex: 1;
+	color: ${({theme}) => theme.text};
+	font-size: 14px;
+`;
+
+const SnackbarActionButton = styled.Pressable`
+	padding: 6px 8px;
+`;
+
+const SnackbarActionText = styled.Text`
+	color: ${({theme}) => theme.primary};
+	font-weight: 700;
+`;

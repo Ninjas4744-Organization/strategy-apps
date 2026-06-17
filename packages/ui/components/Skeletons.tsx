@@ -2,7 +2,7 @@ import {useEffect, useRef} from "react";
 import styled from "styled-components/native";
 import {Animated} from "react-native";
 import type {ViewStyle} from "react-native";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "../styles/theme";
 
 const useSkeletonAnimation = () => {
 	const opacity = useRef(new Animated.Value(0.3)).current;
@@ -20,7 +20,7 @@ const useSkeletonAnimation = () => {
 };
 
 const BaseSkeleton = styled(Animated.View)<{ width?: string | number; height?: string | number; radius?: number }>`
-  background-color: ${MD2Colors.grey600}40;
+  background-color: ${appColors.grey600}40;
   width: ${({ width }) => (typeof width === "number" ? `${width}px` : width || "100%")};
   height: ${({ height }) => (typeof height === "number" ? `${height}px` : height || "16px")};
   border-radius: ${({ radius }) => radius ?? 8}px;
