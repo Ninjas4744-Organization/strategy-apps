@@ -28,6 +28,7 @@ yarn-error.*
 
 # macOS
 .DS_Store
+.firebase/emulator-data/
 *.pem
 
 # local env files
@@ -60,3 +61,8 @@ yarn-error.*
 
 # codex local context cache
 /.codex/context/
+
+# firebase logs
+database-debug.log
+firestore-debug.log
+firebase-debug.log

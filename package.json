@@ -3,7 +3,19 @@
 	"private": true,
 	"scripts": {
 		"dev:scouter": "nx run scouter:start",
+		"dev:scouter:emulator": "bun tools/scripts/run-expo-emulator.mjs start",
+		"dev:scouter:emulator:web": "bun tools/scripts/run-expo-emulator.mjs web",
+		"dev:scouter:emulator:ios": "bun tools/scripts/run-expo-emulator.mjs ios",
+		"dev:scouter:emulator:android": "bun tools/scripts/run-expo-emulator.mjs android",
+		"dev:scouter:emulator:android-device": "bun tools/scripts/run-expo-emulator.mjs android-device",
+		"dev:scouter:emulator:iphone": "bun tools/scripts/run-expo-emulator.mjs iphone",
 		"dev:trainee": "nx run trainee:start",
+		"emulator:run": "bun tools/scripts/run-emulator-stack.mjs",
+		"emulators": "bun run emulators:stop && firebase emulators:start --project scouting-app-3e18a",
+		"emulators:stop": "bun tools/scripts/stop-emulators.mjs",
+		"emulators:export": "firebase emulators:export .firebase/emulator-data --project scouting-app-3e18a --force",
+		"emulators:import": "bun run emulators:stop && firebase emulators:start --project scouting-app-3e18a --import .firebase/emulator-data --export-on-exit .firebase/emulator-data",
+		"sandbox:seed:emulator": "bun tools/scripts/with-firebase-emulator-env.mjs node scripts/seed-firebase-emulator.mjs",
 		"graph": "nx graph"
 	},
 	"workspaces": [
