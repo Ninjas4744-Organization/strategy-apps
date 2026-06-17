@@ -13,8 +13,11 @@ const typography = {
 	},
 };
 
+type BackgroundGradient = readonly [string, string, ...string[]];
+
 export const lightTheme = {
-	background: "#f2f3f5",
+	background: "transparent",
+	backgroundGradient: ["#fbfaf7", "#e8f1f0", "#edf0fa", "#f7e9e3"] as BackgroundGradient,
 	surface: "#ffffff",
 	card: "#ffffff",
 	text: "#1f2328",
@@ -29,7 +32,8 @@ export const lightTheme = {
 };
 
 export const darkTheme = {
-	background: "#0f172a",
+	background: "transparent",
+	backgroundGradient: ["#101827", "#172033", "#26343f", "#2b2338"] as BackgroundGradient,
 	surface: "#111827",
 	card: "#1f2937",
 	text: "#f9fafb",

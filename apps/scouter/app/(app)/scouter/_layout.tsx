@@ -32,7 +32,7 @@ export default observer(function ScouterLayout() {
 					headerStyle: {backgroundColor: appTheme.surface},
 					headerTintColor: appTheme.text,
 					headerTitleStyle: {color: appTheme.text},
-					contentStyle: {backgroundColor: appTheme.background},
+					contentStyle: {backgroundColor: 'transparent'},
 				}}>
 				<Stack.Screen name="[eventId]" options={{headerShown: false}} />
 			</Stack>

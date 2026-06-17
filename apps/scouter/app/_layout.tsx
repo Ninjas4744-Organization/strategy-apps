@@ -13,6 +13,7 @@ import {AppDialog} from "@ninjas-strategy/ui/components/AppDialog";
 import {Updater} from "@/lib/components/Updater";
 import * as SplashScreen from 'expo-splash-screen';
 import {SafeAreaProvider} from "react-native-safe-area-context";
+import {useTheme} from 'expo-router';
 
 if (!__DEV__) {
 	SplashScreen.setOptions({
@@ -25,10 +26,12 @@ const queryClient = new QueryClient()
 
 export default observer(function Root() {
 	const {appTheme} = useThemeBundle();
+	const theme = useTheme();
 
 	useEffect(() => {
 		OfflineQueue.listenForConnectivityAndResend();
-	}, []);
+		theme.colors.background = 'transparent';
+	}, [theme.colors]);
 
 	return (
 		<SafeAreaProvider>
@@ -59,7 +62,7 @@ const RootNavigator = observer(function () {
 						headerTintColor: appTheme.text,
 						headerTitleStyle: {color: appTheme.text},
 						contentStyle: {
-							backgroundColor: appTheme.background,
+							backgroundColor: 'transparent',
 						},
 					}}>
 					<Stack.Protected guard={!user}>

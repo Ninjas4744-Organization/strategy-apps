@@ -15,7 +15,7 @@ export default observer(function DemoRouter() {
 				headerStyle: {backgroundColor: appTheme.surface},
 				headerTintColor: appTheme.text,
 				headerTitleStyle: {color: appTheme.text},
-				contentStyle: {backgroundColor: appTheme.background},
+				contentStyle: {backgroundColor: 'transparent'},
 				headerShown: true,
 				title: 'The Ninja Scouter Demo',
 				headerBackVisible: false,

@@ -43,7 +43,7 @@ export default observer(function EventLayout() {
 						},
 						headerTintColor: appTheme.text,
 						headerBackButtonDisplayMode: 'minimal',
-						contentStyle: {backgroundColor: appTheme.background},
+						contentStyle: {backgroundColor: 'transparent'},
 						headerBlurEffect: 'light',
 					}}>
 					<Stack.Screen name="index" options={{title: `${event?.name} (${event?.id})`}}/>

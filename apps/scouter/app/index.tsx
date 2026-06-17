@@ -1,7 +1,7 @@
 import {useState} from "react";
-import styled from 'styled-components/native';
+import styled, {useTheme} from 'styled-components/native';
 import {useRouter} from "expo-router";
-import {ActivityIndicator, ScrollView} from "react-native";
+import {ActivityIndicator, ScrollView, useWindowDimensions} from "react-native";
 import {BeautifulButton, Text, showSnackbar, AppHeader, TextInput, TextInputIcon, FormGroup, Subtitle, Title} from "@ninjas-strategy/ui";
 import {observer} from "mobx-react-lite";
 import userStore from "@/lib/stores/userStore";
@@ -9,10 +9,17 @@ import {About} from "@/lib/components/About";
 import {shouldUseFirebaseEmulator} from "@/lib/firebase/emulator";
 import {sandboxUserPassword, sandboxUsers} from "@/lib/firebase/sandboxUsers";
 import {SafeAreaView} from "react-native-safe-area-context";
+import {LinearGradient} from "expo-linear-gradient";
+
+const ScreenGradient = styled(LinearGradient)`
+	flex: 1;
+`;
 
 const Container = styled(SafeAreaView).attrs({
 	edges: ['top', 'bottom'],
-})`
+})<{$viewportHeight: number}>`
+	flex: 1;
+	min-height: ${({$viewportHeight}) => `${$viewportHeight}px`};
 	padding: 12px;
 	background-color: transparent;
 	display: flex;
@@ -20,15 +27,23 @@ const Container = styled(SafeAreaView).attrs({
 `;
 
 export default function Index() {
+	const {height} = useWindowDimensions();
+	const theme = useTheme();
+
 	return (
-		<Container>
-			<About />
-			<AppHeader
-				icon="sports-esports"
-				title="The Ninja Scouter"
-				description="Team Performance Analytics" />
-			<LoginForm />
-		</Container>
+		<ScreenGradient
+			colors={theme.backgroundGradient}
+			start={{x: 0, y: 0}}
+			end={{x: 1, y: 1}}>
+			<Container $viewportHeight={height}>
+				<About />
+				<AppHeader
+					icon="sports-esports"
+					title="The Ninja Scouter"
+					description="Team Performance Analytics" />
+				<LoginForm />
+			</Container>
+		</ScreenGradient>
 	);
 }
 

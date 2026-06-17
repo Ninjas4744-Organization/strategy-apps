@@ -13,7 +13,7 @@ export default function TabLayout() {
 				tabBarInactiveTintColor: appTheme.textMuted,
 				headerShown: false,
 				title: `Team ${id} Games`,
-				sceneStyle: {backgroundColor: appTheme.background},
+				sceneStyle: {backgroundColor: 'transparent'},
 				tabBarPosition: 'top',
 				tabBarStyle: {backgroundColor: appTheme.surface, borderTopColor: appTheme.border, paddingTop: 0},
 				tabBarActiveBackgroundColor: appTheme.inputBackground,

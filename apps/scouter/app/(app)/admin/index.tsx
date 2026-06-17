@@ -6,6 +6,7 @@ import eventsStore from "@/lib/stores/eventsStore";
 import {UserType} from "@/lib/interfaces/UserType";
 import {EventsList} from "@/lib/components/EventsList";
 import {ScreenHeader} from "@/lib/components/ScreenHeader";
+import styled from "styled-components/native";
 
 export default observer(function AdminIndex() {
 	const {events, isLoading} = eventsStore;
@@ -16,7 +17,7 @@ export default observer(function AdminIndex() {
 		return <Loading />;
 
 	return (
-		<>
+		<Container>
 			<Stack.Screen options={{headerShown: false}}/>
 			<ScreenHeader
 				title="Events"
@@ -32,6 +33,11 @@ export default observer(function AdminIndex() {
 					if (!id || id === 'undefined') return;
 					router.push(`/admin/${id}`);
 				}} />}
-		</>
+		</Container>
 	);
 });
+
+const Container = styled.View`
+	flex: 1;
+	background-color: transparent;
+`;

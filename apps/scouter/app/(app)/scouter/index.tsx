@@ -18,7 +18,7 @@ export default observer(function ScouterIndex() {
 		return <Loading/>;
 
 	return (
-		<>
+		<Container>
 			<Stack.Screen options={{headerShown: false}}/>
 			<ScreenHeader
 				title="Events"
@@ -34,14 +34,19 @@ export default observer(function ScouterIndex() {
 						{...event} />
 				))}
 			</EventsScroll>
-		</>
+		</Container>
 	);
 });
 
-const EventsScroll = styled(ScrollView).attrs(({theme}) => ({
-	style: {backgroundColor: theme.background},
-	contentContainerStyle: {backgroundColor: theme.background, flexGrow: 1},
-}))`
+const Container = styled.View`
 	flex: 1;
-	background-color: ${({theme}) => theme.background};
+	background-color: transparent;
+`;
+
+const EventsScroll = styled(ScrollView).attrs({
+	style: {flex: 1, backgroundColor: 'transparent'},
+	contentContainerStyle: {flexGrow: 1},
+})`
+	flex: 1;
+	background-color: transparent;
 `;

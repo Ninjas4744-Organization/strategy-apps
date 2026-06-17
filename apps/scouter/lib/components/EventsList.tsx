@@ -191,8 +191,8 @@ export function EventsList({events, onSelect}: EventsListProps) {
 				keyExtractor={(item) => item.id}
 				stickySectionHeadersEnabled
 				keyboardShouldPersistTaps="handled"
-				style={{backgroundColor: theme.background}}
-				contentContainerStyle={{paddingBottom: 24, backgroundColor: theme.background}}
+				style={{flex: 1, backgroundColor: 'transparent'}}
+				contentContainerStyle={{paddingBottom: 24, flexGrow: 1}}
 				renderSectionHeader={({section}) => (
 					<SectionHeader>
 						<SectionTitle>
@@ -232,12 +232,12 @@ export function EventsList({events, onSelect}: EventsListProps) {
 
 const Container = styled.View`
 	flex: 1;
-	background-color: ${({theme}) => theme.background};
+	background-color: transparent;
 `;
 
 const TopBar = styled.View`
 	padding: 12px 12px 6px 12px;
-	background-color: ${({theme}) => theme.background};
+	background-color: transparent;
 `;
 
 const SearchBox = styled.View`
@@ -293,7 +293,7 @@ const SectionTitle = styled.Text`
 
 const EventRow = styled.TouchableOpacity`
 	  padding: 14px;
-	  background-color: ${({theme}) => theme.background};
+	  background-color: ${({theme}) => theme.card};
 	  border-bottom-width: 1px;
 	  border-bottom-color: ${({theme}) => theme.border};
 `;
