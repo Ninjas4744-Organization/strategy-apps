@@ -1,8 +1,7 @@
 import styled, {css} from "styled-components/native";
-import {MD2Colors} from "react-native-paper";
 
 export const TextStyle = css`
-	color: ${MD2Colors.white};
+	color: ${({theme}) => theme.text};
 	font-size: 18px;
 `;
 
@@ -24,4 +23,5 @@ export const Title = styled(Text)`
 
 export const Subtitle = styled(Text)`
 	font-size: 14px;
+	color: ${({theme}) => theme.textMuted};
 `;

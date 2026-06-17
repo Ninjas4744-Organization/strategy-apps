@@ -1,10 +1,6 @@
-import {LinearGradient} from "expo-linear-gradient";
-import {MD2Colors} from "react-native-paper";
+import styled from "styled-components/native";
 
-export const StackWrapper = ({children}: {children: React.ReactNode}) => (
-	<LinearGradient
-		style={{flex: 1}}
-		colors={[MD2Colors.indigo900, MD2Colors.blue900, MD2Colors.blue800]}>
-		{children}
-	</LinearGradient>
-);
+export const StackWrapper = styled.View`
+	flex: 1;
+	background-color: ${({theme}) => theme.background};
+`;

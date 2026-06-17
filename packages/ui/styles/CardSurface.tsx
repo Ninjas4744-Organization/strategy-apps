@@ -1,9 +1,8 @@
 import styled from "styled-components/native";
-import {MD2Colors} from "react-native-paper";
 
 export const CardSurface = styled.View`
-	background-color: ${MD2Colors.white}10;
+	background-color: ${({theme}) => theme.card};
 	gap: 16px;
-	border: ${MD2Colors.white}20;
+	border: 1px solid ${({theme}) => theme.border};
 	border-radius: 16px;
 `;

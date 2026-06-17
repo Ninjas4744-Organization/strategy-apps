@@ -9,3 +9,4 @@ export * from './SimpleButton';
 export * from './StackWrapper';
 export * from './Text';
 export * from './TextInput';
+export * from './theme';

@@ -1,8 +1,6 @@
-import {LinearGradient} from "expo-linear-gradient";
 import styled from "styled-components/native";
 import {Icon} from "../";
 import {Text} from "./Text";
-import {MD2Colors} from "react-native-paper";
 import type {MaterialIcon} from "../interfaces/MaterialIcon";
 
 type BeautifulButtonProps = {
@@ -18,15 +16,21 @@ const Button = styled.TouchableOpacity`
 	display: flex;
 	flex-direction: row;
 	gap: 12px;
+	border-radius: 12px;
+	margin: 8px;
+	background-color: ${({theme}) => theme.primary};
+	border: 1px solid ${({theme}) => theme.primary};
 `;
 
-export const BeautifulButton = ({label, icon, onPress}: BeautifulButtonProps) => <LinearGradient
-	colors={[MD2Colors.green500, MD2Colors.greenA200]}
-	start={{x: 0, y: 0}}
-	end={{x: 1, y: 1}}
-	style={{borderRadius: 16, margin: 8}}>
+const ButtonText = styled(Text)`
+	color: ${({theme}) => theme.primaryText};
+	font-size: 16px;
+	font-weight: 600;
+`;
+
+export const BeautifulButton = ({label, icon, onPress}: BeautifulButtonProps) => (
 	<Button onPress={onPress}>
-		<Icon name={icon} size={16} />
-		<Text style={{fontSize: 16}}>{label}</Text>
+		<Icon color="#ffffff" name={icon} size={16} />
+		<ButtonText>{label}</ButtonText>
 	</Button>
-</LinearGradient>;
+);

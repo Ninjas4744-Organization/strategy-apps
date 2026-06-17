@@ -3,10 +3,9 @@ import {observer} from "mobx-react-lite";
 import {useEffect} from "react";
 import {OfflineQueue} from "@/lib/OfflineQueue";
 import {StatusBar} from "expo-status-bar";
-import {Snackbar, StackWrapper} from "@ninjas-strategy/ui";
+import {AppThemeProvider, Snackbar, StackWrapper, useThemeBundle} from "@ninjas-strategy/ui";
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import 'react-native-reanimated';
-import {MD2Colors, PaperProvider} from "react-native-paper";
 import userStore from "@/lib/stores/userStore";
 import {UserType} from "@/lib/interfaces/UserType";
 import {KeyboardProvider} from "react-native-keyboard-controller";
@@ -25,6 +24,8 @@ if (!__DEV__) {
 const queryClient = new QueryClient()
 
 export default observer(function Root() {
+	const {appTheme} = useThemeBundle();
+
 	useEffect(() => {
 		OfflineQueue.listenForConnectivityAndResend();
 	}, []);
@@ -33,12 +34,12 @@ export default observer(function Root() {
 		<SafeAreaProvider>
 			<KeyboardProvider>
 				<QueryClientProvider client={queryClient}>
-					<PaperProvider>
+					<AppThemeProvider theme={appTheme}>
 						<RootNavigator/>
 						<AppDialog/>
 						<Snackbar/>
 						{!__DEV__ && <Updater/>}
-					</PaperProvider>
+					</AppThemeProvider>
 				</QueryClientProvider>
 			</KeyboardProvider>
 		</SafeAreaProvider>
@@ -47,15 +48,19 @@ export default observer(function Root() {
 
 const RootNavigator = observer(function () {
 	const {user} = userStore;
+	const {appTheme, mode} = useThemeBundle();
 
 	return (
 		<>
 			<StackWrapper>
 				<Stack
 					screenOptions={{
-						headerStyle: {backgroundColor: MD2Colors.indigo900},
-						headerTintColor: MD2Colors.white,
-						contentStyle: {backgroundColor: 'transparent'},
+						headerStyle: {backgroundColor: appTheme.surface},
+						headerTintColor: appTheme.text,
+						headerTitleStyle: {color: appTheme.text},
+						contentStyle: {
+							backgroundColor: appTheme.background,
+						},
 					}}>
 					<Stack.Protected guard={!user}>
 						<Stack.Screen name="index" options={{headerShown: false}}/>
@@ -71,7 +76,7 @@ const RootNavigator = observer(function () {
 					</Stack.Protected>
 				</Stack>
 			</StackWrapper>
-			<StatusBar style="light" />
+			<StatusBar style={mode === "dark" ? "light" : "dark"} />
 		</>
 	);
 });
