@@ -2,7 +2,6 @@ import {useState} from "react";
 import styled from 'styled-components/native';
 import {useRouter} from "expo-router";
 import {ActivityIndicator, ScrollView} from "react-native";
-import {MD2Colors} from "react-native-paper";
 import {BeautifulButton, Text, showSnackbar, AppHeader, TextInput, TextInputIcon, FormGroup, Subtitle, Title} from "@ninjas-strategy/ui";
 import {observer} from "mobx-react-lite";
 import userStore from "@/lib/stores/userStore";
@@ -50,8 +49,8 @@ const SandboxUserButton = styled.TouchableOpacity<{$selected: boolean}>`
 	min-height: 58px;
 	padding: 10px 12px;
 	border-radius: 8px;
-	border: 1px solid ${({$selected}) => $selected ? MD2Colors.greenA200 : `${MD2Colors.white}20`};
-	background-color: ${MD2Colors.white}10;
+	border: 1px solid ${({$selected, theme}) => $selected ? theme.success : theme.border};
+	background-color: ${({theme}) => theme.card};
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -66,7 +65,7 @@ const SandboxUserText = styled.View`
 const SandboxBadge = styled.View`
 	padding: 4px 8px;
 	border-radius: 8px;
-	background-color: ${MD2Colors.green500}30;
+	background-color: ${({theme}) => theme.inputBackground};
 `;
 
 const LoginForm = observer(() => {
@@ -177,7 +176,7 @@ const LoginForm = observer(() => {
 									</Subtitle>
 								</SandboxUserText>
 								{selected && isSandboxSigningIn ? (
-									<ActivityIndicator color={MD2Colors.greenA200} size="small" />
+									<ActivityIndicator size="small" />
 								) : (
 									<SandboxBadge>
 										<Subtitle>Login</Subtitle>

@@ -1,8 +1,8 @@
 import {Team} from "@/lib/models/Team";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "@ninjas-strategy/ui";
 
 export const chartConfig = {
-	color: () => MD2Colors.white,
+	color: () => appColors.white,
 	backgroundGradientFromOpacity: 0,
 	backgroundGradientToOpacity: 0,
 };

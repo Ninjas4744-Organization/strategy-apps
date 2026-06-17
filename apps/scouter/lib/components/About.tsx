@@ -1,5 +1,5 @@
 import {Col, Icon} from "@ninjas-strategy/ui";
-import {Text} from "react-native-paper";
+import {Text} from "@ninjas-strategy/ui";
 import * as Updates from 'expo-updates';
 import styled from "styled-components/native";
 import {openDialog} from "@ninjas-strategy/ui/components/AppDialog";
@@ -28,8 +28,8 @@ export const About = observer(() => {
 
 const AboutDialogContent = () => (
 	<Col>
-		<Text variant="bodyLarge">The Ninja Scouter is an FRC scouting app developed by Ninjas 4744</Text>
-		<Text variant="labelSmall">Version: {Updates.runtimeVersion}</Text>
-		<Text variant="labelSmall">Channel: {Updates.channel}</Text>
+		<Text>The Ninja Scouter is an FRC scouting app developed by Ninjas 4744</Text>
+		<Text>Version: {Updates.runtimeVersion}</Text>
+		<Text>Channel: {Updates.channel}</Text>
 	</Col>
 );

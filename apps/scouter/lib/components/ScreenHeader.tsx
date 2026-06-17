@@ -1,7 +1,6 @@
 import {ReactNode} from "react";
 import styled from "styled-components/native";
 import {SafeAreaView} from "react-native-safe-area-context";
-import {MD2Colors} from "react-native-paper";
 import {Title} from "@ninjas-strategy/ui";
 
 type ScreenHeaderProps = {
@@ -12,7 +11,9 @@ type ScreenHeaderProps = {
 const Container = styled(SafeAreaView).attrs({
 	edges: ['top'],
 })`
-	background-color: ${MD2Colors.indigo900};
+	background-color: ${({theme}) => theme.surface};
+	border-bottom-width: 1px;
+	border-bottom-color: ${({theme}) => theme.border};
 `;
 
 const Content = styled.View`

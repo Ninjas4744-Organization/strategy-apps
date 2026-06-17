@@ -2,7 +2,7 @@ import {AdminTabProps} from "@/lib/components/admin/commons";
 import {Game} from "@/lib/models/Game";
 import {Card, CardTitle, Col, Row, Subtitle} from "@ninjas-strategy/ui";
 import styled from "styled-components/native";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "@ninjas-strategy/ui";
 
 export const GamesList = ({team}: AdminTabProps) => {
 	return <>
@@ -56,7 +56,7 @@ const Label = styled.Text<{color: string}>`
 const Value = styled.Text`
 	font-size: 16px;
 	font-weight: bold;
-	color: ${MD2Colors.white};
+	color: ${appColors.white};
 `;
 
 const GameStat = ({label, value, color}: GameStatProps) => {

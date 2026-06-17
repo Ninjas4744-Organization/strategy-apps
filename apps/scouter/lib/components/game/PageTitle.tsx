@@ -1,7 +1,7 @@
 import styled from "styled-components/native";
 import {CardSurface, Icon, Subtitle, TextSection, Title} from "@ninjas-strategy/ui";
 import {IconContainer} from "@ninjas-strategy/ui/styles/IconContainer";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "@ninjas-strategy/ui";
 import {MaterialIcon} from "@ninjas-strategy/ui/interfaces/MaterialIcon";
 
 type SectionTitleProps = {
@@ -20,7 +20,7 @@ const Container = styled(CardSurface)`
 
 const PageIcon = styled(Icon)`
 	font-size: 24px;
-	color: ${MD2Colors.green500};
+	color: ${appColors.green500};
 `;
 
 export const PageTitle = ({title, subtitle, icon}: SectionTitleProps) => {

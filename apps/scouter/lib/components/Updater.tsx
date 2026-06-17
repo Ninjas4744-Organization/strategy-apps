@@ -1,15 +1,25 @@
 import * as Updates from "expo-updates";
 import styled from "styled-components/native";
-import {AnimatedFAB, MD2Colors} from "react-native-paper";
 import {Icon} from "@ninjas-strategy/ui";
 import {useEffect} from "react";
 import {observer} from "mobx-react-lite";
 
-const UpdateButton = styled(AnimatedFAB)`
+const UpdateButton = styled.Pressable`
 	bottom: 16px;
 	right: 16px;
 	position: absolute;
-	background-color: ${MD2Colors.red500};
+	min-height: 48px;
+	flex-direction: row;
+	align-items: center;
+	gap: 8px;
+	padding: 12px 14px;
+	border-radius: 24px;
+	background-color: ${({theme}) => theme.danger};
+`;
+
+const UpdateText = styled.Text`
+	color: ${({theme}) => theme.primaryText};
+	font-weight: 700;
 `;
 
 export const Updater = observer(() => {
@@ -33,11 +43,9 @@ export const Updater = observer(() => {
 	}
 
 	return (
-		<UpdateButton
-			onPress={() => Updates.fetchUpdateAsync()}
-			icon={() => <Icon name="system-update" />}
-			label="Update app!"
-			extended
-			color={MD2Colors.white}/>
+		<UpdateButton onPress={() => Updates.fetchUpdateAsync()}>
+			<Icon name="system-update" color="#ffffff" />
+			<UpdateText>Update app!</UpdateText>
+		</UpdateButton>
 	);
 });

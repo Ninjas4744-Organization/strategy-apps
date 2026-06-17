@@ -1,11 +1,12 @@
 import {Redirect, Stack} from 'expo-router';
-import {StackWrapper} from "@ninjas-strategy/ui";
+import {StackWrapper, useThemeBundle} from "@ninjas-strategy/ui";
 import {observer} from "mobx-react-lite";
 import {useEffect} from "react";
 import userStore from "@/lib/stores/userStore";
 
 export default observer(function AppLayout() {
 	const {subscribe, unsubscribe, user, isLoading} = userStore;
+	const {appTheme} = useThemeBundle();
 
 	useEffect(() => {
 		subscribe();
@@ -25,7 +26,7 @@ export default observer(function AppLayout() {
 			<Stack
 				screenOptions={{
 					headerShown: false,
-					contentStyle: {backgroundColor: 'transparent'},
+					contentStyle: {backgroundColor: appTheme.background},
 				}}>
 				<Stack.Screen name="index" options={{gestureEnabled: false}} />
 				<Stack.Screen name="admin" options={{gestureEnabled: user.isAnonymous}} />

@@ -1,7 +1,7 @@
 import styled from "styled-components/native";
 import {Icon, Subtitle, Title} from "@ninjas-strategy/ui";
 import {MaterialIcon} from "@ninjas-strategy/ui/interfaces/MaterialIcon";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "@ninjas-strategy/ui";
 
 type StatItemProps = {
 	icon: MaterialIcon;
@@ -17,7 +17,7 @@ const StatItemContainer = styled.View`
 	flex: 1;
 `;
 
-export const StatItem = ({icon, value, title, color = MD2Colors.white}: StatItemProps) => {
+export const StatItem = ({icon, value, title, color = appColors.white}: StatItemProps) => {
 	return <StatItemContainer>
 		<Icon name={icon} color={color} />
 		<Title>{value}</Title>

@@ -1,7 +1,7 @@
 import {observer} from "mobx-react-lite";
 import {BreakdownRow, BreakdownSection} from '@/lib/components/admin/detailed/Breakdown';
 import {useGlobalSearchParams} from "expo-router";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "@ninjas-strategy/ui";
 import {ScoreTrend} from '@/lib/components/admin/analytics/ScoreTrend';
 import {BodyScroll, FocusWrapper, Subtitle, Card, CardTitle} from "@ninjas-strategy/ui";
 import {useContext} from "react";

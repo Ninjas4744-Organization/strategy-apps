@@ -1,7 +1,7 @@
 import styled from "styled-components/native";
 import {Subtitle, Title, Icon, CardSurface} from "@ninjas-strategy/ui";
 import {useGlobalSearchParams, useRouter} from "expo-router";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "@ninjas-strategy/ui";
 import {Team} from "@/lib/models/Team";
 import {observer} from "mobx-react-lite";
 import {TeamItemSkeleton} from "@/lib/components/admin/TeamItemSkeleton";
@@ -24,13 +24,13 @@ const TeamItemContainer = styled(CardSurface)`
 const getRankColor = (rank: number) => {
 	switch (rank) {
 		case 1:
-			return MD2Colors.amber500;
+			return appColors.amber500;
 		case 2:
-			return MD2Colors.grey400;
+			return appColors.grey400;
 		case 3:
-			return MD2Colors.brown300;
+			return appColors.brown300;
 		default:
-			return MD2Colors.blue500;
+			return appColors.blue500;
 	}
 };
 

@@ -2,7 +2,7 @@ import {AdminTabProps} from "@/lib/components/admin/commons";
 import {Breakdown} from "@/lib/components/admin/analytics/Breakdown";
 import {Card, CardTitle, Subtitle, Title, Col, Row, Icon} from "@ninjas-strategy/ui";
 import styled from "styled-components/native";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "@ninjas-strategy/ui";
 
 export const OverviewTab = ({team}: AdminTabProps) => {
 	return <>
@@ -13,22 +13,22 @@ export const OverviewTab = ({team}: AdminTabProps) => {
 };
 
 const RedIcon = styled(Icon)`
-	color: ${MD2Colors.red500};
+	color: ${appColors.red500};
 	font-size: 32px;
 `;
 
 const GreenIcon = styled(Icon)`
-	color: ${MD2Colors.green500};
+	color: ${appColors.green500};
 	font-size: 32px;
 `;
 
 const RedText = styled.Text`
-	color: ${MD2Colors.red500};
+	color: ${appColors.red500};
 	font-size: 16px;
 `;
 
 const GreenText = styled.Text`
-	color: ${MD2Colors.green500};
+	color: ${appColors.green500};
 	font-size: 16px;
 `;
 
@@ -71,7 +71,7 @@ const PerformanceComparisonCard = ({team}: AdminTabProps) => {
 };
 
 const OrangeIcon = styled(Icon)`
-	color: ${MD2Colors.orange500};
+	color: ${appColors.orange500};
 	font-size: 32px;
 `;
 

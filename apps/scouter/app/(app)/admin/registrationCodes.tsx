@@ -2,7 +2,6 @@ import {Loading, HeaderButtons, TextInput, Subtitle, Icon, TextInputIcon, FormDi
 import {ScrollView} from "react-native";
 import {observer} from "mobx-react-lite";
 import {Stack} from "expo-router";
-import {Portal} from "react-native-paper";
 import {useEffect, useMemo, useState} from "react";
 import styled from "styled-components/native";
 import Animated, {FadeInUp} from "react-native-reanimated";
@@ -103,21 +102,19 @@ export default observer(function RegistrationCodesPage() {
 				</ScrollView>
 			)}
 
-			<Portal>
-				<FormDialog<RegistrationCodeFormData>
-					visible={showAddDialog}
-					onDismiss={() => setShowAddDialog(false)}
-					title="Add Team Registration"
-					onSubmit={createRegistrationCode}
-					fields={[
-						{
-							name: "team",
-							label: "Team Number",
-							type: 'number',
-							rules: { required: true },
-						}
-					]} />
-			</Portal>
+			<FormDialog<RegistrationCodeFormData>
+				visible={showAddDialog}
+				onDismiss={() => setShowAddDialog(false)}
+				title="Add Team Registration"
+				onSubmit={createRegistrationCode}
+				fields={[
+					{
+						name: "team",
+						label: "Team Number",
+						type: 'number',
+						rules: { required: true },
+					}
+				]} />
 		</Container>
 	);
 });

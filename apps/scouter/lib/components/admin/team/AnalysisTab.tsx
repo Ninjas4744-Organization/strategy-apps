@@ -1,7 +1,7 @@
 import {AdminTabProps} from "@/lib/components/admin/commons";
 import {Card, CardTitle, Col, Row, Icon, Subtitle} from "@ninjas-strategy/ui";
 import styled from "styled-components/native";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "@ninjas-strategy/ui";
 
 export const AnalysisTab = ({team}: AdminTabProps) => {
 	return <>
@@ -11,23 +11,23 @@ export const AnalysisTab = ({team}: AdminTabProps) => {
 };
 
 const GreenIcon = styled(Icon)`
-	color: ${MD2Colors.green500};
+	color: ${appColors.green500};
 	font-size: 20px;
 `;
 
 const GreenText = styled.Text`
-	color: ${MD2Colors.green500};
+	color: ${appColors.green500};
 	font-size: 16px;
 	font-weight: bold;
 `;
 
 const RedIcon = styled(Icon)`
-	color: ${MD2Colors.red500};
+	color: ${appColors.red500};
 	font-size: 20px;
 `;
 
 const RedText = styled.Text`
-	color: ${MD2Colors.red500};
+	color: ${appColors.red500};
 	font-size: 16px;
 	font-weight: bold;
 `;
@@ -69,12 +69,12 @@ const StrengthsWeaknessesCard = ({team}: AdminTabProps) => {
 };
 
 const BlueTitleIcon = styled(Icon)`
-	color: ${MD2Colors.blue500};
+	color: ${appColors.blue500};
 	font-size: 20px;
 `;
 
 const AmberIcon = styled(Icon)`
-	color: ${MD2Colors.amber500};
+	color: ${appColors.amber500};
 	font-size: 16px;
 `;
 

@@ -3,7 +3,7 @@ import {Subtitle, Title, Icon, showSnackbar} from "@ninjas-strategy/ui";
 import {deleteDoc, doc} from 'firebase/firestore';
 import {db} from "@/lib/firebase/firestore";
 import * as Clipboard from "expo-clipboard";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "@ninjas-strategy/ui";
 import {TouchableOpacity} from "react-native";
 
 type RegistrationCodeItemProps = {
@@ -13,13 +13,13 @@ type RegistrationCodeItemProps = {
 };
 
 const Card = styled.View`
-	background-color: ${MD2Colors.white}08;
+	background-color: ${appColors.white}08;
 	padding: 20px;
 	margin: 8px 0;
 	border-radius: 16px;
 	flex-direction: row;
 	align-items: center;
-	border: 1px solid ${MD2Colors.white}20;
+	border: 1px solid ${appColors.white}20;
 `;
 
 const Details = styled.View`
@@ -62,7 +62,7 @@ export const RegistrationCodeItem = ({id, membersCode, adminsCode}: Registration
 			</Details>
 
 			<ActionRow>
-				<Icon name="delete-outline" size={28} color={MD2Colors.red400} onPress={removeItem} />
+				<Icon name="delete-outline" size={28} color={appColors.red400} onPress={removeItem} />
 			</ActionRow>
 		</Card>
 	);

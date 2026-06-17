@@ -3,15 +3,15 @@ import styled from "styled-components/native";
 import {View} from "react-native";
 import {Row, Subtitle, Card} from "@ninjas-strategy/ui";
 import {AdminTabProps} from "@/lib/components/admin/commons";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "@ninjas-strategy/ui";
 
 export const Comparison = ({team}: AdminTabProps) => {
 	const bestGame = team.games.reduce((a, b) => a.totalScore > b.totalScore ? a : b);
 	const worstGame  = team.games.reduce((a, b) => a.totalScore > b.totalScore ? b : a);
 
 	return <>
-		<ComparisonCard title="Best Game" game={bestGame} color={MD2Colors.green500} />
-		<ComparisonCard title="Worst Game" game={worstGame} color={MD2Colors.red500} />
+		<ComparisonCard title="Best Game" game={bestGame} color={appColors.green500} />
+		<ComparisonCard title="Worst Game" game={worstGame} color={appColors.red500} />
 	</>;
 };
 

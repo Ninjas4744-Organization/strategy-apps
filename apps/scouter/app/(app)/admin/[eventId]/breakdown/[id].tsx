@@ -9,7 +9,7 @@ import {OverviewTab} from "@/lib/components/admin/team/OverviewTab";
 import {GamesList} from "@/lib/components/admin/team/GamesList";
 import {ScoreTrend} from "@/lib/components/admin/analytics/ScoreTrend";
 import {AnalysisTab} from "@/lib/components/admin/team/AnalysisTab";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "@ninjas-strategy/ui";
 import {useContext} from "react";
 import {EventContext, EventStore} from "@/lib/stores/eventStore";
 
@@ -28,15 +28,15 @@ const PageHeader = styled(CardSurface)`
 `;
 
 const AmberIcon = styled(Icon)`
-	color: ${MD2Colors.amber500};
+	color: ${appColors.amber500};
 `;
 
 const OrangeIcon = styled(Icon)`
-	color: ${MD2Colors.orange500};
+	color: ${appColors.orange500};
 `;
 
 const GreenIcon = styled(Icon)`
-	color: ${MD2Colors.green500};
+	color: ${appColors.green500};
 `;
 
 export default observer(function () {

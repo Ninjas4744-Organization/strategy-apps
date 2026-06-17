@@ -1,8 +1,7 @@
 import {observer} from "mobx-react-lite";
 import {Redirect, Stack, useGlobalSearchParams} from "expo-router";
 import {useEffect, useMemo} from "react";
-import {Loading, StackWrapper} from "@ninjas-strategy/ui";
-import {MD2Colors} from "react-native-paper";
+import {Loading, StackWrapper, useThemeBundle} from "@ninjas-strategy/ui";
 import {EventContext, EventStore} from "@/lib/stores/eventStore";
 import eventsStore from "@/lib/stores/eventsStore";
 
@@ -13,6 +12,7 @@ export default observer(function EventLayout() {
 	const event = eventIdString ? events[eventIdString] : undefined;
 	const eventStore = useMemo(() => new EventStore(eventIdString ?? ''), [eventIdString]);
 	const {subscribe, unsubscribe} = eventStore;
+	const {appTheme} = useThemeBundle();
 
 	useEffect(() => {
 		subscribe();
@@ -37,12 +37,13 @@ export default observer(function EventLayout() {
 				<Stack
 					screenOptions={{
 						// headerTitleAlign: 'left',
-						headerStyle: {backgroundColor: MD2Colors.indigo900},
+						headerStyle: {backgroundColor: appTheme.surface},
 						headerTitleStyle: {
-							color: MD2Colors.white
+							color: appTheme.text
 						},
+						headerTintColor: appTheme.text,
 						headerBackButtonDisplayMode: 'minimal',
-						contentStyle: {backgroundColor: 'transparent'},
+						contentStyle: {backgroundColor: appTheme.background},
 						headerBlurEffect: 'light',
 					}}>
 					<Stack.Screen name="index" options={{title: `${event?.name} (${event?.id})`}}/>

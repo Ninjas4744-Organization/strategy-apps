@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 import {useState} from "react";
 import {TouchableOpacity} from "react-native";
 import {Card, CardTitle, Row, Icon, Subtitle} from "@ninjas-strategy/ui";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "@ninjas-strategy/ui";
 import {BreakdownSection, ScoreItem} from "./Breakdown";
 import {chunkArray} from "@/lib/utilities";
 
@@ -48,8 +48,8 @@ const ExpandedGameView = ({game}: DetailedGameProps) => {
 		<Card>
 			<CardTitle>Autonomous Performance</CardTitle>
 			<Row>
-				<ScoreItem label="Corals" score={game.autonomousCoralScore} color={MD2Colors.purple500}/>
-				<ScoreItem label="Corals" score={game.autonomousAlgaeScore} color={MD2Colors.teal500}/>
+				<ScoreItem label="Corals" score={game.autonomousCoralScore} color={appColors.purple500}/>
+				<ScoreItem label="Corals" score={game.autonomousAlgaeScore} color={appColors.teal500}/>
 			</Row>
 		</Card>
 	</>;

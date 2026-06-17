@@ -1,5 +1,4 @@
 import styled from "styled-components/native";
-import {MD2Colors, ProgressBar} from "react-native-paper";
 import {Card, CardTitle, Row, Subtitle} from "@ninjas-strategy/ui";
 import {AdminTabProps} from "@/lib/components/admin/commons";
 
@@ -23,6 +22,16 @@ type PerformanceCardProps = {
 
 const ProgressContainer = styled.View`
 	flex: 1;
+	height: 8px;
+	border-radius: 4px;
+	background-color: ${({theme}) => theme.inputBackground};
+	overflow: hidden;
+`;
+
+const ProgressFill = styled.View<{ $progress: number; $color: string }>`
+	width: ${({$progress}) => `${Math.max(0, Math.min(1, $progress)) * 100}%`};
+	height: 100%;
+	background-color: ${({$color}) => $color};
 `;
 
 const PerformanceCard = ({label, score, color}: PerformanceCardProps) => {
@@ -30,7 +39,7 @@ const PerformanceCard = ({label, score, color}: PerformanceCardProps) => {
 		<CardTitle>{label}</CardTitle>
 		<Row>
 			<ProgressContainer>
-				<ProgressBar progress={score / 100} color={color} />
+				<ProgressFill $progress={score / 100} $color={color} />
 			</ProgressContainer>
 			<Subtitle>{score.toFixed(1)}%</Subtitle>
 		</Row>

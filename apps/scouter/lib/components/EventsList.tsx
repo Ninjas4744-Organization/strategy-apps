@@ -1,8 +1,8 @@
 import React, {useMemo, useRef, useState} from "react";
 import {SectionList, TextInput} from "react-native";
-import styled from "styled-components/native";
+import styled, {useTheme} from "styled-components/native";
 import {Icon} from "@ninjas-strategy/ui";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "@ninjas-strategy/ui";
 
 export type EventStatus = "current" | "upcoming" | "finished";
 
@@ -136,6 +136,7 @@ type EventsListProps = {
 	onSelect: (id: string) => void;
 }
 export function EventsList({events, onSelect}: EventsListProps) {
+	const theme = useTheme();
 	const allEvents = useMemo<ScoutingEvent[]>(() => events.filter(event => event.id && event.id !== 'undefined'), [events]);
 
 	const [search, setSearch] = useState("");
@@ -158,7 +159,7 @@ export function EventsList({events, onSelect}: EventsListProps) {
 	};
 
 	return (
-		<>
+		<Container>
 			<TopBar>
 				<SearchBox>
 					<SearchIcon>
@@ -168,7 +169,7 @@ export function EventsList({events, onSelect}: EventsListProps) {
 						value={search}
 						onChangeText={setSearch}
 						placeholder="Search events…"
-						placeholderTextColor="rgba(255,255,255,0.5)"
+						placeholderTextColor={theme.textMuted}
 						autoCapitalize="none"
 						autoCorrect={false}
 						clearButtonMode="while-editing"
@@ -190,7 +191,8 @@ export function EventsList({events, onSelect}: EventsListProps) {
 				keyExtractor={(item) => item.id}
 				stickySectionHeadersEnabled
 				keyboardShouldPersistTaps="handled"
-				contentContainerStyle={{paddingBottom: 24}}
+				style={{backgroundColor: theme.background}}
+				contentContainerStyle={{paddingBottom: 24, backgroundColor: theme.background}}
 				renderSectionHeader={({section}) => (
 					<SectionHeader>
 						<SectionTitle>
@@ -224,12 +226,18 @@ export function EventsList({events, onSelect}: EventsListProps) {
 					</EmptyWrap>
 				}
 			/>
-		</>
+		</Container>
 	);
 }
 
+const Container = styled.View`
+	flex: 1;
+	background-color: ${({theme}) => theme.background};
+`;
+
 const TopBar = styled.View`
 	padding: 12px 12px 6px 12px;
+	background-color: ${({theme}) => theme.background};
 `;
 
 const SearchBox = styled.View`
@@ -237,18 +245,20 @@ const SearchBox = styled.View`
 	  align-items: center;
 	  border-radius: 14px;
 	  padding: 10px 12px;
-	  background: rgba(255, 255, 255, 0.08);
+	  background: ${({theme}) => theme.inputBackground};
+	  border: 1px solid ${({theme}) => theme.border};
 `;
 
 const SearchIcon = styled.Text`
 	  margin-right: 8px;
 	  font-size: 14px;
+	  color: ${({theme}) => theme.textMuted};
 	  opacity: 0.9;
 `;
 
 const SearchInput = styled(TextInput)`
 	  flex: 1;
-	  color: rgba(255, 255, 255, 0.95);
+	  color: ${({theme}) => theme.text};
 	  font-size: 15px;
 `;
 
@@ -259,31 +269,33 @@ const YearsRow = styled.ScrollView`
 const YearChip = styled.Pressable`
 	  padding: 8px 10px;
 	  border-radius: 999px;
-	  background: rgba(255, 255, 255, 0.08);
+	  background: ${({theme}) => theme.card};
+	  border: 1px solid ${({theme}) => theme.border};
 	  margin-right: 8px;
 `;
 
 const YearChipText = styled.Text`
-	  color: rgba(255, 255, 255, 0.9);
+	  color: ${({theme}) => theme.text};
 	  font-size: 13px;
 `;
 
 const SectionHeader = styled.View`
 	  padding: 10px 14px;
-	  background: rgba(255, 255, 255, 0.05);
+	  background: ${({theme}) => theme.surface};
 	  border-top-width: 1px;
-	  border-top-color: rgba(255, 255, 255, 0.06);
+	  border-top-color: ${({theme}) => theme.border};
 `;
 
 const SectionTitle = styled.Text`
-	  color: rgba(255, 255, 255, 0.85);
+	  color: ${({theme}) => theme.textMuted};
 	  font-size: 13px;
 `;
 
 const EventRow = styled.TouchableOpacity`
 	  padding: 14px;
+	  background-color: ${({theme}) => theme.background};
 	  border-bottom-width: 1px;
-	  border-bottom-color: rgba(255, 255, 255, 0.06);
+	  border-bottom-color: ${({theme}) => theme.border};
 `;
 
 const EventTopLine = styled.View`
@@ -295,19 +307,19 @@ const EventTopLine = styled.View`
 
 const EventName = styled.Text`
 	  flex: 1;
-	  color: rgba(255, 255, 255, 0.95);
+	  color: ${({theme}) => theme.text};
 	  font-size: 16px;
 `;
 
 const EventMeta = styled.Text`
 	  margin-top: 6px;
-	  color: rgba(255, 255, 255, 0.75);
+	  color: ${({theme}) => theme.textMuted};
 	  font-size: 12px;
 `;
 
 const EventKey = styled.Text`
 	  margin-top: 6px;
-	  color: rgba(255, 255, 255, 0.55);
+	  color: ${({theme}) => theme.textMuted};
 	  font-size: 11px;
 `;
 
@@ -317,13 +329,13 @@ const EmptyWrap = styled.View`
 `;
 
 const EmptyTitle = styled.Text`
-	  color: rgba(255, 255, 255, 0.9);
+	  color: ${({theme}) => theme.text};
 	  font-size: 16px;
 `;
 
 const EmptySubtitle = styled.Text`
 	  margin-top: 6px;
-	  color: rgba(255, 255, 255, 0.65);
+	  color: ${({theme}) => theme.textMuted};
 	  font-size: 13px;
 `;
 
@@ -334,27 +346,27 @@ const Badge = styled.View<{status: EventStatus}>`
     background: ${({status}) => {
         switch (status) {
             case "current":
-                return `${MD2Colors.green500}18`;
+                return `${appColors.green500}18`;
             case "upcoming":
-                return `${MD2Colors.blue500}18`;
+                return `${appColors.blue500}18`;
             case "finished":
-                return `${MD2Colors.grey500}10`;
+                return `${appColors.grey500}10`;
         }
     }};
 	border-width: 1px;
 	border-color: ${({status}) => {
         switch (status) {
             case "current":
-                return `${MD2Colors.green500}35`;
+                return `${appColors.green500}35`;
             case "upcoming":
-                return `${MD2Colors.blue500}35`;
+                return `${appColors.blue500}35`;
             case "finished":
-                return `${MD2Colors.grey500}18`;
+                return `${appColors.grey500}18`;
         }
     }};
 `;
 
 const BadgeText = styled.Text`
-	  color: ${MD2Colors.white};
+	  color: ${({theme}) => theme.text};
 	  font-size: 12px;
 `;

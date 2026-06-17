@@ -7,7 +7,7 @@ import {observer} from "mobx-react-lite";
 import {EventContext, EventStore} from "@/lib/stores/eventStore";
 import {games} from "@ninjas-strategy/frc-games";
 import eventsStore from "@/lib/stores/eventsStore";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "@ninjas-strategy/ui";
 import Animated, {LinearTransition} from "react-native-reanimated";
 
 type AddTeamFormData = {
@@ -23,7 +23,7 @@ const Container = styled.SafeAreaView`
 
 const Cell = styled(CardSurface)`
 	flex: 1;
-	background-color: ${MD2Colors.lightBlue500}33;
+	background-color: ${appColors.lightBlue500}33;
 	padding: 12px;
 	border-radius: 14px;
 	margin: 0 4px;
@@ -32,7 +32,7 @@ const Cell = styled(CardSurface)`
 `;
 
 const Value = styled.Text<{ highlight?: boolean }>`
-	color: ${({highlight}) => (highlight ? MD2Colors.lightGreen500 : MD2Colors.white)};
+	color: ${({highlight}) => (highlight ? appColors.lightGreen500 : appColors.white)};
 	font-size: 16px;
 	font-weight: ${({highlight}) => (highlight ? "700" : "500")};
 	text-align: center;

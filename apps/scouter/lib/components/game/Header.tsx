@@ -2,7 +2,7 @@ import styled, {css} from "styled-components/native";
 import {TextSection, Title, Subtitle, Icon, iconContainerStyle} from "@ninjas-strategy/ui";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import type {EdgeInsets} from "react-native-safe-area-context";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "@ninjas-strategy/ui";
 import {observer} from "mobx-react-lite";
 import {Href, useRouter} from "expo-router";
 import eventsStore from "@/lib/stores/eventsStore";
@@ -30,7 +30,7 @@ const HeaderContainer = styled.View<{insets: EdgeInsets}>`
 
 const PageIcon = styled(Icon)`
 	font-size: 24px;
-	color: ${MD2Colors.blue500};
+	color: ${appColors.blue500};
 `;
 
 const PageIconContainer = styled.TouchableOpacity`

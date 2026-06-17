@@ -1,6 +1,6 @@
 import styled from "styled-components/native";
 import {Icon, Subtitle} from "@ninjas-strategy/ui";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "@ninjas-strategy/ui";
 
 type ScoringElementProps = {
 	title: string;
@@ -41,14 +41,14 @@ const ScoringElementValuesRow = styled.View`
 `;
 
 export const ScoringElement = ({title, color, missed, setMissed, scored, setScored}: ScoringElementProps) => {
-	return <ScoringElementContainer color={MD2Colors.white} themeColor={color}>
+	return <ScoringElementContainer color={appColors.white} themeColor={color}>
 		<SectionElementHeader>
 			<StarIcon name="star" color={color} size={24} />
 			<Subtitle>{title}</Subtitle>
 		</SectionElementHeader>
 		<ScoringElementValuesRow>
-			<ScoringElementValue color={MD2Colors.red500} title="Missed" value={missed} onChange={setMissed} />
-			<ScoringElementValue color={MD2Colors.green500} title="Scored" value={scored} onChange={setScored} />
+			<ScoringElementValue color={appColors.red500} title="Missed" value={missed} onChange={setMissed} />
+			<ScoringElementValue color={appColors.green500} title="Scored" value={scored} onChange={setScored} />
 		</ScoringElementValuesRow>
 	</ScoringElementContainer>;
 };
@@ -81,8 +81,8 @@ const CounterContainer = styled.View`
 const CounterButton = styled.TouchableOpacity`
 	padding: 8px;
 	margin: 4px;
-	background-color: ${MD2Colors.white}10;
-	border: ${MD2Colors.white}20;
+	background-color: ${appColors.white}10;
+	border: ${appColors.white}20;
 	border-radius: 8px;
 `;
 

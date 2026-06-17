@@ -1,20 +1,21 @@
 import {observer} from "mobx-react-lite";
-import {Card, Row, IconContainer, Icon, Title, FlexGrow} from "@ninjas-strategy/ui";
+import {Card, Row, IconContainer, Icon, Title, FlexGrow, useThemeBundle} from "@ninjas-strategy/ui";
 import {Stack, useRouter} from "expo-router";
 import {TouchableOpacity} from "react-native";
 import userStore from "@/lib/stores/userStore";
-import {MD2Colors} from "react-native-paper";
 
 export default observer(function DemoRouter() {
 	const router = useRouter();
 	const {signOut} = userStore;
+	const {appTheme} = useThemeBundle();
 
 	return <>
 		<Stack.Screen
 			options={{
-				headerStyle: {backgroundColor: MD2Colors.indigo900},
-				headerTintColor: MD2Colors.white,
-				contentStyle: {backgroundColor: 'transparent'},
+				headerStyle: {backgroundColor: appTheme.surface},
+				headerTintColor: appTheme.text,
+				headerTitleStyle: {color: appTheme.text},
+				contentStyle: {backgroundColor: appTheme.background},
 				headerShown: true,
 				title: 'The Ninja Scouter Demo',
 				headerBackVisible: false,

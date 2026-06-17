@@ -1,9 +1,8 @@
 import {useCallback, useMemo, useState} from "react";
-import {FlatList, TouchableOpacity, View} from "react-native";
-import {ActivityIndicator, Divider, List, Modal, Portal, Text, useTheme, Button} from "react-native-paper";
+import {ActivityIndicator, FlatList, Modal, TouchableOpacity, View} from "react-native";
 import axios from "axios";
-import {TextInput, TextInputIcon} from "@ninjas-strategy/ui";
-import styled from "styled-components/native";
+import {Icon, Text, TextInput, TextInputIcon} from "@ninjas-strategy/ui";
+import styled, {useTheme} from "styled-components/native";
 import {TBAEventSimple} from "@/lib/interfaces/TBAEventSimple";
 import {useDebounce} from "@/lib/hooks/debounce";
 
@@ -31,8 +30,8 @@ const ErrorContainer = styled.View`
 	padding: 16px;
 `;
 
-const ErrorText = styled(Text)<{color: string}>`
-	color: ${props => props.color};
+const ErrorText = styled(Text)`
+	color: ${({theme}) => theme.danger};
 	margin-bottom: 8px;
 `;
 
@@ -52,6 +51,68 @@ const NoResultsContainer = styled.View`
 const CloseContainer = styled.View`
 	padding: 8px;
 	align-items: flex-end;
+`;
+
+const ModalBackdrop = styled.View`
+	flex: 1;
+	justify-content: center;
+	padding: 16px;
+	background-color: rgba(0, 0, 0, 0.42);
+`;
+
+const ModalPanel = styled.View`
+	max-height: 80%;
+	border-radius: 12px;
+	background-color: ${({theme}) => theme.card};
+	border: 1px solid ${({theme}) => theme.border};
+	padding-vertical: 8px;
+	overflow: hidden;
+`;
+
+const Divider = styled.View`
+	height: 1px;
+	background-color: ${({theme}) => theme.border};
+`;
+
+const ResultRow = styled.View`
+	flex-direction: row;
+	align-items: center;
+	gap: 12px;
+	padding: 12px;
+`;
+
+const ResultText = styled.View`
+	flex: 1;
+	min-width: 0;
+`;
+
+const ResultTitle = styled(Text)`
+	font-weight: 700;
+`;
+
+const RetryButton = styled.Pressable`
+	align-self: flex-start;
+	min-height: 40px;
+	border-radius: 12px;
+	padding: 9px 14px;
+	background-color: ${({theme}) => theme.primary};
+`;
+
+const RetryText = styled.Text`
+	color: ${({theme}) => theme.primaryText};
+	font-weight: 700;
+`;
+
+const CloseButton = styled.Pressable`
+	min-height: 40px;
+	border-radius: 12px;
+	padding: 9px 14px;
+	background-color: ${({theme}) => theme.inputBackground};
+`;
+
+const CloseText = styled.Text`
+	color: ${({theme}) => theme.text};
+	font-weight: 700;
 `;
 
 export const TBAEventInput: React.FC<TBAEventInputProps> = ({year, label = "FRC Event", placeholder = "Search by name / city / code…", initialValue = null, onSelect, disabled}) => {
@@ -135,19 +196,11 @@ export const TBAEventInput: React.FC<TBAEventInputProps> = ({year, label = "FRC 
 				disabled={disabled}
 			/>
 
-			<Portal>
-				<Modal
-					visible={modalVisible}
-					onDismiss={closeModal}
-					contentContainerStyle={{
-						margin: 16,
-						borderRadius: 12,
-						backgroundColor: theme.colors.background,
-						paddingVertical: 8,
-						maxHeight: "80%",
-					}}>
+			<Modal visible={modalVisible} transparent animationType="fade" onRequestClose={closeModal}>
+				<ModalBackdrop>
+					<ModalPanel>
 					<TitleContainer>
-						<Text variant="titleMedium">Choose FRC Event • {year}</Text>
+						<Text>Choose FRC Event • {year}</Text>
 						<TextInput
 							placeholder={placeholder}
 							value={query}
@@ -165,8 +218,10 @@ export const TBAEventInput: React.FC<TBAEventInputProps> = ({year, label = "FRC 
 						</LoadingContainer>
 					) : err ? (
 						<ErrorContainer>
-							<ErrorText color={theme.colors.error}>{err}</ErrorText>
-							<Button mode="contained-tonal" onPress={loadEvents} icon="reload">Retry</Button>
+							<ErrorText>{err}</ErrorText>
+							<RetryButton onPress={loadEvents}>
+								<RetryText>Retry</RetryText>
+							</RetryButton>
 						</ErrorContainer>
 					) : (
 						<ResultsList
@@ -176,16 +231,18 @@ export const TBAEventInput: React.FC<TBAEventInputProps> = ({year, label = "FRC 
 							initialNumToRender={20}
 							renderItem={({item}) => (
 								<TouchableOpacity onPress={() => handlePick(item)}>
-									<List.Item
-										title={item.name}
-										description={`${item.city ?? ""}${item.city ? ", " : ""}${item.country ?? ""} • ${item.start_date} → ${item.end_date} • ${item.key}`}
-										left={(props) => <List.Icon {...props} icon="calendar" />}
-										right={() => (
-											<ResultContainer>
-												<Text>{item.event_code.toUpperCase()}</Text>
-											</ResultContainer>
-										)}
-									/>
+									<ResultRow>
+										<Icon name="calendar-today" size={22} />
+										<ResultText>
+											<ResultTitle numberOfLines={1}>{item.name}</ResultTitle>
+											<Text numberOfLines={2}>
+												{item.city ?? ""}{item.city ? ", " : ""}{item.country ?? ""} • {item.start_date} → {item.end_date} • {item.key}
+											</Text>
+										</ResultText>
+										<ResultContainer>
+											<Text>{item.event_code.toUpperCase()}</Text>
+										</ResultContainer>
+									</ResultRow>
 								</TouchableOpacity>
 							)}
 							ListEmptyComponent={
@@ -197,10 +254,13 @@ export const TBAEventInput: React.FC<TBAEventInputProps> = ({year, label = "FRC 
 					)}
 
 					<CloseContainer>
-						<Button onPress={closeModal}>Close</Button>
+						<CloseButton onPress={closeModal}>
+							<CloseText>Close</CloseText>
+						</CloseButton>
 					</CloseContainer>
-				</Modal>
-			</Portal>
+					</ModalPanel>
+				</ModalBackdrop>
+			</Modal>
 		</View>
 	);
 };

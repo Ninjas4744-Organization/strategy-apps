@@ -1,20 +1,22 @@
 import {Tabs, useLocalSearchParams} from 'expo-router';
-import {Icon} from "@ninjas-strategy/ui";
-import {MD2Colors} from "react-native-paper";
+import {Icon, useThemeBundle} from "@ninjas-strategy/ui";
 
 export default function TabLayout() {
 	const {id} = useLocalSearchParams();
+	const {appTheme} = useThemeBundle();
+
 	return (
 		<Tabs
 			safeAreaInsets={{ top: 0 }}
 			screenOptions={{
-				tabBarActiveTintColor: MD2Colors.white,
+				tabBarActiveTintColor: appTheme.text,
+				tabBarInactiveTintColor: appTheme.textMuted,
 				headerShown: false,
 				title: `Team ${id} Games`,
-				sceneStyle: {backgroundColor: 'transparent'},
+				sceneStyle: {backgroundColor: appTheme.background},
 				tabBarPosition: 'top',
-				tabBarStyle: {backgroundColor: MD2Colors.indigo900, paddingTop: 0},
-				tabBarActiveBackgroundColor: MD2Colors.white + '20',
+				tabBarStyle: {backgroundColor: appTheme.surface, borderTopColor: appTheme.border, paddingTop: 0},
+				tabBarActiveBackgroundColor: appTheme.inputBackground,
 				tabBarVariant: 'uikit',
 				freezeOnBlur: true,
 			}}>

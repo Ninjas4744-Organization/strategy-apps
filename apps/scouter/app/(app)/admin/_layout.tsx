@@ -1,14 +1,14 @@
 import {Stack, Redirect} from 'expo-router';
 import {observer} from "mobx-react-lite";
-import {Loading, StackWrapper} from "@ninjas-strategy/ui";
+import {Loading, StackWrapper, useThemeBundle} from "@ninjas-strategy/ui";
 import {useEffect} from "react";
-import {MD2Colors} from "react-native-paper";
 import eventsStore from "@/lib/stores/eventsStore";
 import userStore from "@/lib/stores/userStore";
 
 export default observer(function AdminLayout() {
 	const {isLoading, subscribe, unsubscribe} = eventsStore;
 	const {user, userData, isAdmin, isProfileLoading} = userStore;
+	const {appTheme} = useThemeBundle();
 
 	useEffect(() => {
 		subscribe();
@@ -34,9 +34,10 @@ export default observer(function AdminLayout() {
 		<StackWrapper>
 			<Stack
 				screenOptions={{
-					headerStyle: {backgroundColor: MD2Colors.indigo900},
-					headerTintColor: MD2Colors.white,
-					contentStyle: {backgroundColor: 'transparent'},
+					headerStyle: {backgroundColor: appTheme.surface},
+					headerTintColor: appTheme.text,
+					headerTitleStyle: {color: appTheme.text},
+					contentStyle: {backgroundColor: appTheme.background},
 				}}
 			>
 				<Stack.Screen name="[eventId]" options={{headerShown: false}} />

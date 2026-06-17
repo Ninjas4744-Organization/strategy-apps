@@ -2,6 +2,7 @@ import {HeaderButtons, Loading} from "@ninjas-strategy/ui";
 import {ScrollView} from "react-native";
 import {observer} from "mobx-react-lite";
 import {Href, Stack, useRouter} from "expo-router";
+import styled from "styled-components/native";
 import {EventItem} from "@/lib/components/EventItem";
 import userStore from "@/lib/stores/userStore";
 import eventsStore from "@/lib/stores/eventsStore";
@@ -22,7 +23,7 @@ export default observer(function ScouterIndex() {
 			<ScreenHeader
 				title="Events"
 				right={<HeaderButtons buttons={[{onPress: () => signOut().then(() => router.replace('/')), icon: 'logout'}]}/>} />
-			<ScrollView>
+			<EventsScroll>
 				{events && Object.values(events).filter(event => event.id && event.id !== 'undefined').map((event) => (
 					<EventItem
 						key={event.id}
@@ -32,7 +33,15 @@ export default observer(function ScouterIndex() {
 						}}
 						{...event} />
 				))}
-			</ScrollView>
+			</EventsScroll>
 		</>
 	);
 });
+
+const EventsScroll = styled(ScrollView).attrs(({theme}) => ({
+	style: {backgroundColor: theme.background},
+	contentContainerStyle: {backgroundColor: theme.background, flexGrow: 1},
+}))`
+	flex: 1;
+	background-color: ${({theme}) => theme.background};
+`;

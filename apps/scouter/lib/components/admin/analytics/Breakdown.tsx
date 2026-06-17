@@ -2,7 +2,7 @@ import {PieChart} from "react-native-chart-kit";
 import {Card, CardTitle} from "@ninjas-strategy/ui";
 import {useState} from "react";
 import {AdminTabProps, chartConfig} from "@/lib/components/admin/commons";
-import {MD2Colors} from "react-native-paper";
+import {appColors} from "@ninjas-strategy/ui";
 
 export const Breakdown = ({team}: AdminTabProps) => {
 	const [chartWidth, setChartWidth] = useState(0);
@@ -17,7 +17,7 @@ export const Breakdown = ({team}: AdminTabProps) => {
 				...graph,
 				name: graph.label,
 				val: graph.val(team),
-				legendFontColor: MD2Colors.white,
+				legendFontColor: appColors.white,
 			}))}
 			paddingLeft="0"
 			width={chartWidth}
