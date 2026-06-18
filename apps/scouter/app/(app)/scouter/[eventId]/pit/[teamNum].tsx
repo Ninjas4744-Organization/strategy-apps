@@ -27,7 +27,7 @@ export default observer(function ScouterEvent() {
 			<BeautifulButton
 				label="Submit to Firebase"
 				icon="cloud-upload"
-				onPress={() => pitStore.submitToFirebase(teamNum, eventId).then(() => router.push('/scouter'))} />
+				onPress={() => pitStore.submitToFirebase(teamNum, eventId).then(sent => sent && router.push('/scouter'))} />
 		</BottomSafeArea>
 	</KeyboardAwareScrollView>;
 });

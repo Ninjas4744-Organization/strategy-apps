@@ -65,7 +65,7 @@ export default observer(function TeleopPage() {
 						<BeautifulButton
 							label="Submit to Firebase"
 							icon="cloud-upload"
-							onPress={() => gameStore.submitToFirebase(eventId).then(() => router.push('/scouter'))} />
+							onPress={() => gameStore.submitToFirebase(eventId).then(sent => sent && router.push('/scouter'))} />
 					</BottomSafeArea>
 				)}
 			</KeyboardAwareScrollView>

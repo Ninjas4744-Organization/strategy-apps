@@ -14,9 +14,9 @@ This checklist captures the current known gaps in the Scouter app after a light 
 
 - [x] Clear stale subscription state before repopulating collections in `EventStore` and `RegistrationCodesStore`.
 - [ ] Decide whether registration codes are one-time-use, revocable, or reusable forever.
-- [ ] Improve offline queue metadata and retry behavior. Failed retries can lose whether an item was game or pit data.
-- [ ] Add duplicate protection for match submissions so the same team/game does not overwrite silently.
-- [ ] Add stricter validation for team number, match number, and pit team selection before navigating into forms.
+- [x] Improve offline queue metadata and retry behavior. Failed retries can lose whether an item was game or pit data.
+- [x] Add duplicate protection for match submissions so the same team/game does not overwrite silently.
+- [x] Add stricter validation for team number, match number, and pit team selection before navigating into forms.
 
 ## Product Gaps
 

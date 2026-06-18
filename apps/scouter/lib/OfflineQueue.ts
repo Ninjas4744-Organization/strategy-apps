@@ -1,23 +1,42 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
-import {doc, setDoc, collection, serverTimestamp} from 'firebase/firestore';
+import {doc, setDoc, collection, serverTimestamp, getDoc} from 'firebase/firestore';
 import {db} from "@/lib/firebase/firestore";
 import {showSnackbar} from "@ninjas-strategy/ui";
 
-type GameData = {
+type BaseQueuedData = {
 	team_number: number;
-	game_number: number;
 	eventId: string;
-	[key: string]: any;
+	scouter_id?: string;
+	[key: string]: unknown;
 };
+
+type QueuedGameData = BaseQueuedData & {
+	type: 'game';
+	game_number: number;
+};
+
+type QueuedPitData = BaseQueuedData & {
+	type: 'pit';
+	game_number?: 0;
+};
+
+type QueuedData = QueuedGameData | QueuedPitData;
 
 const STORAGE_KEY = 'unsent_games';
 
+const toFirestoreData = (item: QueuedData): Record<string, unknown> => {
+	const firestoreData: Record<string, unknown> = {...item};
+	delete firestoreData.type;
+	delete firestoreData.eventId;
+	return firestoreData;
+};
+
 export class OfflineQueue {
-	static async saveUnsentGameData(data: GameData) {
+	static async saveUnsentGameData(data: QueuedData) {
 		try {
 			const stored = await AsyncStorage.getItem(STORAGE_KEY);
-			const parsed: GameData[] = stored ? JSON.parse(stored) : [];
+			const parsed: QueuedData[] = stored ? JSON.parse(stored) : [];
 			parsed.push(data);
 			await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
 		} catch (err) {
@@ -28,33 +47,43 @@ export class OfflineQueue {
 	static async resendUnsentGameData() {
 		try {
 			const stored = await AsyncStorage.getItem(STORAGE_KEY);
-			const unsent: GameData[] = stored ? JSON.parse(stored) : [];
+			const unsent: QueuedData[] = stored ? JSON.parse(stored) : [];
 			if (unsent.length === 0) return;
 
 			let sentAny = false;
-			const remaining: GameData[] = [];
+			let skippedDuplicates = 0;
+			const remaining: QueuedData[] = [];
 
-			for (const {type, ...data} of unsent) {
+			for (const item of unsent) {
 				try {
-					if (type === 'game') {
-						const teamDoc = doc(collection(db, 'events', data.eventId, 'teams'), data.team_number.toString());
-						const gameDoc = doc(collection(teamDoc, 'games'), data.game_number.toString());
+					if (item.type === 'game') {
+						const teamDoc = doc(collection(db, 'events', item.eventId, 'teams'), item.team_number.toString());
+						const gameDoc = doc(collection(teamDoc, 'games'), item.game_number.toString());
+						const gameSnap = await getDoc(gameDoc);
+						const firestoreData = toFirestoreData(item);
+
+						if (gameSnap.exists()) {
+							skippedDuplicates++;
+							continue;
+						}
 
 						await setDoc(gameDoc, {
-							...data,
+							...firestoreData,
 							timestamp: serverTimestamp()
 						});
 						sentAny = true;
-					} else if (type === 'pit') {
-						const teamRef = doc(db, 'events', data.eventId, 'pit', data.team_number.toString());
+					} else if (item.type === 'pit') {
+						const teamRef = doc(db, 'events', item.eventId, 'pit', item.team_number.toString());
+						const firestoreData = toFirestoreData(item);
 						await setDoc(teamRef, {
-							...data,
+							...firestoreData,
 							timestamp: serverTimestamp(),
 						});
+						sentAny = true;
 					}
 				} catch (e) {
 					console.warn('Failed to resend item:', e);
-					remaining.push(data);
+					remaining.push(item);
 				}
 			}
 
@@ -62,6 +91,9 @@ export class OfflineQueue {
 
 			if (sentAny) {
 				showSnackbar('Offline data sent to Firebase!');
+			}
+			if (skippedDuplicates) {
+				showSnackbar(`${skippedDuplicates} offline match ${skippedDuplicates === 1 ? 'submission was' : 'submissions were'} skipped because data already exists.`);
 			}
 		} catch (err) {
 			console.error('Failed to resend unsent data', err);

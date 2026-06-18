@@ -34,33 +34,31 @@ class PitStore {
 		this.data[field] = value;
 	}
 
-	async submitToFirebase(teamNumber: string, eventId: string) {
+	async submitToFirebase(teamNumber: string, eventId: string): Promise<boolean> {
 		if (userStore.user?.isAnonymous) {
 			showSnackbar('Pit scouting data updated successfully!');
 			this.reset();
-			return;
+			return true;
 		}
-		if (+teamNumber! <= 0 || !eventId) {
+		if (+teamNumber <= 0 || !eventId) {
 			showSnackbar('Team or event is missing.');
-			return;
+			return false;
 		}
 
 		try {
 			const teamRef = doc(db, 'events', eventId, 'pit', teamNumber);
-			for (const pitField in this.data) {
-				if (!this.data[pitField]) {
-					delete this.data[pitField];
-				}
-			}
+			const data = Object.fromEntries(Object.entries(this.data).filter(([, value]) => !!value));
 			await setDoc(teamRef, {
-				...this.data,
+				...data,
 				team_number: +teamNumber,
 				timestamp: serverTimestamp(),
 				scouter_id: userStore.user?.uid,
 			});
 			showSnackbar('Pit scouting data updated successfully!');
+			this.reset();
+			return true;
 		} catch (e) {
-			console.log(e);
+			console.warn(e);
 			await OfflineQueue.saveUnsentGameData({
 				...this.data,
 				type: 'pit',
@@ -70,8 +68,8 @@ class PitStore {
 				scouter_id: userStore.user?.uid,
 			});
 			showSnackbar('No internet. Data will be sent automatically when online.');
-		} finally {
 			this.reset();
+			return true;
 		}
 	}
 }

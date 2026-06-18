@@ -1,7 +1,7 @@
 import {observer} from "mobx-react-lite";
-import {Card, CardSurface, FormDialog, Row, IconContainer, Icon, Title, FlexGrow, Subtitle} from "@ninjas-strategy/ui";
+import {Card, CardSurface, FormDialog, Row, IconContainer, Icon, Title, FlexGrow, Subtitle, showSnackbar} from "@ninjas-strategy/ui";
 import {useEffect, useState} from "react";
-import gameStore from "@/lib/stores/gameStore";
+import gameStore, {MAX_QUALIFICATION_MATCH_NUMBER} from "@/lib/stores/gameStore";
 import eventsStore from "@/lib/stores/eventsStore";
 import {Href, useGlobalSearchParams, useRouter} from "expo-router";
 import {TouchableOpacity} from "react-native";
@@ -11,13 +11,19 @@ import assignmentsStore from "@/lib/stores/assignmentsStore";
 import styled from "styled-components/native";
 
 type GameInputFormData = {
-	teamNumber: string;
-	gameNumber: string;
+	teamNumber: string | number;
+	gameNumber: string | number;
 };
 
 type PitInputFormData = {
-	teamNumber: string;
+	teamNumber: string | number;
 }
+
+const normalizeNumberInput = (value: string | number) => Number(String(value).trim());
+
+const isEventTeam = (teamNumber: number, teams: string[]) => teams.includes(`frc${teamNumber}`);
+
+const isPositiveInteger = (value: number) => Number.isInteger(value) && value > 0;
 
 export default observer(function ScouterIndex() {
 	const router = useRouter();
@@ -43,7 +49,18 @@ export default observer(function ScouterIndex() {
 		if (!eventId || eventId === 'undefined' || !event)
 			return;
 
-		startGame(data.teamNumber, data.gameNumber, event.year);
+		const teamNumber = normalizeNumberInput(data.teamNumber);
+		const gameNumber = normalizeNumberInput(data.gameNumber);
+		if (!isPositiveInteger(teamNumber) || !isEventTeam(teamNumber, event.teams)) {
+			showSnackbar('Choose a valid team from this event.');
+			return;
+		}
+		if (!isPositiveInteger(gameNumber) || gameNumber > MAX_QUALIFICATION_MATCH_NUMBER) {
+			showSnackbar('Enter a valid qualification match number.');
+			return;
+		}
+
+		startGame(teamNumber.toString(), gameNumber.toString(), event.year);
 		setShowGameDialog(false);
 		router.push(`/scouter/${eventId}/game/0`);
 	};
@@ -60,9 +77,15 @@ export default observer(function ScouterIndex() {
 		if (!eventId || eventId === 'undefined' || !event)
 			return;
 
+		const teamNumber = normalizeNumberInput(data.teamNumber);
+		if (!isPositiveInteger(teamNumber) || !isEventTeam(teamNumber, event.teams)) {
+			showSnackbar('Choose a valid team from this event.');
+			return;
+		}
+
 		setShowPitDialog(false);
 		startPit(event.year);
-		router.push(`/scouter/${eventId}/pit/${data.teamNumber}` as Href);
+		router.push(`/scouter/${eventId}/pit/${teamNumber}` as Href);
 	};
 
 	return <>
@@ -124,7 +147,13 @@ export default observer(function ScouterIndex() {
 					name: "teamNumber",
 					label: "Team Number",
 					type: 'team',
-					rules: {required: true},
+					rules: {
+						required: 'Choose a team.',
+						validate: value => {
+							const teamNumber = normalizeNumberInput(value);
+							return isPositiveInteger(teamNumber) && isEventTeam(teamNumber, event?.teams ?? []) ? true : 'Choose a valid team from this event.';
+						},
+					},
 					teams: event?.teams || [],
 				},
 				{
@@ -132,7 +161,13 @@ export default observer(function ScouterIndex() {
 					label: 'Game Number',
 					type: 'number',
 					iconLeft: 'sports-esports',
-					rules: {required: true},
+					rules: {
+						required: 'Enter a match number.',
+						validate: value => {
+							const gameNumber = normalizeNumberInput(value);
+							return isPositiveInteger(gameNumber) && gameNumber <= MAX_QUALIFICATION_MATCH_NUMBER ? true : 'Enter a valid qualification match number.';
+						},
+					},
 				}
 			]} />
 		<FormDialog<PitInputFormData>
@@ -145,7 +180,13 @@ export default observer(function ScouterIndex() {
 					name: "teamNumber",
 					label: "Team Number",
 					type: 'team',
-					rules: {required: true},
+					rules: {
+						required: 'Choose a team.',
+						validate: value => {
+							const teamNumber = normalizeNumberInput(value);
+							return isPositiveInteger(teamNumber) && isEventTeam(teamNumber, event?.teams ?? []) ? true : 'Choose a valid team from this event.';
+						},
+					},
 					teams: event?.teams || [],
 				},
 			]} />

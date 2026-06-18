@@ -6,8 +6,8 @@ import {showSnackbar} from "@ninjas-strategy/ui";
 import userStore from "@/lib/stores/userStore";
 import {initGameData} from "@ninjas-strategy/frc-games";
 
-const MAX_TEAM_NUMBER = 20000;
-const MAX_QUALIFICATION_MATCH_NUMBER = 150;
+export const MAX_TEAM_NUMBER = 20000;
+export const MAX_QUALIFICATION_MATCH_NUMBER = 150;
 
 class GameStore {
 	data: Record<string, any> = {};
@@ -45,28 +45,34 @@ class GameStore {
 		this.data[field] = value;
 	}
 
-	async submitToFirebase(eventId: string) {
+	async submitToFirebase(eventId: string): Promise<boolean> {
 		if (userStore.user?.isAnonymous) {
 			showSnackbar('Data sent! Starting new match...');
 			this.reset();
-			return;
+			return true;
 		}
-		if (+this.teamNumber! <= 0 || +this.gameNumber! <= 0) {
+		if (+this.teamNumber <= 0 || +this.gameNumber <= 0) {
 			showSnackbar('Team or game number is missing.');
-			return;
+			return false;
 		}
 		if (+this.teamNumber < 0 || +this.gameNumber < 0 || +this.teamNumber > MAX_TEAM_NUMBER || +this.gameNumber > MAX_QUALIFICATION_MATCH_NUMBER) {
-			showSnackbar('Invalid game of team number.');
-			return;
+			showSnackbar('Invalid team or match number.');
+			return false;
 		}
 		try {
-			const teamRef = doc(db, 'events', eventId, 'teams', this.teamNumber!);
+			const teamRef = doc(db, 'events', eventId, 'teams', this.teamNumber);
 			const teamSnap = await getDoc(teamRef);
 			if (!teamSnap.exists())
 				await setDoc(teamRef, {
-					team_number: +this.teamNumber!
+					team_number: +this.teamNumber
 				});
-			const gameRef = doc(teamRef, 'games', this.gameNumber!);
+			const gameRef = doc(teamRef, 'games', this.gameNumber);
+			const gameSnap = await getDoc(gameRef);
+			if (gameSnap.exists()) {
+				showSnackbar(`Team ${this.teamNumber} match ${this.gameNumber} already has scouting data.`);
+				return false;
+			}
+
 			await setDoc(gameRef, {
 				...this.data,
 				team_number: this.teamNumber,
@@ -75,6 +81,8 @@ class GameStore {
 				timestamp: serverTimestamp()
 			});
 			showSnackbar('Data sent! Starting new match...');
+			this.reset();
+			return true;
 		} catch (e) {
 			await OfflineQueue.saveUnsentGameData({
 				...this.data,
@@ -85,8 +93,8 @@ class GameStore {
 				eventId,
 			});
 			showSnackbar('No internet. Data will be sent automatically when online.');
-		} finally {
 			this.reset();
+			return true;
 		}
 	}
 }
