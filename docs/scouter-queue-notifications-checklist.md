@@ -62,28 +62,28 @@ This checklist tracks the plan for notifying assigned scouters when their assign
 
 ## Cloudflare Worker
 
-- [ ] Create a Worker dedicated to notification handling.
-- [ ] Store Firebase project id as a Worker secret or environment variable.
+- [x] Create a Worker dedicated to notification handling.
+- [x] Store Firebase project id as a Worker secret or environment variable.
 - [ ] Store Firebase service account client email as a Worker secret.
 - [ ] Store Firebase service account private key as a Worker secret.
 - [ ] Store Nexus webhook token as a Worker secret.
-- [ ] Implement Google OAuth JWT access-token flow for REST APIs.
-- [ ] Implement Firestore REST helpers for reads, queries, and updates.
+- [x] Implement Google OAuth JWT access-token flow for REST APIs.
+- [x] Implement Firestore REST helpers for reads, queries, and updates.
 - [ ] Implement FCM HTTP v1 send helper for native tokens.
-- [ ] Implement Expo Push API send helper for Expo Go test tokens.
-- [ ] Route notification sends by stored token `provider`.
-- [ ] Add `POST /nexus/live-event` webhook endpoint.
-- [ ] Verify the `Nexus-Token` header before doing any work.
-- [ ] Parse `eventKey`, `dataAsOfTime`, `nowQueuing`, and `matches`.
-- [ ] Ignore stale payloads older than the last processed Nexus snapshot.
-- [ ] Detect matches with status `Now queuing`.
-- [ ] Match Nexus red/blue teams against Firestore assignments.
-- [ ] Query only unnotified assignments.
-- [ ] Read assigned scouters' active push tokens.
-- [ ] Send notifications to all active tokens for each assigned scouter.
-- [ ] Mark assignments with `notifiedAt`, `nexusDataAsOfTime`, and send result.
-- [ ] Make notification delivery idempotent so duplicate Nexus payloads do not duplicate pushes.
-- [ ] Log event key, match label, assignment count, and send outcomes.
+- [x] Implement Expo Push API send helper for Expo Go test tokens.
+- [x] Route notification sends by stored token `provider`.
+- [x] Add `POST /nexus/live-event` webhook endpoint.
+- [x] Verify the `Nexus-Token` header before doing any work.
+- [x] Parse `eventKey`, `dataAsOfTime`, `nowQueuing`, and `matches`.
+- [x] Ignore stale payloads older than the last processed Nexus snapshot.
+- [x] Detect matches with status `Now queuing`.
+- [x] Match Nexus red/blue teams against Firestore assignments.
+- [x] Query only unnotified assignments.
+- [x] Read assigned scouters' active push tokens.
+- [x] Send notifications to all active tokens for each assigned scouter.
+- [x] Mark assignments with `notifiedAt`, `nexusDataAsOfTime`, and send result.
+- [x] Make notification delivery idempotent so duplicate Nexus payloads do not duplicate pushes.
+- [x] Log event key, match label, assignment count, and send outcomes.
 
 ## Firebase Service Account
 

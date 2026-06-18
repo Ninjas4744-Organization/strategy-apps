@@ -66,3 +66,7 @@ yarn-error.*
 database-debug.log
 firestore-debug.log
 firebase-debug.log
+
+# wrangler dotenv
+.dev.vars
+.wrangler/

@@ -1,0 +1,12 @@
+{
+	"name": "queue-notifier",
+	"version": "1.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"test": "bun test",
+		"typecheck": "tsc --noEmit -p tsconfig.json",
+		"dev": "bunx wrangler dev",
+		"deploy": "bunx wrangler deploy"
+	}
+}

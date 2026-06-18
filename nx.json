@@ -12,6 +12,7 @@
 	"projects": {
 		"scouter": "apps/scouter",
 		"trainee": "apps/trainee",
+		"queue-notifier": "apps/queue-notifier",
 		"ui": "packages/ui",
 		"frc-games": "packages/frc-games"
 	}

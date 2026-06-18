@@ -106,6 +106,10 @@ service cloud.firestore {
 			allow write: if isAppAdmin();
 		}
 
+		match /nexusEventStates/{eventId} {
+			allow read, write: if isAppAdmin();
+		}
+
     // Allow read/write access to users collection
     match /users/{userId} {
       allow read: if true;

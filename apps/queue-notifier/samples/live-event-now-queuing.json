@@ -1,0 +1,18 @@
+{
+	"eventKey": "2025isde1",
+	"dataAsOfTime": 1781750000001,
+	"nowQueuing": "Qualification 24",
+	"matches": [
+		{
+			"label": "Qualification 24",
+			"status": "Now queuing",
+			"redTeams": ["4744", "1690", "1574"],
+			"blueTeams": ["3339", "4590", "1943"],
+			"times": {
+				"estimatedQueueTime": 1781750000000
+			}
+		}
+	],
+	"announcements": [],
+	"partsRequests": []
+}

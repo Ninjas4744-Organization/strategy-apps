@@ -1,0 +1,6 @@
+name = "ninjas-queue-notifier"
+main = "src/index.ts"
+compatibility_date = "2026-06-18"
+
+[vars]
+FIREBASE_PROJECT_ID = "scouting-app-3e18a"
