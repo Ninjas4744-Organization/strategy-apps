@@ -24,6 +24,11 @@ export type NexusLiveEventPayload = {
 	matches?: NexusMatch[];
 };
 
+export type TestNotificationPayload = {
+	eventId: string;
+	assignmentId: string;
+};
+
 export type AssignmentDocument = {
 	id: string;
 	eventId: string;

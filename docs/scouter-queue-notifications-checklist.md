@@ -120,7 +120,7 @@ This checklist tracks the plan for notifying assigned scouters when their assign
 
 ## Competition Hardening
 
-- [ ] Add a manual test-notification path or script for admins.
+- [x] Add a manual test-notification path or script for admins.
 - [ ] Add a manual "refresh assigned games" or obvious fallback path in the scouter UI.
 - [ ] Add enough Worker logging to debug event-day issues quickly.
 - [ ] Add visible app messaging when notifications are disabled.

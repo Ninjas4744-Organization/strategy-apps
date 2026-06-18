@@ -1,4 +1,4 @@
-import {sendPushNotifications} from "./expoPush";
+import {sendPushNotifications, sendTestPushNotifications} from "./expoPush";
 import {
 	firebasePrivateKeyFromEnv,
 	firestoreBaseUrlForEnv,
@@ -8,7 +8,7 @@ import {
 import {FirestoreRestClient} from "./firestoreRest";
 import {getGoogleAccessToken} from "./googleAuth";
 import {findQueueingTeams, isNexusLiveEventPayload, planNotifications} from "./nexus";
-import type {Env, NexusLiveEventPayload} from "./types";
+import type {Env, NexusLiveEventPayload, TestNotificationPayload} from "./types";
 
 export default {
 	async fetch(request: Request, env: Env): Promise<Response> {
@@ -22,19 +22,18 @@ export default {
 			return await handleNexusLiveEvent(request, env);
 		}
 
+		if (request.method === "POST" && url.pathname === "/admin/test-notification") {
+			return await handleTestNotification(request, env);
+		}
+
 		return Response.json({error: "Not found"}, {status: 404});
 	},
 };
 
 async function handleNexusLiveEvent(request: Request, env: Env) {
-	const expectedToken = env.NEXUS_WEBHOOK_TOKEN;
-
-	if (!expectedToken) {
-		return Response.json({error: "NEXUS_WEBHOOK_TOKEN is not configured"}, {status: 500});
-	}
-
-	if (request.headers.get("Nexus-Token") !== expectedToken) {
-		return Response.json({error: "Invalid Nexus token"}, {status: 401});
+	const tokenResponse = verifyRequestToken(request, env);
+	if (tokenResponse) {
+		return tokenResponse;
 	}
 
 	let rawPayload: unknown;
@@ -122,6 +121,93 @@ async function handleNexusLiveEvent(request: Request, env: Env) {
 		notificationCount: plans.length,
 		results,
 	});
+}
+
+async function handleTestNotification(request: Request, env: Env) {
+	const tokenResponse = verifyRequestToken(request, env);
+	if (tokenResponse) {
+		return tokenResponse;
+	}
+
+	let rawPayload: unknown;
+
+	try {
+		rawPayload = await request.json();
+	} catch {
+		return Response.json({error: "Invalid JSON body"}, {status: 400});
+	}
+
+	if (!isTestNotificationPayload(rawPayload)) {
+		return Response.json({error: "Expected eventId and assignmentId string fields"}, {status: 400});
+	}
+
+	const payload = rawPayload as TestNotificationPayload;
+	const accessToken = await getFirestoreAccessToken(env);
+	const firestore = new FirestoreRestClient(
+		env.FIREBASE_PROJECT_ID,
+		accessToken,
+		globalThis.fetch.bind(globalThis),
+		firestoreBaseUrlForEnv(env),
+	);
+	const assignment = await firestore.getAssignment(payload.eventId, payload.assignmentId);
+
+	if (!assignment) {
+		return Response.json({error: "Assignment not found"}, {status: 404});
+	}
+
+	const tokens = await firestore.listMessagingTokens(assignment.scouterId);
+	const sendResult = await sendTestPushNotifications({
+		assignment,
+		queueingTeam: {
+			matchLabel: `Match ${assignment.matchNumber}`,
+			matchNumber: assignment.matchNumber,
+			teamNumber: assignment.teamNumber,
+			status: "Manual test",
+		},
+	}, tokens);
+
+	console.log("Processed manual test notification", {
+		eventId: payload.eventId,
+		assignmentId: payload.assignmentId,
+		scouterId: assignment.scouterId,
+		tokenCount: tokens.length,
+		...sendResult,
+	});
+
+	return Response.json({
+		ok: true,
+		eventId: payload.eventId,
+		assignmentId: payload.assignmentId,
+		scouterId: assignment.scouterId,
+		tokenCount: tokens.length,
+		...sendResult,
+	});
+}
+
+function verifyRequestToken(request: Request, env: Env) {
+	const expectedToken = env.NEXUS_WEBHOOK_TOKEN;
+
+	if (!expectedToken) {
+		return Response.json({error: "NEXUS_WEBHOOK_TOKEN is not configured"}, {status: 500});
+	}
+
+	if (request.headers.get("Nexus-Token") !== expectedToken) {
+		return Response.json({error: "Invalid Nexus token"}, {status: 401});
+	}
+
+	return null;
+}
+
+function isTestNotificationPayload(value: unknown): value is TestNotificationPayload {
+	if (!value || typeof value !== "object") {
+		return false;
+	}
+
+	const payload = value as Partial<TestNotificationPayload>;
+	return typeof payload.eventId === "string"
+		&& payload.eventId.length > 0
+		&& typeof payload.assignmentId === "string"
+		&& payload.assignmentId.length > 0;
 }
 
 async function getFirestoreAccessToken(env: Env) {

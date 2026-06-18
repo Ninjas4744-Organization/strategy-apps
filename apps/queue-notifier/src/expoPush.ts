@@ -19,10 +19,28 @@ export function buildExpoMessage(plan: PlannedNotification, token: string) {
 	};
 }
 
+export function buildTestExpoMessage(plan: PlannedNotification, token: string) {
+	return {
+		to: token,
+		sound: "default",
+		title: `Test: Match ${plan.assignment.matchNumber}`,
+		body: `Test notification for Team ${plan.assignment.teamNumber}.`,
+		data: {
+			type: "test-queueing-assignment",
+			eventId: plan.assignment.eventId,
+			assignmentId: plan.assignment.id,
+			matchNumber: plan.assignment.matchNumber,
+			matchLabel: plan.queueingTeam.matchLabel,
+			teamNumber: plan.assignment.teamNumber,
+		},
+	};
+}
+
 export async function sendPushNotifications(
 	plan: PlannedNotification,
 	tokens: MessagingTokenDocument[],
 	fetcher: Fetcher = fetch,
+	messageBuilder = buildExpoMessage,
 ): Promise<SendResult> {
 	const activeTokens = tokens.filter(token => !token.disabledAt);
 	const expoTokens = activeTokens.filter(token => token.provider === "expo");
@@ -35,7 +53,7 @@ export async function sendPushNotifications(
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify(expoTokens.map(token => buildExpoMessage(plan, token.token))),
+			body: JSON.stringify(expoTokens.map(token => messageBuilder(plan, token.token))),
 		});
 
 		if (!response.ok) {
@@ -48,4 +66,12 @@ export async function sendPushNotifications(
 		skippedNative: nativeTokens.length,
 		errors,
 	};
+}
+
+export async function sendTestPushNotifications(
+	plan: PlannedNotification,
+	tokens: MessagingTokenDocument[],
+	fetcher: Fetcher = fetch,
+) {
+	return await sendPushNotifications(plan, tokens, fetcher, buildTestExpoMessage);
 }

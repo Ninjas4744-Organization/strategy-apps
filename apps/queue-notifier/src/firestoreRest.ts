@@ -53,6 +53,23 @@ export class FirestoreRestClient {
 		);
 	}
 
+	async getAssignment(eventId: string, assignmentId: string): Promise<AssignmentDocument | null> {
+		const response = await this.fetcher(
+			`${this.baseUrl}/events/${encodeURIComponent(eventId)}/assignments/${encodeURIComponent(assignmentId)}`,
+			{
+				headers: this.authHeaders(),
+			},
+		);
+
+		if (response.status === 404) {
+			return null;
+		}
+
+		await assertOk(response, "read assignment");
+		const document = await response.json() as FirestoreDocument;
+		return assignmentFromDocument(eventId, document);
+	}
+
 	async listAssignments(eventId: string): Promise<AssignmentDocument[]> {
 		const response = await this.fetcher(`${this.baseUrl}/events/${encodeURIComponent(eventId)}/assignments`, {
 			headers: this.authHeaders(),

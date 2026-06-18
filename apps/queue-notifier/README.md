@@ -60,3 +60,17 @@ curl -i \
 
 If you replay the same sample, bump `dataAsOfTime` in the sample payload or delete the
 `nexusEventStates/2025isde1` document in the emulator UI.
+
+## Local Manual Notification Test
+
+Use this when a scouter is already assigned and you want to confirm their registered device receives pushes:
+
+```bash
+curl -i \
+  -X POST http://localhost:8787/admin/test-notification \
+  -H 'Content-Type: application/json' \
+  -H 'Nexus-Token: local-test-token' \
+  --data '{"eventId":"2025isde1","assignmentId":"match-24-team-4744"}'
+```
+
+This sends a clearly marked test notification and does not update the assignment's Nexus notification state.
