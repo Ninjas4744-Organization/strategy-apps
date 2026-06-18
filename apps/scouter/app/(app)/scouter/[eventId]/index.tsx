@@ -8,6 +8,8 @@ import {TouchableOpacity} from "react-native";
 import {games} from "@ninjas-strategy/frc-games";
 import pitStore from "@/lib/stores/pitStore";
 import assignmentsStore from "@/lib/stores/assignmentsStore";
+import eventActiveUsersStore from "@/lib/stores/eventActiveUsersStore";
+import userStore from "@/lib/stores/userStore";
 import styled from "styled-components/native";
 
 type GameInputFormData = {
@@ -37,6 +39,7 @@ export default observer(function ScouterIndex() {
 	const event = eventId ? eventsStore.events[eventId] : undefined;
 	const hasTeams = !!event?.teams?.length;
 	const hasPitScouting = !!(event && games[event.year]?.pitScoutingAttributes);
+	const canSubmitReports = !!userStore.user?.isAnonymous || (event?.active !== false && eventActiveUsersStore.isCurrentUserActive);
 
 	useEffect(() => {
 		if (!eventId || eventId === 'undefined') {
@@ -44,12 +47,31 @@ export default observer(function ScouterIndex() {
 		}
 
 		assignmentsStore.subscribeForScouter(eventId);
-		return () => assignmentsStore.unsubscribe();
+		eventActiveUsersStore.subscribeForEvent(eventId);
+		return () => {
+			assignmentsStore.unsubscribe();
+			eventActiveUsersStore.unsubscribe();
+		};
 	}, [eventId]);
+
+	const showReportsUnavailable = () => {
+		if (event?.active === false) {
+			showSnackbar('This event is closed for new reports.');
+			return;
+		}
+
+		if (!eventActiveUsersStore.isCurrentUserActive && !userStore.user?.isAnonymous) {
+			showSnackbar('You are not active for this event.');
+		}
+	};
 
 	const scoutGame = (data: GameInputFormData) => {
 		if (!eventId || eventId === 'undefined' || !event)
 			return;
+		if (!canSubmitReports) {
+			showReportsUnavailable();
+			return;
+		}
 		if (!hasTeams) {
 			showSnackbar('This event does not have teams loaded yet.');
 			return;
@@ -74,6 +96,10 @@ export default observer(function ScouterIndex() {
 	const scoutAssignedGame = (teamNumber: string, gameNumber: string) => {
 		if (!eventId || eventId === 'undefined' || !event || !gameNumber)
 			return;
+		if (!canSubmitReports) {
+			showReportsUnavailable();
+			return;
+		}
 
 		startGame(teamNumber, gameNumber, event.year);
 		router.push(`/scouter/${eventId}/game/0`);
@@ -82,6 +108,10 @@ export default observer(function ScouterIndex() {
 	const scoutPit = (data: PitInputFormData) => {
 		if (!eventId || eventId === 'undefined' || !event)
 			return;
+		if (!canSubmitReports) {
+			showReportsUnavailable();
+			return;
+		}
 		if (!hasTeams) {
 			showSnackbar('This event does not have teams loaded yet.');
 			return;
@@ -99,6 +129,19 @@ export default observer(function ScouterIndex() {
 	};
 
 	return <>
+		{!canSubmitReports && (
+			<MessageCard>
+				<Row>
+					<IconContainer>
+						<Icon name={event?.active === false ? "lock" : "person-off"} size={28} />
+					</IconContainer>
+					<AssignmentText>
+						<Title>{event?.active === false ? "Reports closed" : "You are inactive for this event"}</Title>
+						<Subtitle>{event?.active === false ? "Admins can still review stats, but new reports are disabled." : "Ask your team admin to activate you before scouting this event."}</Subtitle>
+					</AssignmentText>
+				</Row>
+			</MessageCard>
+		)}
 		{!hasTeams && (
 			<MessageCard>
 				<Row>
@@ -136,7 +179,7 @@ export default observer(function ScouterIndex() {
 				))}
 			</AssignmentsSection>
 		)}
-		<TouchableOpacity onPress={() => hasTeams ? setShowGameDialog(true) : showSnackbar('This event does not have teams loaded yet.')}>
+		<TouchableOpacity onPress={() => canSubmitReports ? hasTeams ? setShowGameDialog(true) : showSnackbar('This event does not have teams loaded yet.') : showReportsUnavailable()}>
 			<Card>
 				<Row>
 					<IconContainer>
@@ -148,7 +191,7 @@ export default observer(function ScouterIndex() {
 				</Row>
 			</Card>
 		</TouchableOpacity>
-		{hasPitScouting ? <TouchableOpacity onPress={() => hasTeams ? setShowPitDialog(true) : showSnackbar('This event does not have teams loaded yet.')}>
+		{hasPitScouting ? <TouchableOpacity onPress={() => canSubmitReports ? hasTeams ? setShowPitDialog(true) : showSnackbar('This event does not have teams loaded yet.') : showReportsUnavailable()}>
 			<Card>
 				<Row>
 					<IconContainer>

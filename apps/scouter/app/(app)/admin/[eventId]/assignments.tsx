@@ -2,11 +2,12 @@ import {useContext, useMemo, useState} from "react";
 import {ScrollView} from "react-native";
 import styled from "styled-components/native";
 import {observer} from "mobx-react-lite";
-import {BeautifulButton, CardSurface, FlexGrow, FormDialog, Icon, Row, SimpleButton, Subtitle, Title, appColors} from "@ninjas-strategy/ui";
+import {BeautifulButton, CardSurface, FlexGrow, FormDialog, Icon, Row, SimpleButton, Subtitle, Switch, Title, appColors} from "@ninjas-strategy/ui";
 import {EventContext, EventStore} from "@/lib/stores/eventStore";
 import eventsStore from "@/lib/stores/eventsStore";
 import assignmentsStore from "@/lib/stores/assignmentsStore";
 import teamUsersStore from "@/lib/stores/teamUsersStore";
+import eventActiveUsersStore from "@/lib/stores/eventActiveUsersStore";
 import {Loader} from "@/lib/components/Loader";
 import {type Assignment} from "@/lib/models/Assignment";
 
@@ -76,7 +77,12 @@ export default observer(function AssignmentsPage() {
 	const event = eventsStore.events[eventId];
 	const [showCreateDialog, setShowCreateDialog] = useState(false);
 
-	const scouterOptions = teamUsersStore.scouterOptions;
+	const activeUserIds = eventActiveUsersStore.activeUserIds;
+	const activeScouters = teamUsersStore.scouters.filter(scouter => activeUserIds.includes(scouter.id));
+	const scouterOptions = activeScouters.map(scouter => ({
+		label: scouter.name,
+		value: scouter.id,
+	}));
 	const hasScouters = scouterOptions.length > 0;
 
 	const fields = useMemo(() => [
@@ -99,7 +105,7 @@ export default observer(function AssignmentsPage() {
 			label: 'Scouter',
 			type: 'select' as const,
 			options: scouterOptions,
-			placeholder: hasScouters ? 'Choose scouter' : 'No scouters registered',
+			placeholder: hasScouters ? 'Choose scouter' : 'No active scouters',
 			rules: {required: true},
 			disabled: !hasScouters,
 		},
@@ -127,19 +133,42 @@ export default observer(function AssignmentsPage() {
 	return <>
 		<Loader subscribe={() => assignmentsStore.subscribeForEvent(eventId)} unsubscribe={assignmentsStore.unsubscribe} />
 		<Loader subscribe={teamUsersStore.subscribeForCurrentTeam} unsubscribe={teamUsersStore.unsubscribe} />
+		<Loader subscribe={() => eventActiveUsersStore.subscribeForEvent(eventId)} unsubscribe={eventActiveUsersStore.unsubscribe} />
 		<ScrollView>
 			<PageHeader>
 				<Title>Scouting Assignments</Title>
 				<Subtitle>{assignmentsStore.assignmentsList.length} assigned games</Subtitle>
 			</PageHeader>
+			<AssignmentCard>
+				<Title>Active Scouters</Title>
+				<Subtitle>Only active scouters can submit reports for this event.</Subtitle>
+				{teamUsersStore.scouters.length === 0 ? (
+					<Subtitle>Students need to register with the team member code first.</Subtitle>
+				) : teamUsersStore.scouters.map(scouter => {
+					const active = eventActiveUsersStore.activeUsers[scouter.id]?.active === true;
+
+					return (
+						<UserRow key={scouter.id}>
+							<Icon name={active ? "person" : "person-off"} size={22} />
+							<UserCopy>
+								<Title>{scouter.name}</Title>
+								<Subtitle>{scouter.id}</Subtitle>
+							</UserCopy>
+							<Switch
+								value={active}
+								onValueChange={nextActive => eventActiveUsersStore.setUserActive(eventId, scouter, nextActive)} />
+						</UserRow>
+					);
+				})}
+			</AssignmentCard>
 			<BeautifulButton
 				label="Assign scouter"
 				icon="person-add"
 				onPress={() => setShowCreateDialog(true)} />
 			{!hasScouters && (
 				<AssignmentCard>
-					<Title>No scouters registered yet</Title>
-					<Subtitle>Students need to register with the team member code before they can be assigned.</Subtitle>
+					<Title>No active scouters yet</Title>
+					<Subtitle>Turn on at least one scouter above before creating assignments.</Subtitle>
 				</AssignmentCard>
 			)}
 			{assignmentsStore.assignmentsList.length === 0 && hasScouters ? (
@@ -190,6 +219,16 @@ const AssignmentCard = styled(CardSurface)`
 	margin: 8px 16px;
 	padding: 14px;
 	gap: 8px;
+`;
+
+const UserRow = styled(Row)`
+	min-height: 58px;
+`;
+
+const UserCopy = styled.View`
+	flex: 1;
+	min-width: 0;
+	gap: 2px;
 `;
 
 const StatusPill = styled.View<{color: string}>`

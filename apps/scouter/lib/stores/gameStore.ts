@@ -60,6 +60,20 @@ class GameStore {
 			return false;
 		}
 		try {
+			const eventRef = doc(db, 'events', eventId);
+			const eventSnap = await getDoc(eventRef);
+			if (!eventSnap.exists() || eventSnap.data().active === false) {
+				showSnackbar('This event is closed for new reports.');
+				return false;
+			}
+
+			const activeUserRef = doc(db, 'events', eventId, 'activeUsers', userStore.user?.uid ?? '');
+			const activeUserSnap = await getDoc(activeUserRef);
+			if (!activeUserSnap.exists() || activeUserSnap.data().active !== true) {
+				showSnackbar('You are not active for this event.');
+				return false;
+			}
+
 			const teamRef = doc(db, 'events', eventId, 'teams', this.teamNumber);
 			const teamSnap = await getDoc(teamRef);
 			if (!teamSnap.exists())

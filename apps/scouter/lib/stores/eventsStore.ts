@@ -1,5 +1,5 @@
 import {action, makeObservable, observable, runInAction} from "mobx";
-import {collection, doc, DocumentData, QueryDocumentSnapshot, query, setDoc, where} from "firebase/firestore";
+import {collection, doc, DocumentData, QueryDocumentSnapshot, query, setDoc, updateDoc, where} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import {UserType} from "@/lib/interfaces/UserType";
 import {Event} from "@/lib/models/Event";
@@ -32,6 +32,7 @@ class EventsStore {
 			reset: action.bound,
 			applyEvents: action.bound,
 			createEvent: action.bound,
+			setEventActive: action.bound,
 		});
 	}
 
@@ -107,11 +108,21 @@ class EventsStore {
 			await setDoc(eventsRef, {
 				...eventData,
 				teams: teamsRes.data,
+				active: true,
 			});
 		} catch (e) {
 			showSnackbar(`Failed to create event: ${e}`);
 		} finally {
 			router.back();
+		}
+	}
+
+	async setEventActive(eventId: string, active: boolean) {
+		try {
+			await updateDoc(doc(db, 'events', eventId), {active});
+			showSnackbar(active ? 'Event reopened for reports.' : 'Event closed for new reports.');
+		} catch (e) {
+			showSnackbar(`Failed to update event: ${e}`);
 		}
 	}
 }

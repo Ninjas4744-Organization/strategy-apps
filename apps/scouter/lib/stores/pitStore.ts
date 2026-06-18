@@ -1,7 +1,7 @@
 import {action, makeObservable, observable} from "mobx";
 import {initPitData} from "@ninjas-strategy/frc-games";
 import {showSnackbar} from "@ninjas-strategy/ui";
-import {doc, serverTimestamp, setDoc} from "firebase/firestore";
+import {doc, getDoc, serverTimestamp, setDoc} from "firebase/firestore";
 import {db} from "@/lib/firebase/firestore";
 import userStore from "@/lib/stores/userStore";
 import {OfflineQueue} from "@/lib/OfflineQueue";
@@ -46,6 +46,20 @@ class PitStore {
 		}
 
 		try {
+			const eventRef = doc(db, 'events', eventId);
+			const eventSnap = await getDoc(eventRef);
+			if (!eventSnap.exists() || eventSnap.data().active === false) {
+				showSnackbar('This event is closed for new reports.');
+				return false;
+			}
+
+			const activeUserRef = doc(db, 'events', eventId, 'activeUsers', userStore.user?.uid ?? '');
+			const activeUserSnap = await getDoc(activeUserRef);
+			if (!activeUserSnap.exists() || activeUserSnap.data().active !== true) {
+				showSnackbar('You are not active for this event.');
+				return false;
+			}
+
 			const teamRef = doc(db, 'events', eventId, 'pit', teamNumber);
 			const data = Object.fromEntries(Object.entries(this.data).filter(([, value]) => !!value));
 			await setDoc(teamRef, {

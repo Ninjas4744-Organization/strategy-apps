@@ -10,6 +10,7 @@ export class Event implements Model {
 		public endDate: string,
 		public country: string,
 		public teams: string[],
+		public active: boolean,
 	) {}
 
 	static fromMap(id: string, data: Record<string, any>): Event {
@@ -21,6 +22,7 @@ export class Event implements Model {
 			data.end_date,
 			data.country,
 			data.teams,
+			data.active ?? true,
 		);
 	}
 
@@ -32,6 +34,7 @@ export class Event implements Model {
 			end_date: this.endDate,
 			country: this.country,
 			teams: this.teams,
+			active: this.active,
 		};
 	}
 }

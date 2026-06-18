@@ -1,21 +1,32 @@
-import {Card, HeaderButtons, Icon, Loading, Subtitle, Title} from "@ninjas-strategy/ui";
-import {ScrollView} from "react-native";
+import {HeaderButtons, Loading} from "@ninjas-strategy/ui";
 import {observer} from "mobx-react-lite";
 import {Href, Stack, useRouter} from "expo-router";
 import styled from "styled-components/native";
-import {EventItem} from "@/lib/components/EventItem";
 import userStore from "@/lib/stores/userStore";
 import eventsStore from "@/lib/stores/eventsStore";
 import {ScreenHeader} from "@/lib/components/ScreenHeader";
+import {EventsList} from "@/lib/components/EventsList";
+import eventReportAccessStore from "@/lib/stores/eventReportAccessStore";
+import {useEffect, useMemo} from "react";
 
 
 export default observer(function ScouterIndex() {
 	const {events, isLoading} = eventsStore;
 	const router = useRouter();
-	const {signOut} = userStore;
-	const eventsList = Object.values(events).filter(event => event.id && event.id !== 'undefined');
+	const {signOut, user} = userStore;
+	const allEventsList = useMemo(() => Object.values(events).filter(event => event.id && event.id !== 'undefined'), [events]);
+	const eventIds = useMemo(() => allEventsList.map(event => event.id), [allEventsList]);
+	const eventsList = allEventsList.filter(event =>
+		event.active !== false
+		&& (user?.isAnonymous || eventReportAccessStore.canReport(event.id))
+	);
 
-	if (isLoading)
+	useEffect(() => {
+		eventReportAccessStore.subscribeForEvents(eventIds);
+		return () => eventReportAccessStore.unsubscribe();
+	}, [eventIds, user?.uid, user?.isAnonymous]);
+
+	if (isLoading || eventReportAccessStore.isLoading)
 		return <Loading/>;
 
 	return (
@@ -24,23 +35,12 @@ export default observer(function ScouterIndex() {
 			<ScreenHeader
 				title="Events"
 				right={<HeaderButtons buttons={[{onPress: () => signOut().then(() => router.replace('/')), icon: 'logout'}]}/>} />
-			<EventsScroll>
-				{eventsList.length === 0 ? (
-					<EmptyState>
-						<Icon name="event-busy" size={44} />
-						<Title>No events available</Title>
-						<Subtitle>Your team does not have any scouting events yet.</Subtitle>
-					</EmptyState>
-				) : eventsList.map((event) => (
-					<EventItem
-						key={event.id}
-						onClick={() => {
-							if (!event.id || event.id === 'undefined') return;
-							router.push(`/scouter/${event.id}` as Href);
-						}}
-						{...event} />
-				))}
-			</EventsScroll>
+			<EventsList
+				events={eventsList}
+				onSelect={id => {
+					if (!id || id === 'undefined') return;
+					router.push(`/scouter/${id}` as Href);
+				}} />
 		</Container>
 	);
 });
@@ -48,17 +48,4 @@ export default observer(function ScouterIndex() {
 const Container = styled.View`
 	flex: 1;
 	background-color: transparent;
-`;
-
-const EventsScroll = styled(ScrollView).attrs({
-	style: {flex: 1, backgroundColor: 'transparent'},
-	contentContainerStyle: {flexGrow: 1},
-})`
-	flex: 1;
-	background-color: transparent;
-`;
-
-const EmptyState = styled(Card)`
-	justify-content: center;
-	gap: 8px;
 `;
