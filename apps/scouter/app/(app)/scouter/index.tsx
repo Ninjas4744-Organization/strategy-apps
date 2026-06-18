@@ -1,4 +1,4 @@
-import {HeaderButtons, Loading} from "@ninjas-strategy/ui";
+import {Card, HeaderButtons, Icon, Loading, Subtitle, Title} from "@ninjas-strategy/ui";
 import {ScrollView} from "react-native";
 import {observer} from "mobx-react-lite";
 import {Href, Stack, useRouter} from "expo-router";
@@ -13,6 +13,7 @@ export default observer(function ScouterIndex() {
 	const {events, isLoading} = eventsStore;
 	const router = useRouter();
 	const {signOut} = userStore;
+	const eventsList = Object.values(events).filter(event => event.id && event.id !== 'undefined');
 
 	if (isLoading)
 		return <Loading/>;
@@ -24,7 +25,13 @@ export default observer(function ScouterIndex() {
 				title="Events"
 				right={<HeaderButtons buttons={[{onPress: () => signOut().then(() => router.replace('/')), icon: 'logout'}]}/>} />
 			<EventsScroll>
-				{events && Object.values(events).filter(event => event.id && event.id !== 'undefined').map((event) => (
+				{eventsList.length === 0 ? (
+					<EmptyState>
+						<Icon name="event-busy" size={44} />
+						<Title>No events available</Title>
+						<Subtitle>Your team does not have any scouting events yet.</Subtitle>
+					</EmptyState>
+				) : eventsList.map((event) => (
 					<EventItem
 						key={event.id}
 						onClick={() => {
@@ -49,4 +56,9 @@ const EventsScroll = styled(ScrollView).attrs({
 })`
 	flex: 1;
 	background-color: transparent;
+`;
+
+const EmptyState = styled(Card)`
+	justify-content: center;
+	gap: 8px;
 `;

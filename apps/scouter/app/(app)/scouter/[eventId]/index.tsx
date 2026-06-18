@@ -35,6 +35,8 @@ export default observer(function ScouterIndex() {
 	const [showPitDialog, setShowPitDialog] = useState<boolean>(false);
 
 	const event = eventId ? eventsStore.events[eventId] : undefined;
+	const hasTeams = !!event?.teams?.length;
+	const hasPitScouting = !!(event && games[event.year]?.pitScoutingAttributes);
 
 	useEffect(() => {
 		if (!eventId || eventId === 'undefined') {
@@ -48,6 +50,10 @@ export default observer(function ScouterIndex() {
 	const scoutGame = (data: GameInputFormData) => {
 		if (!eventId || eventId === 'undefined' || !event)
 			return;
+		if (!hasTeams) {
+			showSnackbar('This event does not have teams loaded yet.');
+			return;
+		}
 
 		const teamNumber = normalizeNumberInput(data.teamNumber);
 		const gameNumber = normalizeNumberInput(data.gameNumber);
@@ -76,6 +82,10 @@ export default observer(function ScouterIndex() {
 	const scoutPit = (data: PitInputFormData) => {
 		if (!eventId || eventId === 'undefined' || !event)
 			return;
+		if (!hasTeams) {
+			showSnackbar('This event does not have teams loaded yet.');
+			return;
+		}
 
 		const teamNumber = normalizeNumberInput(data.teamNumber);
 		if (!isPositiveInteger(teamNumber) || !isEventTeam(teamNumber, event.teams)) {
@@ -89,6 +99,19 @@ export default observer(function ScouterIndex() {
 	};
 
 	return <>
+		{!hasTeams && (
+			<MessageCard>
+				<Row>
+					<IconContainer>
+						<Icon name="groups" size={28} />
+					</IconContainer>
+					<AssignmentText>
+						<Title>No teams available</Title>
+						<Subtitle>This event does not have a team list yet.</Subtitle>
+					</AssignmentText>
+				</Row>
+			</MessageCard>
+		)}
 		{assignmentsStore.assignmentsList.length > 0 && (
 			<AssignmentsSection>
 				<Title>Your Assigned Games</Title>
@@ -113,7 +136,7 @@ export default observer(function ScouterIndex() {
 				))}
 			</AssignmentsSection>
 		)}
-		<TouchableOpacity onPress={() => setShowGameDialog(true)}>
+		<TouchableOpacity onPress={() => hasTeams ? setShowGameDialog(true) : showSnackbar('This event does not have teams loaded yet.')}>
 			<Card>
 				<Row>
 					<IconContainer>
@@ -125,7 +148,7 @@ export default observer(function ScouterIndex() {
 				</Row>
 			</Card>
 		</TouchableOpacity>
-		{event && games[event.year]?.pitScoutingAttributes && <TouchableOpacity onPress={() => setShowPitDialog(true)}>
+		{hasPitScouting ? <TouchableOpacity onPress={() => hasTeams ? setShowPitDialog(true) : showSnackbar('This event does not have teams loaded yet.')}>
 			<Card>
 				<Row>
 					<IconContainer>
@@ -136,7 +159,19 @@ export default observer(function ScouterIndex() {
 					<Icon name="chevron-right" size={24}/>
 				</Row>
 			</Card>
-		</TouchableOpacity>}
+		</TouchableOpacity> : (
+			<MessageCard>
+				<Row>
+					<IconContainer>
+						<Icon name="info" size={28} />
+					</IconContainer>
+					<AssignmentText>
+						<Title>Pit scouting unavailable</Title>
+						<Subtitle>This game definition does not include a pit scouting form.</Subtitle>
+					</AssignmentText>
+				</Row>
+			</MessageCard>
+		)}
 		<FormDialog<GameInputFormData>
 			visible={showGameDialog}
 			onDismiss={() => setShowGameDialog(false)}
@@ -198,6 +233,11 @@ const AssignmentsSection = styled.View`
 `;
 
 const AssignmentCard = styled(CardSurface)`
+	margin: 8px 16px;
+	padding: 16px;
+`;
+
+const MessageCard = styled(CardSurface)`
 	margin: 8px 16px;
 	padding: 16px;
 `;

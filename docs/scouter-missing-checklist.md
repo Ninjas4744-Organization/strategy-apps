@@ -20,7 +20,7 @@ This checklist captures the current known gaps in the Scouter app after a light 
 
 ## Product Gaps
 
-- [ ] Add empty/error states for scouter event list, event detail, pit form unavailable, and no teams/no games.
+- [x] Add empty/error states for scouter event list, event detail, pit form unavailable, and no teams/no games.
 - [ ] Add confirmation before leaving an in-progress scouting form.
 - [ ] Add "saved offline / pending uploads" UI so scouters know data is queued.
 - [ ] Add admin controls for deleting/editing events, teams, games, pit data, and registration codes.
@@ -29,7 +29,7 @@ This checklist captures the current known gaps in the Scouter app after a light 
 
 ## UI And Forms
 
-- [ ] Implement select fields in shared forms. `packages/ui/components/form/FormInline.tsx` currently renders select as a disabled input with a TODO.
+- [x] Implement select fields in shared forms. `packages/ui/components/form/FormInline.tsx` currently renders select as a disabled input with a TODO.
 - [ ] Normalize loading indicators. Some screens return `null` or empty containers instead of a clear loading/error surface.
 - [ ] Check mobile layout of admin stat rows; several pages put multiple stat cards in one row.
 - [x] Remove unused variables/imports once lint works, for example registration code keyboard height state.
