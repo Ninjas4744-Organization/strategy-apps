@@ -36,6 +36,8 @@ bun run queue-notifier:dev
 
 ## Required Worker Secrets
 
+See [queue-notifier-deployment.md](../../docs/queue-notifier-deployment.md) for the full production runbook.
+
 Set these before deploying:
 
 ```bash

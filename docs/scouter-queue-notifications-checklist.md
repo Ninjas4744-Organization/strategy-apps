@@ -91,7 +91,7 @@ This checklist tracks the plan for notifying assigned scouters when their assign
 - [ ] Grant only the minimum roles needed for Firestore document access and FCM send.
 - [ ] Do not use project Owner/Admin credentials.
 - [ ] Store the private key only in Cloudflare Worker secrets.
-- [ ] Document key rotation steps.
+- [x] Document key rotation steps.
 - [ ] Confirm the service account can send FCM HTTP v1 messages.
 - [ ] Confirm the service account can read and update only the intended Firestore data in practice.
 
@@ -124,7 +124,7 @@ This checklist tracks the plan for notifying assigned scouters when their assign
 - [ ] Add a manual "refresh assigned games" or obvious fallback path in the scouter UI.
 - [ ] Add enough Worker logging to debug event-day issues quickly.
 - [ ] Add visible app messaging when notifications are disabled.
-- [ ] Document the manual fallback workflow for match assignment and queue reminders.
+- [x] Document the manual fallback workflow for match assignment and queue reminders.
 - [ ] Keep the first release focused on assigned match queue notifications only.
 
 ## Implementation Order
