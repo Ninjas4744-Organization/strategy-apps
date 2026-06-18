@@ -2,6 +2,12 @@
 
 This runbook deploys the Cloudflare Worker that receives `frc.nexus` live-event payloads and sends assignment notifications.
 
+Production Worker URL:
+
+```text
+https://the-ninja-scouter-notifier.kfiros.com
+```
+
 ## Production Shape
 
 - Firestore remains the source of truth for users, assignments, and push tokens.
@@ -71,7 +77,7 @@ Use an existing assignment whose scouter has an active token:
 
 ```bash
 curl -i \
-  -X POST https://YOUR_WORKER_URL/admin/test-notification \
+  -X POST https://the-ninja-scouter-notifier.kfiros.com/admin/test-notification \
   -H 'Content-Type: application/json' \
   -H 'Nexus-Token: YOUR_NEXUS_WEBHOOK_TOKEN' \
   --data '{"eventId":"2025isde1","assignmentId":"match-24-team-4744"}'
@@ -86,6 +92,14 @@ Register this URL with Nexus:
 ```text
 https://YOUR_WORKER_URL/nexus/live-event
 ```
+
+Current production URL:
+
+```text
+https://the-ninja-scouter-notifier.kfiros.com/nexus/live-event
+```
+
+Nexus sends a validation POST before saving the webhook. The Worker returns `200 OK` for token-valid validation probes even when the body is not a full live-event payload.
 
 Configure Nexus to send the same token stored in `NEXUS_WEBHOOK_TOKEN`.
 

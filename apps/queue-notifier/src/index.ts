@@ -41,11 +41,15 @@ async function handleNexusLiveEvent(request: Request, env: Env) {
 	try {
 		rawPayload = await request.json();
 	} catch {
-		return Response.json({error: "Invalid JSON body"}, {status: 400});
+		console.log("Ignoring Nexus live-event verification probe with invalid JSON");
+		return Response.json({ok: true, ignored: true, reason: "verification_probe"});
 	}
 
 	if (!isNexusLiveEventPayload(rawPayload)) {
-		return Response.json({error: "Invalid Nexus live event payload"}, {status: 400});
+		console.log("Ignoring Nexus live-event verification probe with non-live-event body", {
+			bodyType: typeof rawPayload,
+		});
+		return Response.json({ok: true, ignored: true, reason: "verification_probe"});
 	}
 
 	const payload = rawPayload as NexusLiveEventPayload;
