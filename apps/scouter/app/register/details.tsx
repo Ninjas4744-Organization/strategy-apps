@@ -6,7 +6,6 @@ import {updateProfile} from "firebase/auth";
 import {db} from "@/lib/firebase/firestore";
 import {doc, setDoc} from "firebase/firestore";
 import {z, ZodError} from "zod";
-import {View} from "react-native";
 import userStore from "@/lib/stores/userStore";
 import {observer} from "mobx-react-lite";
 import {KeyboardAwareScrollView} from "react-native-keyboard-controller";
@@ -31,10 +30,6 @@ const userSchema = z
 const Container = styled.View`
 	flex: 1;
 	padding: 24px;
-`;
-
-const BottomBar = styled(View)`
-	padding-top: 12px;
 `;
 
 export default observer(function RegistrationDetailsPage() {
@@ -65,16 +60,17 @@ export default observer(function RegistrationDetailsPage() {
 
 			router.replace("/");
 			showSnackbar("Welcome to Team " + teamNumber + "!");
-		}
-		catch (err: any) {
+		} catch (err: unknown) {
 			if (err instanceof ZodError) {
 				showSnackbar(err.errors[0].message);
-			} else {
+			} else if (err instanceof Error) {
 				console.error(err);
 				showSnackbar(err.message || "Failed to register");
+			} else {
+				console.error(err);
+				showSnackbar("Failed to register");
 			}
-		}
-		finally {
+		} finally {
 			setLoading(false);
 		}
 	};

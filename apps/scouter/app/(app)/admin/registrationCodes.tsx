@@ -38,7 +38,7 @@ export default observer(function RegistrationCodesPage() {
 	useEffect(() => {
 		subscribe();
 		return () => unsubscribe();
-	}, []);
+	}, [subscribe, unsubscribe]);
 
 	const filteredCodes = useMemo(() => {
 		const allCodes = Object.values(registrationCodes || {});
@@ -52,14 +52,14 @@ export default observer(function RegistrationCodesPage() {
 				code.membersCode.toLowerCase().includes(q) ||
 				code.adminsCode.toLowerCase().includes(q)
 		);
-	}, [isLoading, registrationCodes, debouncedQuery, registrationCodes]);
+	}, [registrationCodes, debouncedQuery]);
 
 	if (isLoading)
 		return <Loading />;
 
 	const createRegistrationCode = ({team}: RegistrationCodeFormData) => {
 		generateRegistrationCode(team);
-	}
+	};
 
 	return (
 		<Container>

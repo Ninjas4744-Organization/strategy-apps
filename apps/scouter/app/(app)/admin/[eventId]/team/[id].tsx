@@ -28,23 +28,34 @@ const HeaderButtons = styled(Row)`
 	margin: 0 10px;
 `;
 
+const MessageCard = styled(CardSurface)`
+	margin: 16px;
+	padding: 20px;
+`;
+
 export default observer(function () {
 	const {eventId, id} = useGlobalSearchParams();
 	const router = useRouter();
-	const {teams} = useContext(EventContext) as EventStore;
+	const {teams, isLoading, error} = useContext(EventContext) as EventStore;
 	const team = teams[Number.parseInt(id as string)];
-	const bestGame = team?.games.reduce((a, b) => a.totalScore > b.totalScore ? a : b);
+	const bestGame = team?.games.length ? team.games.reduce((a, b) => a.totalScore > b.totalScore ? a : b) : undefined;
 	const {events} = eventsStore;
-
-	const game = games[events[eventId as string].year];
+	const event = events[eventId as string];
+	const game = event ? games[event.year] : undefined;
 
 	useEffect(() => {
 		team?.subscribe();
 		return () => team?.unsubscribe();
 	}, [team]);
 
-	if (!team) {
-		return <Container />;
+	if (!team || !event || !game) {
+		return <Container>
+			<Stack.Screen options={{title: `Team ${id}`}} />
+			<MessageCard>
+				<Title>{isLoading ? 'Loading team' : 'Team unavailable'}</Title>
+				{!isLoading && <Title>{error ?? 'This team or event could not be loaded.'}</Title>}
+			</MessageCard>
+		</Container>;
 	}
 
 	return <Container>
@@ -70,7 +81,7 @@ export default observer(function () {
 				<Row>
 					<StatItem icon="sports-esports" value={team.games.length} title="Games"/>
 					<StatItem icon="trending-up" value={team.averageTotalScore.toFixed(1)} title="Avg Score"/>
-					<StatItem icon="emoji-events" value={bestGame.totalScore} title="Best Score"/>
+					<StatItem icon="emoji-events" value={bestGame?.totalScore ?? 0} title="Best Score"/>
 					<StatItem icon="speed" value={(team.consistencyScore * 100).toFixed(1) + '%'} title="Consistency"/>
 				</Row>
 				<BeautifulButton label="Click here to view insights" icon="lightbulb" onPress={() => router.push(`/admin/${eventId}/breakdown/${id}` as Href)} />

@@ -13,7 +13,7 @@ export default observer(function ScouterEvent() {
 	const eventId = Array.isArray(eventIdParam) ? eventIdParam[0] : eventIdParam;
 	const teamNum = Array.isArray(teamNumParam) ? teamNumParam[0] : teamNumParam;
 	const event = eventId ? eventsStore.events[eventId] : undefined;
-	const game = event ? games[event?.year!] : null;
+	const game = event ? games[event.year] : null;
 	const {pitScoutingAttributes} = game || {};
 	const {data, updateValue} = pitStore;
 

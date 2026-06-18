@@ -4,15 +4,15 @@ This checklist captures the current known gaps in the Scouter app after a light 
 
 ## Must Fix
 
-- [ ] Fix lint/TypeScript validation setup. `expo lint` fails because `.eslintrc.cjs` points to root `./tsconfig.json`, but this repo only has app/package tsconfigs.
-- [ ] Guard admin team pages against unloaded or empty teams. `apps/scouter/app/(app)/admin/[eventId]/team/[id].tsx` can reduce an empty `team.games` array and dereference a missing `bestGame`.
-- [ ] Add loading/not-found states for analytics pages. `apps/scouter/app/(app)/admin/[eventId]/analytics/[id].tsx` assumes `team` exists before reading `team.games`.
-- [ ] Fix team/event store permission and loading behavior. `apps/scouter/lib/stores/eventStore.ts` returns early for non-app-admin users without clearing loading or showing permission feedback.
-- [ ] Validate missing event/game data before rendering. Several screens assume `events[eventId]` and `games[event.year]` exist.
+- [x] Fix lint/TypeScript validation setup. `expo lint` fails because `.eslintrc.cjs` points to root `./tsconfig.json`, but this repo only has app/package tsconfigs.
+- [x] Guard admin team pages against unloaded or empty teams. `apps/scouter/app/(app)/admin/[eventId]/team/[id].tsx` can reduce an empty `team.games` array and dereference a missing `bestGame`.
+- [x] Add loading/not-found states for analytics pages. `apps/scouter/app/(app)/admin/[eventId]/analytics/[id].tsx` assumes `team` exists before reading `team.games`.
+- [x] Fix team/event store permission and loading behavior. `apps/scouter/lib/stores/eventStore.ts` returns early for non-app-admin users without clearing loading or showing permission feedback.
+- [x] Validate missing event/game data before rendering. Several screens assume `events[eventId]` and `games[event.year]` exist.
 
 ## Data Integrity
 
-- [ ] Clear stale subscription state before repopulating collections in `EventStore` and `RegistrationCodesStore`.
+- [x] Clear stale subscription state before repopulating collections in `EventStore` and `RegistrationCodesStore`.
 - [ ] Decide whether registration codes are one-time-use, revocable, or reusable forever.
 - [ ] Improve offline queue metadata and retry behavior. Failed retries can lose whether an item was game or pit data.
 - [ ] Add duplicate protection for match submissions so the same team/game does not overwrite silently.
@@ -32,7 +32,7 @@ This checklist captures the current known gaps in the Scouter app after a light 
 - [ ] Implement select fields in shared forms. `packages/ui/components/form/FormInline.tsx` currently renders select as a disabled input with a TODO.
 - [ ] Normalize loading indicators. Some screens return `null` or empty containers instead of a clear loading/error surface.
 - [ ] Check mobile layout of admin stat rows; several pages put multiple stat cards in one row.
-- [ ] Remove unused variables/imports once lint works, for example registration code keyboard height state.
+- [x] Remove unused variables/imports once lint works, for example registration code keyboard height state.
 
 ## Nice Next
 

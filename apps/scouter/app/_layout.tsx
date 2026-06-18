@@ -22,7 +22,12 @@ if (!__DEV__) {
 	});
 }
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
+
+type RegisterDetailsRouteParams = {
+	userType?: UserType;
+	teamNumber?: string | number;
+};
 
 export default observer(function Root() {
 	const {appTheme} = useThemeBundle();
@@ -70,9 +75,13 @@ const RootNavigator = observer(function () {
 						<Stack.Screen name="register/enter-code" options={{headerTitle: 'Register', headerBackButtonDisplayMode: 'minimal'}}/>
 						<Stack.Screen
 							name="register/details"
-							options={({route}) => ({
-								headerTitle: `Register as ${(route.params as Record<string, any>).userType === UserType.SCOUTER ? 'scout' : 'admin'} for team ${(route.params as Record<string, any>).teamNumber}`,
-							})}/>
+							options={({route}) => {
+								const params = (route.params ?? {}) as RegisterDetailsRouteParams;
+
+								return {
+									headerTitle: `Register as ${params.userType === UserType.SCOUTER ? 'scout' : 'admin'} for team ${params.teamNumber ?? ''}`,
+								};
+							}}/>
 					</Stack.Protected>
 					<Stack.Protected guard={!!user}>
 						<Stack.Screen name="(app)" options={{gestureEnabled: false, headerShown: false}}/>

@@ -43,7 +43,7 @@ export default observer(function ScouterIndex() {
 		if (!eventId || eventId === 'undefined' || !event)
 			return;
 
-		startGame(data.teamNumber, data.gameNumber, event?.year!);
+		startGame(data.teamNumber, data.gameNumber, event.year);
 		setShowGameDialog(false);
 		router.push(`/scouter/${eventId}/game/0`);
 	};
@@ -61,7 +61,7 @@ export default observer(function ScouterIndex() {
 			return;
 
 		setShowPitDialog(false);
-		startPit(event?.year!);
+		startPit(event.year);
 		router.push(`/scouter/${eventId}/pit/${data.teamNumber}` as Href);
 	};
 
@@ -102,7 +102,7 @@ export default observer(function ScouterIndex() {
 				</Row>
 			</Card>
 		</TouchableOpacity>
-		{games[event?.year!]?.pitScoutingAttributes && <TouchableOpacity onPress={() => setShowPitDialog(true)}>
+		{event && games[event.year]?.pitScoutingAttributes && <TouchableOpacity onPress={() => setShowPitDialog(true)}>
 			<Card>
 				<Row>
 					<IconContainer>

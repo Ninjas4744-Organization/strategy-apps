@@ -1,9 +1,8 @@
 import {observer} from "mobx-react-lite";
-import {BreakdownRow, BreakdownSection} from '@/lib/components/admin/detailed/Breakdown';
+import {BreakdownSection} from '@/lib/components/admin/detailed/Breakdown';
 import {useGlobalSearchParams} from "expo-router";
-import {appColors} from "@ninjas-strategy/ui";
 import {ScoreTrend} from '@/lib/components/admin/analytics/ScoreTrend';
-import {BodyScroll, FocusWrapper, Subtitle, Card, CardTitle} from "@ninjas-strategy/ui";
+import {BodyScroll, FocusWrapper} from "@ninjas-strategy/ui";
 import {useContext} from "react";
 import {EventContext, EventStore} from "@/lib/stores/eventStore";
 import {Team} from "@ninjas-strategy/frc-games";

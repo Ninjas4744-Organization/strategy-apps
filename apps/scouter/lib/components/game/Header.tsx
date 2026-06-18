@@ -75,7 +75,7 @@ export const Header = observer(({route}: HeaderProps) => {
 				<Title>Now Scouting Team {teamNumber}</Title>
 				<Subtitle>{event.name}</Subtitle>
 			</TextSection>
-			{page < yearGame.pages.length - 1 && <NextPageIconContainer onPress={() => router.push(`/scouter/${eventId}/game/${page + 1}` as Href)}>
+			{yearGame && page < yearGame.pages.length - 1 && <NextPageIconContainer onPress={() => router.push(`/scouter/${eventId}/game/${page + 1}` as Href)}>
 				<PageIcon name="arrow-forward"/>
 			</NextPageIconContainer>}
 		</>}

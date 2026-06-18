@@ -35,7 +35,15 @@ export default observer(function TeleopPage() {
 	}
 
 	const game = games[event.year];
+	if (!game) {
+		return <Container />;
+	}
+
 	const page = game.pages[parseInt(pageNum as string)];
+	if (!page) {
+		return <Container />;
+	}
+
 	const isLastPage = parseInt(pageNum as string) === game.pages.length - 1;
 
 	return <KeyboardAvoidingView
@@ -48,7 +56,7 @@ export default observer(function TeleopPage() {
 				icon={page.icon}/>
 			<KeyboardAwareScrollView ScrollViewComponent={BodyScroll}>
 				<GameForm
-					{...games[event.year]}
+					{...game}
 					pageNum={parseInt(pageNum as string)}
 					data={data}
 					setData={(key, value) => updateValue(key, value)} />

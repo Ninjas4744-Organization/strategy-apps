@@ -83,6 +83,26 @@ const SandboxBadge = styled.View`
 	background-color: ${({theme}) => theme.inputBackground};
 `;
 
+const getErrorMessage = (error: unknown, fallback: string) => {
+	if (error instanceof Error) {
+		return error.message || fallback;
+	}
+
+	if (typeof error === 'object' && error && 'message' in error && typeof error.message === 'string') {
+		return error.message || fallback;
+	}
+
+	return fallback;
+};
+
+const getErrorCode = (error: unknown) => {
+	if (typeof error === 'object' && error && 'code' in error && typeof error.code === 'string') {
+		return error.code;
+	}
+
+	return undefined;
+};
+
 const LoginForm = observer(() => {
 	const {signIn, user, signOut, demoSignIn} = userStore;
 	const [email, setEmail] = useState('');
@@ -114,15 +134,16 @@ const LoginForm = observer(() => {
 			setEmail('');
 			setPassword('');
 			router.replace('/(app)');
-		} catch (e: any) {
-			if (e.code === 'auth/invalid-email')
+		} catch (e: unknown) {
+			const errorCode = getErrorCode(e);
+			if (errorCode === 'auth/invalid-email')
 				showSnackbar('Invalid email');
-			else if (e.code === 'auth/missing-password')
+			else if (errorCode === 'auth/missing-password')
 				showSnackbar('Please type a password');
-			else if (e.code === 'auth/invalid-credential')
+			else if (errorCode === 'auth/invalid-credential')
 				showSnackbar('Incorrect password');
 			else
-				showSnackbar(e.message);
+				showSnackbar(getErrorMessage(e, 'Failed to log in'));
 		}
 	};
 
@@ -132,10 +153,10 @@ const LoginForm = observer(() => {
 				await signOut();
 			await demoSignIn();
 			router.replace('/(app)');
-		} catch (e: any) {
-			showSnackbar(e.message);
+		} catch (e: unknown) {
+			showSnackbar(getErrorMessage(e, 'Failed to start demo'));
 		}
-	}
+	};
 
 	const handleSandboxLogin = async (sandboxEmail: string) => {
 		if (isSandboxSigningIn)
@@ -148,8 +169,8 @@ const LoginForm = observer(() => {
 				await signOut();
 			await signIn(sandboxEmail, sandboxUserPassword);
 			router.replace('/(app)');
-		} catch (e: any) {
-			showSnackbar(e.message);
+		} catch (e: unknown) {
+			showSnackbar(getErrorMessage(e, 'Failed to log in'));
 		} finally {
 			setIsSandboxSigningIn(false);
 		}

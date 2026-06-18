@@ -107,12 +107,6 @@ export default observer(function AssignmentsPage() {
 
 	const createAssignment = (data: AssignmentFormData) => {
 		const scouter = teamUsersStore.users[data.scouterId];
-		console.log('[AssignmentsPage] createAssignment:submit', {
-			eventId,
-			formData: data,
-			scouter,
-			scouterOptions,
-		});
 		if (!scouter) {
 			console.warn('[AssignmentsPage] createAssignment:missingScouter', {
 				eventId,

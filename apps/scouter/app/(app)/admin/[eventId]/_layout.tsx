@@ -17,7 +17,7 @@ export default observer(function EventLayout() {
 	useEffect(() => {
 		subscribe();
 		return () => unsubscribe();
-	}, [eventStore, event?.id]);
+	}, [eventStore, event?.id, subscribe, unsubscribe]);
 
 	if (!eventIdString || eventIdString === 'undefined') {
 		return <Redirect href="/(app)/admin" />;

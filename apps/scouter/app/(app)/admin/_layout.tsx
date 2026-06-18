@@ -13,10 +13,9 @@ export default observer(function AdminLayout() {
 	useEffect(() => {
 		subscribe();
 		return () => unsubscribe();
-	}, [user?.uid, user?.isAnonymous, userData?.type, userData?.team]);
+	}, [subscribe, unsubscribe, user?.uid, user?.isAnonymous, userData?.type, userData?.team]);
 
-	if (!user?.isAnonymous)
-	{
+	if (!user?.isAnonymous) {
 		if (isProfileLoading || !userData) {
 			return <Loading/>;
 		}

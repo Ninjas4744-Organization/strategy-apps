@@ -9,7 +9,7 @@ import {StatItem} from "@/lib/components/admin/StatItem";
 import {Tabs} from "@/lib/components/admin/Tabs";
 import {useContext} from "react";
 import {EventContext, EventStore} from "@/lib/stores/eventStore";
-import {CardSurface} from "@ninjas-strategy/ui";
+import {CardSurface, Title} from "@ninjas-strategy/ui";
 
 const Container = styled.SafeAreaView`
 	background-color: transparent;
@@ -26,10 +26,25 @@ const PageHeader = styled(CardSurface)`
 	align-items: center;
 `;
 
+const MessageCard = styled(CardSurface)`
+	margin: 16px;
+	padding: 20px;
+`;
+
 export default observer(function () {
 	const {id} = useLocalSearchParams();
-	const {teams} = useContext(EventContext) as EventStore;
+	const {teams, isLoading, error} = useContext(EventContext) as EventStore;
 	const team = teams[Number.parseInt(id as string)];
+
+	if (!team) {
+		return <Container>
+			<Stack.Screen options={{ title: `Team ${id} Analytics` }} />
+			<MessageCard>
+				<Title>{isLoading ? 'Loading analytics' : 'Analytics unavailable'}</Title>
+				{!isLoading && <Title>{error ?? 'This team could not be loaded.'}</Title>}
+			</MessageCard>
+		</Container>;
+	}
 
 	return <Container>
 		<Stack.Screen options={{ title: `Team ${id} Analytics` }} />

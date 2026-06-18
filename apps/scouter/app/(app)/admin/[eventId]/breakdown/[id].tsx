@@ -1,7 +1,6 @@
 import {Href, Stack, useGlobalSearchParams, useRouter} from "expo-router";
 import {observer} from "mobx-react-lite";
 import styled from "styled-components/native";
-import {StatItem} from "@/lib/components/admin/StatItem";
 import {Subtitle, Title, Row, Icon, SimpleButton, CardSurface} from "@ninjas-strategy/ui";
 import {Insight} from "@/lib/interfaces/Insight";
 import {Tabs} from "@/lib/components/admin/Tabs";
@@ -44,7 +43,6 @@ export default observer(function () {
 	const router = useRouter();
 	const {teams} = useContext(EventContext) as EventStore;
 	const team = teams[Number.parseInt(id as string)];
-	const bestGame = team.games.reduce((a, b) => a.totalScore > b.totalScore ? a : b);
 
 	return <Container>
 		<Stack.Screen

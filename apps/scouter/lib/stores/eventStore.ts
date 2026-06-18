@@ -45,6 +45,12 @@ export class EventStore {
 		this.error = undefined;
 	}
 
+	private fail(message: string) {
+		this.teams = {};
+		this.error = message;
+		this._isLoading = false;
+	}
+
 	async subscribe() {
 		if (this.subscription) {
 			this.subscription.unsubscribe();
@@ -57,17 +63,18 @@ export class EventStore {
 		}
 
 		if (userStore.userData?.type !== UserType.APP_ADMIN && !userStore.user?.isAnonymous) {
-			this.reset();
+			this.fail('You do not have permission to view this event.');
 			return;
 		}
 
 		const event = eventsStore.events[this.eventId];
 		if (!event) {
-			this.reset();
+			this.fail('Event not found.');
 			return;
 		}
 
 		this._isLoading = true;
+		this.error = undefined;
 		const $teams = observeCollection(collection(db, 'events', this.eventId, 'teams'));
 		this.subscription = $teams.subscribe({
 			next: teams => {

@@ -13,7 +13,7 @@ export default observer(function ScouterLayout() {
 	useEffect(() => {
 		subscribe();
 		return () => unsubscribe();
-	}, [user?.uid, user?.isAnonymous, userData?.type, userData?.team]);
+	}, [subscribe, unsubscribe, user?.uid, user?.isAnonymous, userData?.type, userData?.team]);
 
 	if (!user?.isAnonymous && (isProfileLoading || !userData))
 		return <Loading />;

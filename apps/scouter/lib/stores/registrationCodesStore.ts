@@ -23,14 +23,23 @@ class RegistrationCodesStore {
 			registrationCodes: observable.ref,
 			subscribe: action.bound,
 			unsubscribe: action.bound,
+			reset: action.bound,
 			generateRegistrationCode: action.bound,
 		});
+	}
+
+	reset() {
+		this.registrationCodes = {};
+		this.isLoading = false;
 	}
 
 	async subscribe() {
 		if (this.subscription) {
 			this.subscription.unsubscribe();
+			this.subscription = null;
 		}
+
+		this.reset();
 
 		if (userStore.userData?.type !== UserType.APP_ADMIN)
 			return;
@@ -38,17 +47,25 @@ class RegistrationCodesStore {
 		this.isLoading = true;
 
 		const $registrationCodes = observeCollection(collection(db, 'registration_codes'));
-		this.subscription = $registrationCodes.subscribe(registrationCodes => {
-			runInAction(() => {
-				const nextRegistrationCodes: RegistrationCodes = {};
-				for (const registrationCodeDoc of registrationCodes) {
-					const registrationCodeData = registrationCodeDoc.data();
-					const registrationCode = RegistrationCode.fromMap(registrationCodeDoc.id, registrationCodeData);
-					nextRegistrationCodes[registrationCode.id] = registrationCode;
-				}
-				this.registrationCodes = nextRegistrationCodes;
-				this.isLoading = false;
-			})
+		this.subscription = $registrationCodes.subscribe({
+			next: registrationCodes => {
+				runInAction(() => {
+					const nextRegistrationCodes: RegistrationCodes = {};
+					for (const registrationCodeDoc of registrationCodes) {
+						const registrationCodeData = registrationCodeDoc.data();
+						const registrationCode = RegistrationCode.fromMap(registrationCodeDoc.id, registrationCodeData);
+						nextRegistrationCodes[registrationCode.id] = registrationCode;
+					}
+					this.registrationCodes = nextRegistrationCodes;
+					this.isLoading = false;
+				});
+			},
+			error: error => {
+				showSnackbar(`Failed to load registration codes: ${error.message}`);
+				runInAction(() => {
+					this.reset();
+				});
+			},
 		});
 	}
 
@@ -57,6 +74,7 @@ class RegistrationCodesStore {
 			this.subscription.unsubscribe();
 		}
 		this.subscription = null;
+		this.reset();
 	}
 
 	async generateRegistrationCode(team: number) {

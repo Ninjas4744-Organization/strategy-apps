@@ -45,21 +45,27 @@ const FlexGrow = styled.View`
 export default observer(function CompareScreen() {
 	const [showAddTeamDialog, setShowAddTeamDialog] = useState(false);
 	const {eventId, id} = useLocalSearchParams<{ eventId: string, id: string }>();
-	const [teamIds, setTeamIds] = useState<string[]>([id])
+	const [teamIds, setTeamIds] = useState<string[]>([id]);
 	const {teams} = useContext(EventContext) as EventStore;
 	const comparisonTeams = useMemo(() => teamIds.map(id => teams[Number.parseInt(id as string)]).filter(t => t), [teamIds, teams]);
 
 	const {events} = eventsStore;
-	const game = games[events[eventId as string].year];
+	const event = events[eventId as string];
+	const game = event ? games[event.year] : undefined;
+	const sections = useMemo(() => game?.mainPageSections ?? [], [game]);
 
-	const [shownSections, setShownSections] = useState<{[label: string]: boolean}>(() => game.mainPageSections.reduce((acc, section) => ({
-		...acc,
-		[section.title]: true,
-	}), {}));
+	const [shownSections, setShownSections] = useState<{[label: string]: boolean}>({});
+
+	useEffect(() => {
+		setShownSections(current => sections.reduce((acc, section) => ({
+			...acc,
+			[section.title]: current[section.title] ?? true,
+		}), {}));
+	}, [sections]);
 
 	const leaders = useMemo(() => {
 		const leadingTeams: {[key: string]: number} = {};
-		for (const section of game.mainPageSections) {
+		for (const section of sections) {
 			for (const card of section.cards) {
 				let leader: number | null = null;
 				let currentMax = -Infinity;
@@ -76,7 +82,7 @@ export default observer(function CompareScreen() {
 			}
 		}
 		return leadingTeams;
-	}, [comparisonTeams, game]);
+	}, [comparisonTeams, sections]);
 
 	useEffect(() => {
 		comparisonTeams.forEach(team => team.subscribe());
@@ -88,6 +94,16 @@ export default observer(function CompareScreen() {
 			setTeamIds(ids => [...ids, team]);
 		}
 		setShowAddTeamDialog(false);
+	};
+
+	if (!event || !game) {
+		return <Container>
+			<Stack.Screen options={{title: 'Compare Teams'}} />
+			<Card>
+				<Title>Comparison unavailable</Title>
+				<Subtitle>This event or game definition could not be loaded.</Subtitle>
+			</Card>
+		</Container>;
 	}
 
 	return (
@@ -110,7 +126,7 @@ export default observer(function CompareScreen() {
 				</Row>
 			</Card>
 			<ScrollView>
-				{game.mainPageSections.map((section, index) => (
+				{sections.map((section, index) => (
 					<Animated.View layout={LinearTransition} key={'section-' + index}>
 						<Card>
 							<Row>
@@ -148,7 +164,7 @@ export default observer(function CompareScreen() {
 						label: "Team",
 						type: 'team',
 						rules: {required: true},
-						teams: events[eventId as string].teams,
+						teams: event.teams,
 					}
 				]} />
 		</Container>
