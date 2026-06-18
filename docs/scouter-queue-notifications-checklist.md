@@ -48,7 +48,7 @@ This checklist tracks the plan for notifying assigned scouters when their assign
 - [x] Add a scouter "My assigned games" view.
 - [x] Add a "Start scouting" action from an assignment.
 - [x] Pre-fill team number and match number when starting from an assignment.
-- [ ] Show assignment status: assigned, queueing/notified, completed.
+- [x] Show assignment status: assigned, queueing/notified, completed.
 
 ## Firestore Rules
 

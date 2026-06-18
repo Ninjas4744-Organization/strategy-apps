@@ -2,17 +2,72 @@ import {useContext, useMemo, useState} from "react";
 import {ScrollView} from "react-native";
 import styled from "styled-components/native";
 import {observer} from "mobx-react-lite";
-import {BeautifulButton, CardSurface, FlexGrow, FormDialog, Icon, Row, SimpleButton, Subtitle, Title} from "@ninjas-strategy/ui";
+import {BeautifulButton, CardSurface, FlexGrow, FormDialog, Icon, Row, SimpleButton, Subtitle, Title, appColors} from "@ninjas-strategy/ui";
 import {EventContext, EventStore} from "@/lib/stores/eventStore";
 import eventsStore from "@/lib/stores/eventsStore";
 import assignmentsStore from "@/lib/stores/assignmentsStore";
 import teamUsersStore from "@/lib/stores/teamUsersStore";
 import {Loader} from "@/lib/components/Loader";
+import {type Assignment} from "@/lib/models/Assignment";
 
 type AssignmentFormData = {
 	teamNumber: string;
 	matchNumber: string | number;
 	scouterId: string;
+};
+
+type AssignmentStatus = "assigned" | "notified" | "failed";
+
+const assignmentStatus = (assignment: Assignment): AssignmentStatus => {
+	if (assignment.notificationError) {
+		return "failed";
+	}
+
+	if (assignment.notifiedAt) {
+		return "notified";
+	}
+
+	return "assigned";
+};
+
+const assignmentStatusLabel = (status: AssignmentStatus) => {
+	switch (status) {
+		case "failed":
+			return "Failed";
+		case "notified":
+			return "Notified";
+		case "assigned":
+			return "Assigned";
+	}
+};
+
+const assignmentStatusColor = (status: AssignmentStatus) => {
+	switch (status) {
+		case "failed":
+			return appColors.red500;
+		case "notified":
+			return appColors.green500;
+		case "assigned":
+			return appColors.blue500;
+	}
+};
+
+const assignmentStatusDetail = (assignment: Assignment) => {
+	if (assignment.notificationError) {
+		return assignment.notificationResult
+			? `Last send failed: ${assignment.notificationResult}`
+			: "Last send failed";
+	}
+
+	if (assignment.notifiedAt) {
+		return `Notified ${assignment.notifiedAt.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}`;
+	}
+
+	if (assignment.lastNexusStatus) {
+		return `Last Nexus status: ${assignment.lastNexusStatus}`;
+	}
+
+	return "Waiting for queue notification";
 };
 
 export default observer(function AssignmentsPage() {
@@ -98,20 +153,30 @@ export default observer(function AssignmentsPage() {
 					<Title>No assignments yet</Title>
 					<Subtitle>Create assignments for upcoming matches, then scouters will see them in their event screen.</Subtitle>
 				</AssignmentCard>
-			) : assignmentsStore.assignmentsList.map(assignment => (
-				<AssignmentCard key={assignment.id}>
-					<Row>
-						<Icon name="sports-esports" size={24} />
-						<Title>{assignment.matchTitle}</Title>
-						<FlexGrow />
-						<SimpleButton onPress={() => assignmentsStore.deleteAssignment(eventId, assignment.id)}>
-							<Icon name="delete" size={22} />
-						</SimpleButton>
-					</Row>
-					<Subtitle>Team {assignment.teamNumber} • {assignment.scouterName}</Subtitle>
-					<Subtitle>{assignment.notifiedAt ? 'Notified' : 'Not notified yet'}</Subtitle>
-				</AssignmentCard>
-			))}
+			) : assignmentsStore.assignmentsList.map(assignment => {
+				const status = assignmentStatus(assignment);
+
+				return (
+					<AssignmentCard key={assignment.id}>
+						<Row>
+							<Icon name="sports-esports" size={24} />
+							<Title>{assignment.matchTitle}</Title>
+							<StatusPill color={assignmentStatusColor(status)}>
+								<StatusText>{assignmentStatusLabel(status)}</StatusText>
+							</StatusPill>
+							<FlexGrow />
+							<SimpleButton onPress={() => assignmentsStore.deleteAssignment(eventId, assignment.id)}>
+								<Icon name="delete" size={22} />
+							</SimpleButton>
+						</Row>
+						<Subtitle>Team {assignment.teamNumber} • {assignment.scouterName}</Subtitle>
+						<Subtitle>{assignmentStatusDetail(assignment)}</Subtitle>
+						{assignment.notificationError ? (
+							<ErrorText numberOfLines={3}>{assignment.notificationError}</ErrorText>
+						) : null}
+					</AssignmentCard>
+				);
+			})}
 		</ScrollView>
 		<FormDialog<AssignmentFormData>
 			visible={showCreateDialog}
@@ -131,4 +196,21 @@ const AssignmentCard = styled(CardSurface)`
 	margin: 8px 16px;
 	padding: 14px;
 	gap: 8px;
+`;
+
+const StatusPill = styled.View<{color: string}>`
+	background-color: ${({color}) => `${color}22`};
+	border: 1px solid ${({color}) => `${color}88`};
+	border-radius: 999px;
+	padding: 4px 10px;
+`;
+
+const StatusText = styled.Text`
+	color: ${({theme}) => theme.text};
+	font-size: 12px;
+	font-weight: 700;
+`;
+
+const ErrorText = styled(Subtitle)`
+	color: ${appColors.red500};
 `;
