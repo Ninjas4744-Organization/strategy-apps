@@ -6,8 +6,8 @@
 		"strict": true,
 		"noEmit": true,
 		"skipLibCheck": true,
-		"lib": ["ES2022", "WebWorker"]
+		"lib": ["ES2022", "WebWorker"],
+		"types": ["bun-types"]
 	},
 	"include": ["src/**/*.ts"],
-	"exclude": ["src/**/*.test.ts"]
 }

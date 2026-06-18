@@ -1,4 +1,4 @@
-import type {AssignmentDocument, MessagingTokenDocument} from "./types";
+import type {AssignmentDocument, Fetcher, MessagingTokenDocument} from "./types";
 
 type FirestoreDocument = {
 	name: string;
@@ -20,7 +20,7 @@ export class FirestoreRestClient {
 	constructor(
 		private readonly projectId: string,
 		private readonly accessToken: string | null,
-		private readonly fetcher: typeof fetch = globalThis.fetch.bind(globalThis),
+		private readonly fetcher: Fetcher = globalThis.fetch.bind(globalThis),
 		baseUrl?: string,
 	) {
 		this.baseUrl = baseUrl ?? `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents`;

@@ -1,4 +1,4 @@
-import type {MessagingTokenDocument, PlannedNotification, SendResult} from "./types";
+import type {Fetcher, MessagingTokenDocument, PlannedNotification, SendResult} from "./types";
 
 const EXPO_PUSH_URL = "https://exp.host/--/api/v2/push/send";
 
@@ -22,7 +22,7 @@ export function buildExpoMessage(plan: PlannedNotification, token: string) {
 export async function sendPushNotifications(
 	plan: PlannedNotification,
 	tokens: MessagingTokenDocument[],
-	fetcher: typeof fetch = fetch,
+	fetcher: Fetcher = fetch,
 ): Promise<SendResult> {
 	const activeTokens = tokens.filter(token => !token.disabledAt);
 	const expoTokens = activeTokens.filter(token => token.provider === "expo");

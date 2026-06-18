@@ -8,6 +8,8 @@ export type Env = {
 	NEXUS_WEBHOOK_TOKEN: string;
 };
 
+export type Fetcher = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+
 export type NexusMatch = {
 	label: string;
 	status?: string | null;

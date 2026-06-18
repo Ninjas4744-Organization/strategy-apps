@@ -1,10 +1,12 @@
+import type {Fetcher} from "./types";
+
 const GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token";
 const GOOGLE_SCOPE = "https://www.googleapis.com/auth/cloud-platform";
 
 export async function getGoogleAccessToken(
 	clientEmail: string,
 	privateKeyPem: string,
-	fetcher: typeof fetch = fetch,
+	fetcher: Fetcher = fetch,
 ) {
 	const issuedAt = Math.floor(Date.now() / 1000);
 	const expiresAt = issuedAt + 3600;

@@ -4,12 +4,12 @@ This checklist tracks the plan for notifying assigned scouters when their assign
 
 ## Architecture
 
-- [ ] Keep assignments, users, tokens, events, and future robot images in Firebase.
-- [ ] Use Cloudflare Workers only for receiving Nexus webhook calls and dispatching notification work.
-- [ ] Use Firestore as the only app database.
+- [x] Keep assignments, users, tokens, events, and future robot images in Firebase.
+- [x] Use Cloudflare Workers only for receiving Nexus webhook calls and dispatching notification work.
+- [x] Use Firestore as the only app database.
 - [ ] Use Firebase Cloud Messaging for native device notifications.
-- [ ] Use Expo push tokens for iOS Expo Go testing, with the Worker routing those through Expo's push endpoint.
-- [ ] Avoid Firebase Cloud Functions for this feature.
+- [x] Use Expo push tokens for iOS Expo Go testing, with the Worker routing those through Expo's push endpoint.
+- [x] Avoid Firebase Cloud Functions for this feature.
 - [ ] Confirm whether the official event key in Nexus matches the app's existing Firestore `events/{eventId}` document id.
 
 ## Firestore Data Model
@@ -105,18 +105,18 @@ This checklist tracks the plan for notifying assigned scouters when their assign
 
 ## Testing
 
-- [ ] Verify app writes push tokens after login.
-- [ ] Verify notification permission denied still leaves assignments visible in-app.
-- [ ] Verify team admin can create an assignment.
+- [x] Verify app writes push tokens after login.
+- [x] Verify notification permission denied still leaves assignments visible in-app.
+- [x] Verify team admin can create an assignment.
 - [ ] Verify scouter can see only their own assignments.
-- [ ] Manually post a sample Nexus payload to the Worker.
-- [ ] Verify one matching assignment receives one notification.
-- [ ] Verify duplicate payloads do not send duplicate notifications.
-- [ ] Verify stale `dataAsOfTime` payloads are ignored.
+- [x] Manually post a sample Nexus payload to the Worker.
+- [x] Verify one matching assignment receives one notification.
+- [x] Verify duplicate payloads do not send duplicate notifications.
+- [x] Verify stale `dataAsOfTime` payloads are ignored.
 - [ ] Verify bad/expired FCM tokens are marked disabled.
-- [ ] Verify assignment "Start scouting" opens the correct team and match.
+- [x] Verify assignment "Start scouting" opens the correct team and match.
 - [ ] Test on a real Android device.
-- [ ] Test on a real iPhone if iOS will be used at competition.
+- [x] Test on a real iPhone if iOS will be used at competition.
 
 ## Competition Hardening
 
@@ -133,9 +133,9 @@ This checklist tracks the plan for notifying assigned scouters when their assign
 - [x] Add app-side push token registration.
 - [x] Add team-admin assignment UI.
 - [x] Add scouter assigned-games UI.
-- [ ] Build and locally test the Cloudflare Worker.
+- [x] Build and locally test the Cloudflare Worker.
 - [ ] Register Nexus webhook.
-- [ ] Run end-to-end device test.
+- [x] Run end-to-end device test.
 - [ ] Polish fallback states and competition docs.
 
 ## Nice Next
