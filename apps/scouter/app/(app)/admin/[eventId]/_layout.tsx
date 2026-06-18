@@ -48,6 +48,12 @@ export default observer(function EventLayout() {
 					}}>
 					<Stack.Screen name="index" options={{title: `${event?.name} (${event?.id})`}}/>
 					<Stack.Screen
+						name="assignments"
+						options={{
+							headerTitle: 'Scouting Assignments',
+						}}
+					/>
+					<Stack.Screen
 						name="detailed/[id]"
 						options={{
 							headerTitle: `Team ${id} Games`,

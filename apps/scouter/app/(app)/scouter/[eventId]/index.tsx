@@ -1,12 +1,14 @@
 import {observer} from "mobx-react-lite";
-import {Card, FormDialog, Row, IconContainer, Icon, Title, FlexGrow} from "@ninjas-strategy/ui";
-import {useState} from "react";
+import {Card, CardSurface, FormDialog, Row, IconContainer, Icon, Title, FlexGrow, Subtitle} from "@ninjas-strategy/ui";
+import {useEffect, useState} from "react";
 import gameStore from "@/lib/stores/gameStore";
 import eventsStore from "@/lib/stores/eventsStore";
 import {Href, useGlobalSearchParams, useRouter} from "expo-router";
 import {TouchableOpacity} from "react-native";
 import {games} from "@ninjas-strategy/frc-games";
 import pitStore from "@/lib/stores/pitStore";
+import assignmentsStore from "@/lib/stores/assignmentsStore";
+import styled from "styled-components/native";
 
 type GameInputFormData = {
 	teamNumber: string;
@@ -28,12 +30,29 @@ export default observer(function ScouterIndex() {
 
 	const event = eventId ? eventsStore.events[eventId] : undefined;
 
+	useEffect(() => {
+		if (!eventId || eventId === 'undefined') {
+			return;
+		}
+
+		assignmentsStore.subscribeForScouter(eventId);
+		return () => assignmentsStore.unsubscribe();
+	}, [eventId]);
+
 	const scoutGame = (data: GameInputFormData) => {
 		if (!eventId || eventId === 'undefined' || !event)
 			return;
 
 		startGame(data.teamNumber, data.gameNumber, event?.year!);
 		setShowGameDialog(false);
+		router.push(`/scouter/${eventId}/game/0`);
+	};
+
+	const scoutAssignedGame = (teamNumber: string, gameNumber: string) => {
+		if (!eventId || eventId === 'undefined' || !event || !gameNumber)
+			return;
+
+		startGame(teamNumber, gameNumber, event.year);
 		router.push(`/scouter/${eventId}/game/0`);
 	};
 
@@ -47,6 +66,30 @@ export default observer(function ScouterIndex() {
 	};
 
 	return <>
+		{assignmentsStore.assignmentsList.length > 0 && (
+			<AssignmentsSection>
+				<Title>Your Assigned Games</Title>
+				{assignmentsStore.assignmentsList.map(assignment => (
+					<TouchableOpacity
+						key={assignment.id}
+						onPress={() => scoutAssignedGame(assignment.teamNumber, assignment.matchNumber)}>
+						<AssignmentCard>
+							<Row>
+								<IconContainer>
+									<Icon name="assignment" size={28} />
+								</IconContainer>
+								<AssignmentText>
+									<Title>{assignment.matchTitle}</Title>
+									<Subtitle>Team {assignment.teamNumber}</Subtitle>
+								</AssignmentText>
+								<FlexGrow />
+								<Icon name="chevron-right" size={24} />
+							</Row>
+						</AssignmentCard>
+					</TouchableOpacity>
+				))}
+			</AssignmentsSection>
+		)}
 		<TouchableOpacity onPress={() => setShowGameDialog(true)}>
 			<Card>
 				<Row>
@@ -108,3 +151,17 @@ export default observer(function ScouterIndex() {
 			]} />
 	</>;
 });
+
+const AssignmentsSection = styled.View`
+	margin: 8px 0;
+`;
+
+const AssignmentCard = styled(CardSurface)`
+	margin: 8px 16px;
+	padding: 16px;
+`;
+
+const AssignmentText = styled.View`
+	flex-shrink: 1;
+	gap: 4px;
+`;

@@ -11,6 +11,95 @@ service cloud.firestore {
 				&& get(/databases/$(database)/documents/users/$(request.auth.uid)).data.type == 'app_admin';
 		}
 
+		function userData() {
+			return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+		}
+
+		function isRegisteredUser() {
+			return isSignedIn()
+				&& exists(/databases/$(database)/documents/users/$(request.auth.uid));
+		}
+
+		function isTeamAdmin() {
+			return isRegisteredUser()
+				&& userData().type == 'team_admin';
+		}
+
+		function isNonAnonymous() {
+			return isSignedIn()
+				&& request.auth.token.firebase.sign_in_provider != 'anonymous';
+		}
+
+		function isSameTeam(teamNumber) {
+			return isRegisteredUser()
+				&& userData().team == teamNumber;
+		}
+
+		function isAssignmentOwner() {
+			return isRegisteredUser()
+				&& resource.data.keys().hasAll(['scouter_id'])
+				&& resource.data.scouter_id == request.auth.uid;
+		}
+
+		function hasAssignmentTeam() {
+			return resource.data.keys().hasAll(['owning_team']);
+		}
+
+		function isCreatingOwnTeamAssignment() {
+			return isTeamAdmin()
+				&& isSameTeam(request.resource.data.owning_team)
+				&& request.resource.data.created_by == request.auth.uid
+				&& request.resource.data.keys().hasOnly([
+					'owning_team',
+					'team_number',
+					'match_number',
+					'scouter_id',
+					'scouter_name',
+					'created_by',
+					'created_at',
+					'updated_at',
+					'notified_at',
+					'last_nexus_status',
+					'nexus_data_as_of_time',
+					'notification_result',
+					'notification_error',
+				])
+				&& request.resource.data.match_number is string
+				&& request.resource.data.team_number is string
+				&& request.resource.data.notified_at == null
+				&& request.resource.data.last_nexus_status == null
+				&& request.resource.data.nexus_data_as_of_time == null
+				&& request.resource.data.notification_result == null
+				&& request.resource.data.notification_error == null;
+		}
+
+		function isUpdatingOwnTeamAssignment() {
+			return isTeamAdmin()
+				&& hasAssignmentTeam()
+				&& isSameTeam(resource.data.owning_team)
+				&& request.resource.data.owning_team == resource.data.owning_team
+				&& request.resource.data.created_by == resource.data.created_by
+				&& request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+					'team_number',
+					'match_number',
+					'scouter_id',
+					'scouter_name',
+					'updated_at',
+					'notified_at',
+					'last_nexus_status',
+					'nexus_data_as_of_time',
+					'notification_result',
+					'notification_error',
+				])
+				&& request.resource.data.match_number is string
+				&& request.resource.data.team_number is string
+				&& request.resource.data.notified_at == null
+				&& request.resource.data.last_nexus_status == null
+				&& request.resource.data.nexus_data_as_of_time == null
+				&& request.resource.data.notification_result == null
+				&& request.resource.data.notification_error == null;
+		}
+
 		// Allow only app admins to manage registration codes.
 		match /registration_codes/{teamId} {
 			allow read: if true;
@@ -20,7 +109,19 @@ service cloud.firestore {
     // Allow read/write access to users collection
     match /users/{userId} {
       allow read: if true;
-      allow write: if request.auth != null && request.auth.token.firebase.sign_in_provider != 'anonymous';
+      allow write: if isNonAnonymous();
+
+			match /messagingTokens/{tokenId} {
+				allow read: if isSignedIn() && (request.auth.uid == userId || isAppAdmin());
+				allow create, update: if isSignedIn()
+					&& request.auth.uid == userId
+					&& isNonAnonymous()
+					&& request.resource.data.token is string
+					&& request.resource.data.disabled_at == null;
+				allow delete: if isSignedIn()
+					&& request.auth.uid == userId
+					&& isNonAnonymous();
+			}
     }
 
     // Allow reading and writing to the "teams" collection
@@ -38,7 +139,17 @@ service cloud.firestore {
     // Allow reading and writing to the "events" collection
     match /events/{eventId} {
     	allow read: if true;
-      allow write: if request.auth != null && request.auth.token.firebase.sign_in_provider != 'anonymous';
+      allow write: if isNonAnonymous();
+
+			match /assignments/{assignmentId} {
+				allow read: if isAppAdmin()
+					|| (isTeamAdmin() && hasAssignmentTeam() && isSameTeam(resource.data.owning_team))
+					|| isAssignmentOwner();
+				allow create: if isCreatingOwnTeamAssignment() || isAppAdmin();
+				allow update: if isUpdatingOwnTeamAssignment() || isAppAdmin();
+				allow delete: if isAppAdmin()
+					|| (isTeamAdmin() && hasAssignmentTeam() && isSameTeam(resource.data.owning_team));
+			}
 
       // Allow reading and writing to the "teams" collection
     	match /teams/{teamId} {
@@ -54,7 +165,7 @@ service cloud.firestore {
       // Allow reading and writing to the "pit" collection
       match /pit/{teamId} {
       	allow read, write: if true;
-        allow write: if request.auth != null && request.auth.token.firebase.sign_in_provider != 'anonymous';
+        allow write: if isNonAnonymous();
       }
     }
   }

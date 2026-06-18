@@ -1,6 +1,6 @@
 import styled from "styled-components/native";
 import {PageTitle} from "@/lib/components/game/PageTitle";
-import {Subtitle, Title, Icon, HeaderButtons, CardSurface} from "@ninjas-strategy/ui";
+import {BeautifulButton, Subtitle, Title, Icon, CardSurface} from "@ninjas-strategy/ui";
 import {TeamItem} from "@/lib/components/admin/TeamItem";
 import {ScrollView, View} from "react-native";
 import {observer} from "mobx-react-lite";
@@ -9,6 +9,7 @@ import {useContext} from "react";
 import {EventContext, EventStore} from "@/lib/stores/eventStore";
 import {TeamItemSkeleton} from "@/lib/components/admin/TeamItemSkeleton";
 import {Loader} from "@/lib/components/Loader";
+import {Href, useRouter} from "expo-router";
 
 const IconsRow = styled.View`
 	display: flex;
@@ -17,8 +18,9 @@ const IconsRow = styled.View`
 `;
 
 export default observer(function AdminIndex() {
+	const router = useRouter();
 	const eventStore = useContext(EventContext) as EventStore;
-	const {isLoading, teamsRanked, totalGamesCount} = eventStore;
+	const {eventId, isLoading, teamsRanked, totalGamesCount} = eventStore;
 
 	const [topTeam] = teamsRanked;
 
@@ -26,6 +28,10 @@ export default observer(function AdminIndex() {
 		{teamsRanked.map((team, index) => <Loader key={'team-loader-' + index} subscribe={team.subscribe} unsubscribe={team.unsubscribe} />)}
 		<ScrollView>
 			{isLoading ? Array.from({length: 5}).map((_, i) => <TeamItemSkeleton key={i} />) : <>
+				<BeautifulButton
+					label="Assign scouters"
+					icon="person-add"
+					onPress={() => router.push(`/admin/${eventId}/assignments` as Href)} />
 				{teamsRanked.length > 0 ? <>
 					<PageTitle
 						title="Team Analytics Dashboard"
