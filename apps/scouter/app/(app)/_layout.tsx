@@ -3,6 +3,7 @@ import {StackWrapper} from "@ninjas-strategy/ui";
 import {observer} from "mobx-react-lite";
 import {useEffect} from "react";
 import userStore from "@/lib/stores/userStore";
+import {NotificationTokenRegistrar} from "@/lib/components/NotificationTokenRegistrar";
 
 export default observer(function AppLayout() {
 	const {subscribe, unsubscribe, user, isLoading} = userStore;
@@ -22,6 +23,7 @@ export default observer(function AppLayout() {
 
 	return (
 		<StackWrapper>
+			<NotificationTokenRegistrar />
 			<Stack
 				screenOptions={{
 					headerShown: false,

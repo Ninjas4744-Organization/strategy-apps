@@ -7,21 +7,20 @@
     "icon": "./assets/icon.png",
     "scheme": "ninjascouter",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "icon": "./assets/NinjasAppIcon.icon",
       "bundleIdentifier": "com.realKfiros.scoutingApp",
       "infoPlist": {
-        "ExpoLocalization_supportsRTL": false
+        "ExpoLocalization_supportsRTL": false,
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
       "package": "com.ninjas4744.scouter"
     },
@@ -41,6 +40,7 @@
           "backgroundColor": "#ffffff"
         }
       ],
+      "expo-notifications",
       "expo-status-bar"
     ],
     "experiments": {

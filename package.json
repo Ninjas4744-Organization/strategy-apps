@@ -9,6 +9,7 @@
 		"dev:scouter:emulator:android": "bun tools/scripts/run-expo-emulator.mjs android",
 		"dev:scouter:emulator:android-device": "bun tools/scripts/run-expo-emulator.mjs android-device",
 		"dev:scouter:emulator:iphone": "bun tools/scripts/run-expo-emulator.mjs iphone",
+		"dev:scouter:dev-client:iphone": "bun tools/scripts/run-iphone-dev-client-stack.mjs",
 		"dev:trainee": "nx run trainee:start",
 		"emulator:run": "bun tools/scripts/run-emulator-stack.mjs",
 		"emulators": "bun run emulators:stop && firebase emulators:start --project scouting-app-3e18a",

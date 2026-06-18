@@ -7,7 +7,8 @@ This checklist tracks the plan for notifying assigned scouters when their assign
 - [ ] Keep assignments, users, tokens, events, and future robot images in Firebase.
 - [ ] Use Cloudflare Workers only for receiving Nexus webhook calls and dispatching notification work.
 - [ ] Use Firestore as the only app database.
-- [ ] Use Firebase Cloud Messaging for device notifications.
+- [ ] Use Firebase Cloud Messaging for native device notifications.
+- [ ] Use Expo push tokens for iOS Expo Go testing, with the Worker routing those through Expo's push endpoint.
 - [ ] Avoid Firebase Cloud Functions for this feature.
 - [ ] Confirm whether the official event key in Nexus matches the app's existing Firestore `events/{eventId}` document id.
 
@@ -17,19 +18,20 @@ This checklist tracks the plan for notifying assigned scouters when their assign
 - [x] Store assignment fields: `teamNumber`, `matchNumber`, `scouterId`, `scouterName`, `createdBy`, `createdAt`, `updatedAt`, `notifiedAt`.
 - [x] Store Nexus delivery fields: `lastNexusStatus`, `nexusDataAsOfTime`, `notificationResult`, `notificationError`.
 - [x] Add `users/{uid}/messagingTokens/{tokenId}`.
-- [x] Store token fields: `token`, `platform`, `appVersion`, `createdAt`, `updatedAt`, `disabledAt`.
+- [x] Store token fields: `token`, `tokenType`, `provider`, `platform`, `appVersion`, `createdAt`, `updatedAt`, `disabledAt`.
 - [x] Decide whether assignments are keyed by generated ids, match labels, or `{match}-{team}-{scouter}` deterministic ids.
 - [ ] Add enough fields to query unnotified assignments by event and team without expensive client-side filtering.
 
 ## App Notification Setup
 
-- [ ] Add notification client dependency and configuration.
+- [x] Add notification client dependency and configuration.
 - [ ] Configure Android Firebase file: `google-services.json`.
 - [ ] Configure iOS Firebase/APNs setup if students will use iPhones.
-- [ ] Request notification permission after sign-in or onboarding.
-- [ ] Fetch the device FCM token.
-- [ ] Write the token to `users/{uid}/messagingTokens/{tokenId}`.
-- [ ] Refresh/update the token when it changes.
+- [x] Request notification permission after sign-in or onboarding.
+- [x] Fetch an Expo push token in Expo Go for iOS testing.
+- [ ] Fetch a native device push token outside Expo Go when the native app supports push entitlements, if we decide to bypass Expo Push later.
+- [x] Write the token to `users/{uid}/messagingTokens/{tokenId}`.
+- [x] Refresh/update the token when it changes.
 - [ ] Disable or delete the current device token on sign-out when practical.
 - [x] Add a small in-app fallback surface showing assigned games even when push permission is denied.
 
@@ -67,7 +69,9 @@ This checklist tracks the plan for notifying assigned scouters when their assign
 - [ ] Store Nexus webhook token as a Worker secret.
 - [ ] Implement Google OAuth JWT access-token flow for REST APIs.
 - [ ] Implement Firestore REST helpers for reads, queries, and updates.
-- [ ] Implement FCM HTTP v1 send helper.
+- [ ] Implement FCM HTTP v1 send helper for native tokens.
+- [ ] Implement Expo Push API send helper for Expo Go test tokens.
+- [ ] Route notification sends by stored token `provider`.
 - [ ] Add `POST /nexus/live-event` webhook endpoint.
 - [ ] Verify the `Nexus-Token` header before doing any work.
 - [ ] Parse `eventKey`, `dataAsOfTime`, `nowQueuing`, and `matches`.
@@ -75,8 +79,8 @@ This checklist tracks the plan for notifying assigned scouters when their assign
 - [ ] Detect matches with status `Now queuing`.
 - [ ] Match Nexus red/blue teams against Firestore assignments.
 - [ ] Query only unnotified assignments.
-- [ ] Read assigned scouters' active FCM tokens.
-- [ ] Send FCM notification to all active tokens for each assigned scouter.
+- [ ] Read assigned scouters' active push tokens.
+- [ ] Send notifications to all active tokens for each assigned scouter.
 - [ ] Mark assignments with `notifiedAt`, `nexusDataAsOfTime`, and send result.
 - [ ] Make notification delivery idempotent so duplicate Nexus payloads do not duplicate pushes.
 - [ ] Log event key, match label, assignment count, and send outcomes.
@@ -101,7 +105,7 @@ This checklist tracks the plan for notifying assigned scouters when their assign
 
 ## Testing
 
-- [ ] Verify app writes FCM tokens after login.
+- [ ] Verify app writes push tokens after login.
 - [ ] Verify notification permission denied still leaves assignments visible in-app.
 - [ ] Verify team admin can create an assignment.
 - [ ] Verify scouter can see only their own assignments.
@@ -126,7 +130,7 @@ This checklist tracks the plan for notifying assigned scouters when their assign
 ## Implementation Order
 
 - [x] Build Firestore assignment model and rules.
-- [ ] Add app-side FCM token registration.
+- [x] Add app-side push token registration.
 - [x] Add team-admin assignment UI.
 - [x] Add scouter assigned-games UI.
 - [ ] Build and locally test the Cloudflare Worker.

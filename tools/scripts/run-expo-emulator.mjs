@@ -13,6 +13,7 @@ const targetArgs = {
 	android: ["--android"],
 	"android-device": [],
 	iphone: ["--host", "lan"],
+	"iphone-dev-client": ["--dev-client", "--host", "lan"],
 };
 
 if (!targetArgs[target]) {
@@ -66,7 +67,7 @@ function getWindowsLanHost() {
 const defaultHost =
 	target === "android"
 		? "10.0.2.2"
-		: target === "iphone" || target === "android-device"
+		: target === "iphone" || target === "iphone-dev-client" || target === "android-device"
 			? getLanHost()
 			: "127.0.0.1";
 const emulatorHost = process.env.EXPO_PUBLIC_FIREBASE_EMULATOR_HOST ?? defaultHost;
@@ -104,11 +105,11 @@ function canReachPort(host, port, timeoutMs = 500) {
 }
 
 console.log(`Using Firebase emulators at ${emulatorHost}`);
-if (target === "iphone" || target === "android-device") {
+if (target === "iphone" || target === "iphone-dev-client" || target === "android-device") {
 	console.log(`Device check: open http://${emulatorHost}:9099/ on the device before logging in.`);
 }
 
-const shouldRequireReachableEmulator = target === "iphone" || target === "android-device";
+const shouldRequireReachableEmulator = target === "iphone" || target === "iphone-dev-client" || target === "android-device";
 const canReachAuthEmulator = target === "android" || await canReachPort(emulatorHost, 9099);
 
 if (!canReachAuthEmulator) {
