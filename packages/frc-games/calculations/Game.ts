@@ -11,7 +11,7 @@ export class Game {
 						return section.fields[id]?.getScore(data) ?? 0;
 					},
 					configurable: true
-				})
+				});
 			}
 		}
 		for (const calculation in game.fieldCalculations) {
@@ -22,7 +22,7 @@ export class Game {
 					) || 0;
 				},
 				configurable: true
-			})
+			});
 		}
 		for (const calculation in game.totalCalculations) {
 			Object.defineProperty(this, calculation, {
@@ -32,7 +32,7 @@ export class Game {
 					) || 0;
 				},
 				configurable: true
-			})
+			});
 		}
 	}
 
