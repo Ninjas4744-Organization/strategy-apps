@@ -7,7 +7,7 @@ import {
 } from "./env";
 import {FirestoreRestClient} from "./firestoreRest";
 import {getGoogleAccessToken} from "./googleAuth";
-import {findQueueingTeams, isNexusLiveEventPayload, planNotifications, qualificationScheduleSummary} from "./nexus";
+import {eventScheduleSummary, findQueueingTeams, isNexusLiveEventPayload, planNotifications, qualificationScheduleSummary} from "./nexus";
 import type {
 	Env,
 	NexusCreatedEventDocument,
@@ -81,13 +81,14 @@ async function handleNexusLiveEvent(request: Request, env: Env) {
 		}
 	}
 
-	const scheduleSummary = qualificationScheduleSummary(payload);
+	const scheduleSummary = eventScheduleSummary(payload);
+	const qualificationSummary = qualificationScheduleSummary(payload);
 	const shouldCreateScheduleReleasedEvent = Boolean(
-		scheduleSummary && !previousState?.qualificationScheduleReleasedAt,
+		qualificationSummary && !previousState?.qualificationScheduleReleasedAt,
 	);
 	let nexusEventCreated = false;
 
-	if (scheduleSummary && shouldCreateScheduleReleasedEvent) {
+	if (scheduleSummary) {
 		const eventExists = await firestore.eventExists(payload.eventKey);
 
 		if (!eventExists) {
@@ -99,12 +100,14 @@ async function handleNexusLiveEvent(request: Request, env: Env) {
 		} else {
 			await firestore.upsertEventMatchesFromNexusSchedule(payload.eventKey, scheduleSummary.matches);
 		}
+	}
 
+	if (qualificationSummary && shouldCreateScheduleReleasedEvent) {
 		console.log("Stored qualification schedule release", {
 			eventKey: payload.eventKey,
 			dataAsOfTime: payload.dataAsOfTime,
-			matchCount: scheduleSummary.matchCount,
-			firstMatchLabel: scheduleSummary.firstMatchLabel,
+			matchCount: qualificationSummary.matchCount,
+			firstMatchLabel: qualificationSummary.firstMatchLabel,
 			eventCreated: nexusEventCreated,
 		});
 	}
@@ -143,7 +146,7 @@ async function handleNexusLiveEvent(request: Request, env: Env) {
 	await firestore.setNexusEventState(
 		payload.eventKey,
 		payload.dataAsOfTime,
-		shouldCreateScheduleReleasedEvent ? scheduleSummary : null,
+		shouldCreateScheduleReleasedEvent ? qualificationSummary : null,
 	);
 
 	console.log("Processed Nexus live event", {
@@ -152,6 +155,7 @@ async function handleNexusLiveEvent(request: Request, env: Env) {
 		queueingTeamCount: queueingTeams.length,
 		assignmentCount: assignments.length,
 		notificationCount: plans.length,
+		scheduledMatchCount: scheduleSummary?.matchCount ?? 0,
 		qualificationScheduleReleased: shouldCreateScheduleReleasedEvent,
 		nexusEventCreated,
 	});
@@ -163,6 +167,7 @@ async function handleNexusLiveEvent(request: Request, env: Env) {
 		queueingTeamCount: queueingTeams.length,
 		assignmentCount: assignments.length,
 		notificationCount: plans.length,
+		scheduledMatchCount: scheduleSummary?.matchCount ?? 0,
 		qualificationScheduleReleased: shouldCreateScheduleReleasedEvent,
 		nexusEventCreated,
 		results,

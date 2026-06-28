@@ -1,5 +1,5 @@
 import {describe, expect, test} from "bun:test";
-import {findQueueingTeams, matchNumberFromLabel, planNotifications, qualificationScheduleSummary} from "./nexus";
+import {eventScheduleSummary, findQueueingTeams, matchNumberFromLabel, normalizeMatchStatus, planNotifications, qualificationScheduleSummary} from "./nexus";
 import type {AssignmentDocument, NexusLiveEventPayload} from "./types";
 
 describe("Nexus queue notification planning", () => {
@@ -39,6 +39,22 @@ describe("Nexus queue notification planning", () => {
 			{matchLabel: "Qualification 24", matchNumber: "24", teamNumber: "4590", status: "Now queuing"},
 			{matchLabel: "Qualification 24", matchNumber: "24", teamNumber: "5654", status: "Now queuing"},
 		]);
+	});
+
+	test("does not send assignment notifications for practice queueing", () => {
+		expect(findQueueingTeams({
+			eventKey: "2025isde1",
+			dataAsOfTime: 1,
+			nowQueuing: "Practice 1",
+			matches: [
+				{
+					label: "Practice 1",
+					status: "Now queuing",
+					redTeams: ["4744"],
+					blueTeams: ["1690"],
+				},
+			],
+		})).toEqual([]);
 	});
 
 	test("plans notifications only for unnotified matching assignments", () => {
@@ -89,17 +105,23 @@ describe("Nexus queue notification planning", () => {
 			teams: ["frc1", "frc2", "frc1574", "frc1690", "frc3339", "frc4590", "frc4744", "frc5654"],
 			matches: [
 				{
-					id: "1",
+					id: "qualification-1",
 					label: "Qualification 1",
 					match_number: "1",
+					match_type: "qualification",
+					status: "queued",
+					nexus_status: "Queuing soon",
 					red_teams: ["4744", "1690", "1574"],
 					blue_teams: ["3339", "4590", "5654"],
 					source: "nexus",
 				},
 				{
-					id: "2",
+					id: "qualification-2",
 					label: "Qualification 2",
 					match_number: "2",
+					match_type: "qualification",
+					status: "queued",
+					nexus_status: "Queuing soon",
 					red_teams: ["1"],
 					blue_teams: ["2"],
 					source: "nexus",
@@ -127,6 +149,78 @@ describe("Nexus queue notification planning", () => {
 				},
 			],
 		})).toBeNull();
+	});
+
+	test("detects practice schedules for event creation without treating them as qualifications", () => {
+		const payload: NexusLiveEventPayload = {
+			eventKey: "2025isde1",
+			dataAsOfTime: 1,
+			matches: [
+				{
+					label: "Practice 1",
+					status: "Queuing soon",
+					redTeams: ["4744", "1690", "1574"],
+					blueTeams: ["3339", "4590", "5654"],
+				},
+				{
+					label: "Qualification 1",
+					status: "Queuing soon",
+					redTeams: ["1"],
+					blueTeams: ["2"],
+				},
+			],
+		};
+
+		expect(eventScheduleSummary(payload)).toEqual({
+			matchCount: 2,
+			firstMatchLabel: "Practice 1",
+			teams: ["frc1", "frc2", "frc1574", "frc1690", "frc3339", "frc4590", "frc4744", "frc5654"],
+			matches: [
+				{
+					id: "practice-1",
+					label: "Practice 1",
+					match_number: "1",
+					match_type: "practice",
+					status: "queued",
+					nexus_status: "Queuing soon",
+					red_teams: ["4744", "1690", "1574"],
+					blue_teams: ["3339", "4590", "5654"],
+					source: "nexus",
+				},
+				{
+					id: "qualification-1",
+					label: "Qualification 1",
+					match_number: "1",
+					match_type: "qualification",
+					status: "queued",
+					nexus_status: "Queuing soon",
+					red_teams: ["1"],
+					blue_teams: ["2"],
+					source: "nexus",
+				},
+			],
+		});
+		expect(qualificationScheduleSummary({
+			...payload,
+			matches: payload.matches?.filter(match => match.label.startsWith("Practice")),
+		})).toBeNull();
+	});
+
+	test("normalizes Nexus match statuses for match cards", () => {
+		expect(normalizeMatchStatus("Now queuing", "Qualification 1", null)).toBe("queued");
+		expect(normalizeMatchStatus("On deck", "Qualification 1", null)).toBe("queued");
+		expect(normalizeMatchStatus(null, "Qualification 1", "Qualification 1")).toBe("queued");
+		expect(normalizeMatchStatus("On field", "Qualification 1", null)).toBe("playing");
+		expect(normalizeMatchStatus("Match complete", "Qualification 1", null)).toBe("finished");
+		expect(normalizeMatchStatus(null, "Qualification 1", null)).toBe("unknown");
+	});
+
+	test("infers finished matches from the currently queueing match", () => {
+		expect(normalizeMatchStatus("On field", "Qualification 21", "Qualification 24")).toBe("finished");
+		expect(normalizeMatchStatus("On field", "Qualification 23", "Qualification 24")).toBe("playing");
+		expect(normalizeMatchStatus("On field", "Qualification 24", "Qualification 24")).toBe("queued");
+		expect(normalizeMatchStatus("On field", "Qualification 25", "Qualification 24")).toBe("unknown");
+		expect(normalizeMatchStatus("On field", "Practice 1", "Qualification 24")).toBe("playing");
 	});
 });
 

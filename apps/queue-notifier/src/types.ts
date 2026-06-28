@@ -36,6 +36,9 @@ export type NexusEventState = {
 	qualificationScheduleMatchCount: number | null;
 };
 
+export type NexusMatchType = "qualification" | "practice";
+export type NexusMatchStatus = "queued" | "playing" | "finished" | "unknown";
+
 export type QualificationScheduleSummary = {
 	matchCount: number;
 	firstMatchLabel: string;
@@ -62,6 +65,9 @@ export type NexusCreatedMatchDocument = {
 	id: string;
 	label: string;
 	match_number: string;
+	match_type: NexusMatchType;
+	status: NexusMatchStatus;
+	nexus_status: string | null;
 	red_teams: string[];
 	blue_teams: string[];
 	source: "nexus";

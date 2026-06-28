@@ -141,6 +141,9 @@ export class FirestoreRestClient {
 				{
 					label: {stringValue: match.label},
 					match_number: {stringValue: match.match_number},
+					match_type: {stringValue: match.match_type},
+					status: {stringValue: match.status},
+					nexus_status: match.nexus_status ? {stringValue: match.nexus_status} : {nullValue: null},
 					red_teams: {arrayValue: {values: match.red_teams.map(team => ({stringValue: team}))}},
 					blue_teams: {arrayValue: {values: match.blue_teams.map(team => ({stringValue: team}))}},
 					source: {stringValue: match.source},
@@ -149,6 +152,9 @@ export class FirestoreRestClient {
 				[
 					"label",
 					"match_number",
+					"match_type",
+					"status",
+					"nexus_status",
 					"red_teams",
 					"blue_teams",
 					"source",
