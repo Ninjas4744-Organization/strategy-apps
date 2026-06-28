@@ -103,6 +103,16 @@ Nexus sends a validation POST before saving the webhook. The Worker returns `200
 
 Configure Nexus to send the same token stored in `NEXUS_WEBHOOK_TOKEN`.
 
+Nexus does not expose a separate "qualification schedule released" webhook type. The Worker detects schedule release from the live-event payload by watching for normal `Qualification N` matches to appear in the `matches` array for the first time.
+
+When detected, the Worker creates the normal app event document if it does not already exist:
+
+```text
+events/{eventKey}
+```
+
+The document uses the same shape as admin-created events, including `teams` as `frc`-prefixed team keys such as `frc4744`. Nexus does not include full TBA event metadata in the live-event payload, so the Worker derives minimal event metadata from `eventKey` and the schedule payload.
+
 Before competition, confirm that the Nexus `eventKey` exactly matches the Firestore event document id, for example:
 
 ```text

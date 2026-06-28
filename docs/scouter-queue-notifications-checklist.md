@@ -77,6 +77,8 @@ This checklist tracks the plan for notifying assigned scouters when their assign
 - [x] Parse `eventKey`, `dataAsOfTime`, `nowQueuing`, and `matches`.
 - [x] Ignore stale payloads older than the last processed Nexus snapshot.
 - [x] Detect matches with status `Now queuing`.
+- [x] Detect qualification schedule release from live-event match data.
+- [x] Create the normal Firestore event document from Nexus schedule data if it does not exist.
 - [x] Match Nexus red/blue teams against Firestore assignments.
 - [x] Query only unnotified assignments.
 - [x] Read assigned scouters' active push tokens.

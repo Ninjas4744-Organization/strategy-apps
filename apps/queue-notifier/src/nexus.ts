@@ -3,10 +3,12 @@ import type {
 	NexusLiveEventPayload,
 	NexusMatch,
 	PlannedNotification,
+	QualificationScheduleSummary,
 	QueueingTeam,
 } from "./types";
 
 const NOW_QUEUING_STATUS = "Now queuing";
+const QUALIFICATION_MATCH_LABEL = /^Qualification\s+\d+$/i;
 
 export function isNexusLiveEventPayload(value: unknown): value is NexusLiveEventPayload {
 	if (!value || typeof value !== "object") {
@@ -46,6 +48,20 @@ export function findQueueingTeams(payload: NexusLiveEventPayload): QueueingTeam[
 	});
 }
 
+export function qualificationScheduleSummary(payload: NexusLiveEventPayload): QualificationScheduleSummary | null {
+	const qualificationMatches = (payload.matches ?? []).filter(isScheduledQualificationMatch);
+
+	if (qualificationMatches.length === 0) {
+		return null;
+	}
+
+	return {
+		matchCount: qualificationMatches.length,
+		firstMatchLabel: qualificationMatches[0].label,
+		teams: teamsFromMatches(qualificationMatches),
+	};
+}
+
 export function planNotifications(
 	assignments: AssignmentDocument[],
 	queueingTeams: QueueingTeam[],
@@ -67,6 +83,30 @@ export function planNotifications(
 
 		return [{assignment, queueingTeam}];
 	});
+}
+
+function isScheduledQualificationMatch(match: NexusMatch) {
+	if (!QUALIFICATION_MATCH_LABEL.test(match.label)) {
+		return false;
+	}
+
+	return [...(match.redTeams ?? []), ...(match.blueTeams ?? [])].length > 0;
+}
+
+function teamsFromMatches(matches: NexusMatch[]) {
+	const teams = new Set<string>();
+
+	for (const match of matches) {
+		for (const teamNumber of [...(match.redTeams ?? []), ...(match.blueTeams ?? [])]) {
+			const normalizedTeam = teamNumber.toString().trim();
+
+			if (normalizedTeam) {
+				teams.add(normalizedTeam.startsWith("frc") ? normalizedTeam : `frc${normalizedTeam}`);
+			}
+		}
+	}
+
+	return [...teams].sort((a, b) => Number(a.replace("frc", "")) - Number(b.replace("frc", "")));
 }
 
 function isQueueingMatch(match: NexusMatch, nowQueuing: string | null) {

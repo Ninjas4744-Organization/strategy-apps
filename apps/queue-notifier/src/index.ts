@@ -7,8 +7,14 @@ import {
 } from "./env";
 import {FirestoreRestClient} from "./firestoreRest";
 import {getGoogleAccessToken} from "./googleAuth";
-import {findQueueingTeams, isNexusLiveEventPayload, planNotifications} from "./nexus";
-import type {Env, NexusLiveEventPayload, TestNotificationPayload} from "./types";
+import {findQueueingTeams, isNexusLiveEventPayload, planNotifications, qualificationScheduleSummary} from "./nexus";
+import type {
+	Env,
+	NexusCreatedEventDocument,
+	NexusLiveEventPayload,
+	QualificationScheduleSummary,
+	TestNotificationPayload,
+} from "./types";
 
 export default {
 	async fetch(request: Request, env: Env): Promise<Response> {
@@ -75,6 +81,31 @@ async function handleNexusLiveEvent(request: Request, env: Env) {
 		}
 	}
 
+	const scheduleSummary = qualificationScheduleSummary(payload);
+	const shouldCreateScheduleReleasedEvent = Boolean(
+		scheduleSummary && !previousState?.qualificationScheduleReleasedAt,
+	);
+	let nexusEventCreated = false;
+
+	if (scheduleSummary && shouldCreateScheduleReleasedEvent) {
+		const eventExists = await firestore.eventExists(payload.eventKey);
+
+		if (!eventExists) {
+			await firestore.createEventFromNexusSchedule(
+				eventFromNexusSchedule(payload.eventKey, payload.dataAsOfTime, scheduleSummary),
+			);
+			nexusEventCreated = true;
+		}
+
+		console.log("Created qualification schedule released event", {
+			eventKey: payload.eventKey,
+			dataAsOfTime: payload.dataAsOfTime,
+			matchCount: scheduleSummary.matchCount,
+			firstMatchLabel: scheduleSummary.firstMatchLabel,
+			eventCreated: nexusEventCreated,
+		});
+	}
+
 	const queueingTeams = findQueueingTeams(payload);
 	const assignments = await firestore.listAssignments(payload.eventKey);
 	const plans = planNotifications(assignments, queueingTeams);
@@ -106,7 +137,11 @@ async function handleNexusLiveEvent(request: Request, env: Env) {
 		});
 	}
 
-	await firestore.setNexusEventState(payload.eventKey, payload.dataAsOfTime);
+	await firestore.setNexusEventState(
+		payload.eventKey,
+		payload.dataAsOfTime,
+		shouldCreateScheduleReleasedEvent ? scheduleSummary : null,
+	);
 
 	console.log("Processed Nexus live event", {
 		eventKey: payload.eventKey,
@@ -114,6 +149,8 @@ async function handleNexusLiveEvent(request: Request, env: Env) {
 		queueingTeamCount: queueingTeams.length,
 		assignmentCount: assignments.length,
 		notificationCount: plans.length,
+		qualificationScheduleReleased: shouldCreateScheduleReleasedEvent,
+		nexusEventCreated,
 	});
 
 	return Response.json({
@@ -123,8 +160,48 @@ async function handleNexusLiveEvent(request: Request, env: Env) {
 		queueingTeamCount: queueingTeams.length,
 		assignmentCount: assignments.length,
 		notificationCount: plans.length,
+		qualificationScheduleReleased: shouldCreateScheduleReleasedEvent,
+		nexusEventCreated,
 		results,
 	});
+}
+
+function eventFromNexusSchedule(
+	eventKey: string,
+	dataAsOfTime: number,
+	qualificationSchedule: QualificationScheduleSummary,
+): NexusCreatedEventDocument {
+	const year = yearFromEventKey(eventKey, dataAsOfTime);
+	const eventDate = new Date(dataAsOfTime).toISOString().slice(0, 10);
+
+	return {
+		key: eventKey,
+		name: eventKey,
+		event_code: eventCodeFromEventKey(eventKey),
+		event_type: 0,
+		city: null,
+		state_prov: null,
+		country: "",
+		start_date: eventDate,
+		end_date: eventDate,
+		year,
+		teams: qualificationSchedule.teams,
+		active: true,
+	};
+}
+
+function yearFromEventKey(eventKey: string, dataAsOfTime: number) {
+	const year = Number(eventKey.slice(0, 4));
+
+	if (Number.isInteger(year) && year > 1900) {
+		return year;
+	}
+
+	return new Date(dataAsOfTime).getUTCFullYear();
+}
+
+function eventCodeFromEventKey(eventKey: string) {
+	return eventKey.replace(/^\d{4}/, "");
 }
 
 async function handleTestNotification(request: Request, env: Env) {

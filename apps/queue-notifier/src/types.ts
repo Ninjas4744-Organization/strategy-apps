@@ -29,6 +29,34 @@ export type TestNotificationPayload = {
 	assignmentId: string;
 };
 
+export type NexusEventState = {
+	lastDataAsOfTime: number | null;
+	qualificationScheduleReleasedAt: string | null;
+	qualificationScheduleReleaseDataAsOfTime: number | null;
+	qualificationScheduleMatchCount: number | null;
+};
+
+export type QualificationScheduleSummary = {
+	matchCount: number;
+	firstMatchLabel: string;
+	teams: string[];
+};
+
+export type NexusCreatedEventDocument = {
+	key: string;
+	name: string;
+	event_code: string;
+	event_type: number;
+	city: string | null;
+	state_prov: string | null;
+	country: string;
+	start_date: string;
+	end_date: string;
+	year: number;
+	teams: string[];
+	active: boolean;
+};
+
 export type AssignmentDocument = {
 	id: string;
 	eventId: string;

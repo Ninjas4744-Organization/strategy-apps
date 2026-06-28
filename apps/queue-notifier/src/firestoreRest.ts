@@ -1,4 +1,11 @@
-import type {AssignmentDocument, Fetcher, MessagingTokenDocument} from "./types";
+import type {
+	AssignmentDocument,
+	Fetcher,
+	MessagingTokenDocument,
+	NexusCreatedEventDocument,
+	NexusEventState,
+	QualificationScheduleSummary,
+} from "./types";
 
 type FirestoreDocument = {
 	name: string;
@@ -12,6 +19,9 @@ type FirestoreValue = {
 	booleanValue?: boolean;
 	timestampValue?: string;
 	nullValue?: null;
+	arrayValue?: {
+		values?: FirestoreValue[];
+	};
 };
 
 export class FirestoreRestClient {
@@ -26,7 +36,7 @@ export class FirestoreRestClient {
 		this.baseUrl = baseUrl ?? `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents`;
 	}
 
-	async getNexusEventState(eventId: string) {
+	async getNexusEventState(eventId: string): Promise<NexusEventState | null> {
 		const response = await this.fetcher(`${this.baseUrl}/nexusEventStates/${encodeURIComponent(eventId)}`, {
 			headers: this.authHeaders(),
 		});
@@ -39,17 +49,85 @@ export class FirestoreRestClient {
 		const document = await response.json() as FirestoreDocument;
 		return {
 			lastDataAsOfTime: numberField(document.fields?.last_data_as_of_time),
+			qualificationScheduleReleasedAt: timestampField(document.fields?.qualification_schedule_released_at),
+			qualificationScheduleReleaseDataAsOfTime: numberField(document.fields?.qualification_schedule_release_data_as_of_time),
+			qualificationScheduleMatchCount: numberField(document.fields?.qualification_schedule_match_count),
 		};
 	}
 
-	async setNexusEventState(eventId: string, dataAsOfTime: number) {
+	async setNexusEventState(
+		eventId: string,
+		dataAsOfTime: number,
+		qualificationSchedule?: QualificationScheduleSummary | null,
+	) {
+		const fields: Record<string, FirestoreValue> = {
+			last_data_as_of_time: {integerValue: dataAsOfTime.toString()},
+			updated_at: {timestampValue: new Date().toISOString()},
+		};
+		const updateMask = ["last_data_as_of_time", "updated_at"];
+
+		if (qualificationSchedule) {
+			fields.qualification_schedule_released_at = {timestampValue: new Date().toISOString()};
+			fields.qualification_schedule_release_data_as_of_time = {integerValue: dataAsOfTime.toString()};
+			fields.qualification_schedule_match_count = {integerValue: qualificationSchedule.matchCount.toString()};
+			updateMask.push(
+				"qualification_schedule_released_at",
+				"qualification_schedule_release_data_as_of_time",
+				"qualification_schedule_match_count",
+			);
+		}
+
 		await this.patchDocument(
 			`nexusEventStates/${eventId}`,
+			fields,
+			updateMask,
+		);
+	}
+
+	async eventExists(eventId: string) {
+		const response = await this.fetcher(`${this.baseUrl}/events/${encodeURIComponent(eventId)}`, {
+			headers: this.authHeaders(),
+		});
+
+		if (response.status === 404) {
+			return false;
+		}
+
+		await assertOk(response, "read event");
+		return true;
+	}
+
+	async createEventFromNexusSchedule(event: NexusCreatedEventDocument) {
+		await this.patchDocument(
+			`events/${event.key}`,
 			{
-				last_data_as_of_time: {integerValue: dataAsOfTime.toString()},
-				updated_at: {timestampValue: new Date().toISOString()},
+				key: {stringValue: event.key},
+				name: {stringValue: event.name},
+				event_code: {stringValue: event.event_code},
+				event_type: {integerValue: event.event_type.toString()},
+				city: event.city ? {stringValue: event.city} : {nullValue: null},
+				state_prov: event.state_prov ? {stringValue: event.state_prov} : {nullValue: null},
+				country: {stringValue: event.country},
+				start_date: {stringValue: event.start_date},
+				end_date: {stringValue: event.end_date},
+				year: {integerValue: event.year.toString()},
+				teams: {arrayValue: {values: event.teams.map(team => ({stringValue: team}))}},
+				active: {booleanValue: event.active},
 			},
-			["last_data_as_of_time", "updated_at"],
+			[
+				"key",
+				"name",
+				"event_code",
+				"event_type",
+				"city",
+				"state_prov",
+				"country",
+				"start_date",
+				"end_date",
+				"year",
+				"teams",
+				"active",
+			],
 		);
 	}
 

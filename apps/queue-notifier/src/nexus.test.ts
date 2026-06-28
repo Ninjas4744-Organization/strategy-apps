@@ -1,5 +1,5 @@
 import {describe, expect, test} from "bun:test";
-import {findQueueingTeams, matchNumberFromLabel, planNotifications} from "./nexus";
+import {findQueueingTeams, matchNumberFromLabel, planNotifications, qualificationScheduleSummary} from "./nexus";
 import type {AssignmentDocument, NexusLiveEventPayload} from "./types";
 
 describe("Nexus queue notification planning", () => {
@@ -55,6 +55,60 @@ describe("Nexus queue notification planning", () => {
 		expect(planNotifications(assignments, queueingTeams).map(plan => plan.assignment.id)).toEqual([
 			"match-24-team-4744",
 		]);
+	});
+
+	test("detects qualification schedule release from scheduled qualification matches", () => {
+		const payload: NexusLiveEventPayload = {
+			eventKey: "2025isde1",
+			dataAsOfTime: 1,
+			matches: [
+				{
+					label: "Qualification 1",
+					status: "Queuing soon",
+					redTeams: ["4744", "1690", "1574"],
+					blueTeams: ["3339", "4590", "5654"],
+				},
+				{
+					label: "Qualification 2",
+					status: "Queuing soon",
+					redTeams: ["1"],
+					blueTeams: ["2"],
+				},
+				{
+					label: "Playoff 1",
+					status: "Queuing soon",
+					redTeams: ["3"],
+					blueTeams: ["4"],
+				},
+			],
+		};
+
+		expect(qualificationScheduleSummary(payload)).toEqual({
+			matchCount: 2,
+			firstMatchLabel: "Qualification 1",
+			teams: ["frc1", "frc2", "frc1574", "frc1690", "frc3339", "frc4590", "frc4744", "frc5654"],
+		});
+	});
+
+	test("does not detect schedule release without normal qualification matches", () => {
+		expect(qualificationScheduleSummary({
+			eventKey: "2025isde1",
+			dataAsOfTime: 1,
+			matches: [],
+		})).toBeNull();
+
+		expect(qualificationScheduleSummary({
+			eventKey: "2025isde1",
+			dataAsOfTime: 1,
+			matches: [
+				{
+					label: "Qualification 2 Replay",
+					status: "Queuing soon",
+					redTeams: ["1"],
+					blueTeams: ["2"],
+				},
+			],
+		})).toBeNull();
 	});
 });
 
