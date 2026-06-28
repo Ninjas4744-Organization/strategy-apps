@@ -103,6 +103,27 @@ const gameTemplates = [
 	{team: 1943, matches: [[3, 3, 2, 6, 4, "shallow"], [7, 3, 2, 7, 3, "park"], [10, 4, 2, 7, 4, "shallow"]]},
 ];
 
+function qualificationMatchesForEvent(event, matchCount = 10) {
+	const teamNumbers = event.data.teams.map(team => team.replace(/^frc/i, ""));
+
+	return Array.from({length: matchCount}, (_, index) => {
+		const rotatedTeams = Array.from({length: 6}, (__, offset) => teamNumbers[(index + offset) % teamNumbers.length]);
+		const matchNumber = String(index + 1);
+
+		return {
+			id: matchNumber,
+			data: {
+				label: `Qualification ${matchNumber}`,
+				match_number: matchNumber,
+				red_teams: rotatedTeams.slice(0, 3),
+				blue_teams: rotatedTeams.slice(3, 6),
+				source: "seed",
+				updated_at: Timestamp.fromDate(new Date(`${event.data.start_date}T08:00:00Z`)),
+			},
+		};
+	});
+}
+
 function gameData(teamNumber, [match, autoL4, autoNet, teleL4, teleNet, cageLevel]) {
 	return {
 		team_number: String(teamNumber),
@@ -170,6 +191,10 @@ await setDoc(doc(db, "registration_codes", "1690"), {
 
 for (const event of events) {
 	await setDoc(doc(db, "events", event.id), event.data);
+
+	for (const match of qualificationMatchesForEvent(event)) {
+		await setDoc(doc(db, "events", event.id, "matches", match.id), match.data);
+	}
 
 	for (const team of teams) {
 		if (!event.data.teams.includes(`frc${team}`)) {

@@ -87,6 +87,24 @@ describe("Nexus queue notification planning", () => {
 			matchCount: 2,
 			firstMatchLabel: "Qualification 1",
 			teams: ["frc1", "frc2", "frc1574", "frc1690", "frc3339", "frc4590", "frc4744", "frc5654"],
+			matches: [
+				{
+					id: "1",
+					label: "Qualification 1",
+					match_number: "1",
+					red_teams: ["4744", "1690", "1574"],
+					blue_teams: ["3339", "4590", "5654"],
+					source: "nexus",
+				},
+				{
+					id: "2",
+					label: "Qualification 2",
+					match_number: "2",
+					red_teams: ["1"],
+					blue_teams: ["2"],
+					source: "nexus",
+				},
+			],
 		});
 	});
 

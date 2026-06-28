@@ -1,6 +1,7 @@
 import type {
 	AssignmentDocument,
 	NexusLiveEventPayload,
+	NexusCreatedMatchDocument,
 	NexusMatch,
 	PlannedNotification,
 	QualificationScheduleSummary,
@@ -49,7 +50,9 @@ export function findQueueingTeams(payload: NexusLiveEventPayload): QueueingTeam[
 }
 
 export function qualificationScheduleSummary(payload: NexusLiveEventPayload): QualificationScheduleSummary | null {
-	const qualificationMatches = (payload.matches ?? []).filter(isScheduledQualificationMatch);
+	const qualificationMatches = (payload.matches ?? [])
+		.filter(isScheduledQualificationMatch)
+		.sort((a, b) => Number(matchNumberFromLabel(a.label)) - Number(matchNumberFromLabel(b.label)));
 
 	if (qualificationMatches.length === 0) {
 		return null;
@@ -59,6 +62,7 @@ export function qualificationScheduleSummary(payload: NexusLiveEventPayload): Qu
 		matchCount: qualificationMatches.length,
 		firstMatchLabel: qualificationMatches[0].label,
 		teams: teamsFromMatches(qualificationMatches),
+		matches: qualificationMatches.map(matchFromNexus),
 	};
 }
 
@@ -107,6 +111,25 @@ function teamsFromMatches(matches: NexusMatch[]) {
 	}
 
 	return [...teams].sort((a, b) => Number(a.replace("frc", "")) - Number(b.replace("frc", "")));
+}
+
+function matchFromNexus(match: NexusMatch): NexusCreatedMatchDocument {
+	const matchNumber = matchNumberFromLabel(match.label) ?? match.label;
+
+	return {
+		id: matchNumber,
+		label: match.label,
+		match_number: matchNumber,
+		red_teams: teamsForMatchDoc(match.redTeams),
+		blue_teams: teamsForMatchDoc(match.blueTeams),
+		source: "nexus",
+	};
+}
+
+function teamsForMatchDoc(teams: string[] | undefined) {
+	return (teams ?? [])
+		.map(team => team.toString().replace(/^frc/i, "").trim())
+		.filter(Boolean);
 }
 
 function isQueueingMatch(match: NexusMatch, nowQueuing: string | null) {

@@ -58,9 +58,14 @@ service cloud.firestore {
 		}
 
 		function canWriteReports(eventId) {
-			return isNonAnonymous()
-				&& isActiveEvent(eventId)
-				&& isActiveForEvent(eventId);
+			return isActiveEvent(eventId)
+				&& (
+					isAppAdmin()
+					|| (
+						isNonAnonymous()
+						&& isActiveForEvent(eventId)
+					)
+				);
 		}
 
 		function isAssignmentOwner() {
@@ -210,27 +215,32 @@ service cloud.firestore {
 					);
 			}
 
-			match /assignments/{assignmentId} {
-				allow read: if isAppAdmin()
-					|| (isTeamAdmin() && hasAssignmentTeam() && isSameTeam(resource.data.owning_team))
-					|| isAssignmentOwner();
-				allow create: if isCreatingOwnTeamAssignment() || isAppAdmin();
-				allow update: if isUpdatingOwnTeamAssignment() || isAppAdmin();
-				allow delete: if isAppAdmin()
-					|| (isTeamAdmin() && hasAssignmentTeam() && isSameTeam(resource.data.owning_team));
-			}
+				match /assignments/{assignmentId} {
+					allow read: if isAppAdmin()
+						|| (isTeamAdmin() && hasAssignmentTeam() && isSameTeam(resource.data.owning_team))
+						|| isAssignmentOwner();
+					allow create: if isCreatingOwnTeamAssignment() || isAppAdmin();
+					allow update: if isUpdatingOwnTeamAssignment() || isAppAdmin();
+					allow delete: if isAppAdmin()
+						|| (isTeamAdmin() && hasAssignmentTeam() && isSameTeam(resource.data.owning_team));
+				}
 
-      // Allow reading and writing to the "teams" collection
-    	match /teams/{teamId} {
-      	allow read: if true;
-        allow write: if canWriteReports(eventId);
+				match /matches/{matchId} {
+					allow read: if true;
+					allow create, update, delete: if isAppAdmin();
+				}
 
-      	// Allow subcollection access like /teams/{teamId}/games/{gameId}
-      	match /games/{gameId} {
-        	allow read: if true;
-          allow write: if canWriteReports(eventId);
-      	}
-    	}
+				// Allow reading and writing to the "teams" collection
+					match /teams/{teamId} {
+						allow read: if true;
+						allow write: if canWriteReports(eventId);
+
+						// Allow subcollection access like /teams/{teamId}/games/{gameId}
+					match /games/{gameId} {
+						allow read: if true;
+						allow write: if canWriteReports(eventId);
+					}
+				}
       // Allow reading and writing to the "pit" collection
       match /pit/{teamId} {
 				allow read: if true;

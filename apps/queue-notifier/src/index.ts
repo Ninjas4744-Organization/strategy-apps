@@ -93,11 +93,14 @@ async function handleNexusLiveEvent(request: Request, env: Env) {
 		if (!eventExists) {
 			await firestore.createEventFromNexusSchedule(
 				eventFromNexusSchedule(payload.eventKey, payload.dataAsOfTime, scheduleSummary),
+				scheduleSummary.matches,
 			);
 			nexusEventCreated = true;
+		} else {
+			await firestore.upsertEventMatchesFromNexusSchedule(payload.eventKey, scheduleSummary.matches);
 		}
 
-		console.log("Created qualification schedule released event", {
+		console.log("Stored qualification schedule release", {
 			eventKey: payload.eventKey,
 			dataAsOfTime: payload.dataAsOfTime,
 			matchCount: scheduleSummary.matchCount,

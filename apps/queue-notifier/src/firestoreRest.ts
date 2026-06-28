@@ -3,6 +3,7 @@ import type {
 	Fetcher,
 	MessagingTokenDocument,
 	NexusCreatedEventDocument,
+	NexusCreatedMatchDocument,
 	NexusEventState,
 	QualificationScheduleSummary,
 } from "./types";
@@ -97,7 +98,7 @@ export class FirestoreRestClient {
 		return true;
 	}
 
-	async createEventFromNexusSchedule(event: NexusCreatedEventDocument) {
+	async createEventFromNexusSchedule(event: NexusCreatedEventDocument, matches: NexusCreatedMatchDocument[]) {
 		await this.patchDocument(
 			`events/${event.key}`,
 			{
@@ -129,6 +130,32 @@ export class FirestoreRestClient {
 				"active",
 			],
 		);
+
+		await this.upsertEventMatchesFromNexusSchedule(event.key, matches);
+	}
+
+	async upsertEventMatchesFromNexusSchedule(eventId: string, matches: NexusCreatedMatchDocument[]) {
+		for (const match of matches) {
+			await this.patchDocument(
+				`events/${eventId}/matches/${match.id}`,
+				{
+					label: {stringValue: match.label},
+					match_number: {stringValue: match.match_number},
+					red_teams: {arrayValue: {values: match.red_teams.map(team => ({stringValue: team}))}},
+					blue_teams: {arrayValue: {values: match.blue_teams.map(team => ({stringValue: team}))}},
+					source: {stringValue: match.source},
+					updated_at: {timestampValue: new Date().toISOString()},
+				},
+				[
+					"label",
+					"match_number",
+					"red_teams",
+					"blue_teams",
+					"source",
+					"updated_at",
+				],
+			);
+		}
 	}
 
 	async getAssignment(eventId: string, assignmentId: string): Promise<AssignmentDocument | null> {

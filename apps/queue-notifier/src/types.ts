@@ -40,6 +40,7 @@ export type QualificationScheduleSummary = {
 	matchCount: number;
 	firstMatchLabel: string;
 	teams: string[];
+	matches: NexusCreatedMatchDocument[];
 };
 
 export type NexusCreatedEventDocument = {
@@ -55,6 +56,15 @@ export type NexusCreatedEventDocument = {
 	year: number;
 	teams: string[];
 	active: boolean;
+};
+
+export type NexusCreatedMatchDocument = {
+	id: string;
+	label: string;
+	match_number: string;
+	red_teams: string[];
+	blue_teams: string[];
+	source: "nexus";
 };
 
 export type AssignmentDocument = {
