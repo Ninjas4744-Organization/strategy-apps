@@ -1,5 +1,5 @@
 import {describe, expect, test} from "bun:test";
-import {eventScheduleSummary, findQueueingTeams, matchNumberFromLabel, normalizeMatchStatus, planNotifications, qualificationScheduleSummary} from "./nexus";
+import {eventScheduleSummary, findQueueingTeams, fullerLiveEventPayload, matchNumberFromLabel, normalizeMatchStatus, planNotifications, qualificationScheduleSummary} from "./nexus";
 import type {AssignmentDocument, NexusLiveEventPayload} from "./types";
 
 describe("Nexus queue notification planning", () => {
@@ -221,6 +221,30 @@ describe("Nexus queue notification planning", () => {
 		expect(normalizeMatchStatus("On field", "Qualification 24", "Qualification 24")).toBe("queued");
 		expect(normalizeMatchStatus("On field", "Qualification 25", "Qualification 24")).toBe("unknown");
 		expect(normalizeMatchStatus("On field", "Practice 1", "Qualification 24")).toBe("playing");
+	});
+
+	test("prefers a fuller pulled Nexus payload for schedules", () => {
+		const webhookPayload: NexusLiveEventPayload = {
+			eventKey: "2025isde1",
+			dataAsOfTime: 10,
+			matches: [
+				{label: "Qualification 1", status: "On deck", redTeams: ["1"], blueTeams: ["2"]},
+			],
+		};
+		const pulledPayload: NexusLiveEventPayload = {
+			eventKey: "2025isde1",
+			dataAsOfTime: 9,
+			matches: [
+				{label: "Qualification 1", status: "On deck", redTeams: ["1"], blueTeams: ["2"]},
+				{label: "Qualification 2", status: "On deck", redTeams: ["3"], blueTeams: ["4"]},
+			],
+		};
+
+		expect(fullerLiveEventPayload(webhookPayload, pulledPayload)).toEqual({
+			...pulledPayload,
+			dataAsOfTime: 10,
+		});
+		expect(fullerLiveEventPayload(webhookPayload, {...pulledPayload, eventKey: "2025isde2"})).toBe(webhookPayload);
 	});
 });
 

@@ -27,6 +27,32 @@ export function isNexusLiveEventPayload(value: unknown): value is NexusLiveEvent
 	);
 }
 
+export function fullerLiveEventPayload(
+	webhookPayload: NexusLiveEventPayload,
+	pulledPayload: NexusLiveEventPayload | null,
+): NexusLiveEventPayload {
+	if (!pulledPayload || pulledPayload.eventKey !== webhookPayload.eventKey) {
+		return webhookPayload;
+	}
+
+	const webhookMatchCount = webhookPayload.matches?.length ?? 0;
+	const pulledMatchCount = pulledPayload.matches?.length ?? 0;
+
+	if (pulledMatchCount > webhookMatchCount) {
+		return {
+			...pulledPayload,
+			dataAsOfTime: Math.max(pulledPayload.dataAsOfTime, webhookPayload.dataAsOfTime),
+			nowQueuing: webhookPayload.nowQueuing ?? pulledPayload.nowQueuing,
+		};
+	}
+
+	if (pulledPayload.dataAsOfTime > webhookPayload.dataAsOfTime) {
+		return pulledPayload;
+	}
+
+	return webhookPayload;
+}
+
 export function matchNumberFromLabel(label: string): string | null {
 	const match = label.match(/\d+/);
 	return match?.[0] ?? null;

@@ -25,6 +25,15 @@ type FirestoreValue = {
 	};
 };
 
+type FirestoreWrite = {
+	update: FirestoreDocument;
+	updateMask: {
+		fieldPaths: string[];
+	};
+};
+
+const COMMIT_BATCH_SIZE = 30;
+
 export class FirestoreRestClient {
 	private readonly baseUrl: string;
 
@@ -135,10 +144,22 @@ export class FirestoreRestClient {
 	}
 
 	async upsertEventMatchesFromNexusSchedule(eventId: string, matches: NexusCreatedMatchDocument[]) {
-		for (const match of matches) {
-			await this.patchDocument(
-				`events/${eventId}/matches/${match.id}`,
-				{
+		const updatedAt = new Date().toISOString();
+		const updateMask = [
+			"label",
+			"match_number",
+			"match_type",
+			"status",
+			"nexus_status",
+			"red_teams",
+			"blue_teams",
+			"source",
+			"updated_at",
+		];
+		const writes = matches.map(match => ({
+			update: {
+				name: this.documentName(`events/${eventId}/matches/${match.id}`),
+				fields: {
 					label: {stringValue: match.label},
 					match_number: {stringValue: match.match_number},
 					match_type: {stringValue: match.match_type},
@@ -147,20 +168,16 @@ export class FirestoreRestClient {
 					red_teams: {arrayValue: {values: match.red_teams.map(team => ({stringValue: team}))}},
 					blue_teams: {arrayValue: {values: match.blue_teams.map(team => ({stringValue: team}))}},
 					source: {stringValue: match.source},
-					updated_at: {timestampValue: new Date().toISOString()},
+					updated_at: {timestampValue: updatedAt},
 				},
-				[
-					"label",
-					"match_number",
-					"match_type",
-					"status",
-					"nexus_status",
-					"red_teams",
-					"blue_teams",
-					"source",
-					"updated_at",
-				],
-			);
+			},
+			updateMask: {
+				fieldPaths: updateMask,
+			},
+		}));
+
+		for (const writeBatch of chunks(writes, COMMIT_BATCH_SIZE)) {
+			await this.commitWrites(writeBatch);
 		}
 	}
 
@@ -260,6 +277,27 @@ export class FirestoreRestClient {
 		await assertOk(response, `patch ${path}`);
 	}
 
+	private async commitWrites(writes: FirestoreWrite[]) {
+		if (writes.length === 0) {
+			return;
+		}
+
+		const response = await this.fetcher(`${this.baseUrl}:commit`, {
+			method: "POST",
+			headers: {
+				...this.authHeaders(),
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({writes}),
+		});
+
+		await assertOk(response, `commit ${writes.length} writes`);
+	}
+
+	private documentName(path: string) {
+		return `projects/${this.projectId}/databases/(default)/documents/${path}`;
+	}
+
 	private authHeaders(): Record<string, string> {
 		if (!this.accessToken) {
 			return {};
@@ -269,6 +307,16 @@ export class FirestoreRestClient {
 			Authorization: `Bearer ${this.accessToken}`,
 		};
 	}
+}
+
+function chunks<T>(items: T[], size: number) {
+	const result: T[][] = [];
+
+	for (let index = 0; index < items.length; index += size) {
+		result.push(items.slice(index, index + size));
+	}
+
+	return result;
 }
 
 function assignmentFromDocument(eventId: string, document: FirestoreDocument): AssignmentDocument {

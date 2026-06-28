@@ -7,7 +7,7 @@ import {
 } from "./env";
 import {FirestoreRestClient} from "./firestoreRest";
 import {getGoogleAccessToken} from "./googleAuth";
-import {eventScheduleSummary, findQueueingTeams, isNexusLiveEventPayload, planNotifications, qualificationScheduleSummary} from "./nexus";
+import {eventScheduleSummary, findQueueingTeams, fullerLiveEventPayload, isNexusLiveEventPayload, planNotifications, qualificationScheduleSummary} from "./nexus";
 import type {
 	Env,
 	NexusCreatedEventDocument,
@@ -58,7 +58,10 @@ async function handleNexusLiveEvent(request: Request, env: Env) {
 		return Response.json({ok: true, ignored: true, reason: "verification_probe"});
 	}
 
-	const payload = rawPayload as NexusLiveEventPayload;
+	const webhookPayload = rawPayload as NexusLiveEventPayload;
+	const pulledPayload = await fetchNexusEventPayload(webhookPayload.eventKey, env);
+	const payload = fullerLiveEventPayload(webhookPayload, pulledPayload);
+	const usedPulledPayload = payload === pulledPayload;
 	const accessToken = await getFirestoreAccessToken(env);
 	const firestore = new FirestoreRestClient(
 		env.FIREBASE_PROJECT_ID,
@@ -76,7 +79,9 @@ async function handleNexusLiveEvent(request: Request, env: Env) {
 				reason: "stale_payload",
 				eventKey: payload.eventKey,
 				dataAsOfTime: payload.dataAsOfTime,
+				webhookDataAsOfTime: webhookPayload.dataAsOfTime,
 				lastDataAsOfTime: previousState.lastDataAsOfTime,
+				usedPulledPayload,
 			});
 		}
 	}
@@ -156,6 +161,9 @@ async function handleNexusLiveEvent(request: Request, env: Env) {
 		assignmentCount: assignments.length,
 		notificationCount: plans.length,
 		scheduledMatchCount: scheduleSummary?.matchCount ?? 0,
+		webhookMatchCount: webhookPayload.matches?.length ?? 0,
+		pulledMatchCount: pulledPayload?.matches?.length ?? null,
+		usedPulledPayload,
 		qualificationScheduleReleased: shouldCreateScheduleReleasedEvent,
 		nexusEventCreated,
 	});
@@ -168,10 +176,46 @@ async function handleNexusLiveEvent(request: Request, env: Env) {
 		assignmentCount: assignments.length,
 		notificationCount: plans.length,
 		scheduledMatchCount: scheduleSummary?.matchCount ?? 0,
+		webhookMatchCount: webhookPayload.matches?.length ?? 0,
+		pulledMatchCount: pulledPayload?.matches?.length ?? null,
+		usedPulledPayload,
 		qualificationScheduleReleased: shouldCreateScheduleReleasedEvent,
 		nexusEventCreated,
 		results,
 	});
+}
+
+async function fetchNexusEventPayload(eventKey: string, env: Env): Promise<NexusLiveEventPayload | null> {
+	const headers: HeadersInit = {};
+
+	if (env.NEXUS_API_KEY) {
+		headers["Nexus-Api-Key"] = env.NEXUS_API_KEY;
+	}
+
+	const response = await fetch(`https://frc.nexus/api/v1/event/${encodeURIComponent(eventKey)}`, {
+		headers,
+	});
+
+	if (!response.ok) {
+		console.warn("Failed to fetch full Nexus event payload", {
+			eventKey,
+			status: response.status,
+			body: await response.text(),
+		});
+		return null;
+	}
+
+	const data = await response.json();
+
+	if (!isNexusLiveEventPayload(data)) {
+		console.warn("Ignoring invalid full Nexus event payload", {
+			eventKey,
+			bodyType: typeof data,
+		});
+		return null;
+	}
+
+	return data;
 }
 
 function eventFromNexusSchedule(

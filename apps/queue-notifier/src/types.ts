@@ -5,6 +5,7 @@ export type Env = {
 	FIRESTORE_EMULATOR_HOST?: string;
 	FIRESTORE_EMULATOR_AUTH_UID?: string;
 	FIRESTORE_BASE_URL?: string;
+	NEXUS_API_KEY?: string;
 	NEXUS_WEBHOOK_TOKEN: string;
 };
 
