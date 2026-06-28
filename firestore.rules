@@ -235,8 +235,13 @@ service cloud.firestore {
 						allow read: if true;
 						allow write: if canWriteReports(eventId);
 
-						// Allow subcollection access like /teams/{teamId}/games/{gameId}
+					// Allow subcollection access like /teams/{teamId}/games/{gameId}
 					match /games/{gameId} {
+						allow read: if true;
+						allow write: if canWriteReports(eventId);
+					}
+
+					match /practiceGames/{gameId} {
 						allow read: if true;
 						allow write: if canWriteReports(eventId);
 					}

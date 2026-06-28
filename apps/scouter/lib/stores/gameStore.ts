@@ -8,12 +8,16 @@ import {initGameData} from "@ninjas-strategy/frc-games";
 
 export const MAX_TEAM_NUMBER = 20000;
 export const MAX_QUALIFICATION_MATCH_NUMBER = 150;
+export type MatchType = "qualification" | "practice";
+
+const gamesCollectionForMatchType = (matchType: MatchType) => matchType === "practice" ? "practiceGames" : "games";
 
 class GameStore {
 	data: Record<string, any> = {};
 
 	teamNumber: string = '';
 	gameNumber: string = '';
+	matchType: MatchType = "qualification";
 	year: number = new Date().getFullYear();
 
 	constructor() {
@@ -21,6 +25,7 @@ class GameStore {
 			data: observable,
 			teamNumber: observable,
 			gameNumber: observable,
+			matchType: observable,
 			year: observable,
 			reset: action,
 			startGame: action.bound,
@@ -32,12 +37,14 @@ class GameStore {
 	reset() {
 		this.data = initGameData(this.year);
 		this.teamNumber = this.gameNumber = '';
+		this.matchType = "qualification";
 	}
 
-	startGame(teamNumber: string, gameNumber: string, year: number) {
+	startGame(teamNumber: string, gameNumber: string, year: number, matchType: MatchType = "qualification") {
 		this.data = initGameData(year);
 		this.teamNumber = teamNumber;
 		this.gameNumber = gameNumber;
+		this.matchType = matchType;
 		this.year = year;
 	}
 
@@ -80,10 +87,10 @@ class GameStore {
 				await setDoc(teamRef, {
 					team_number: +this.teamNumber
 				});
-			const gameRef = doc(teamRef, 'games', this.gameNumber);
+			const gameRef = doc(teamRef, gamesCollectionForMatchType(this.matchType), this.gameNumber);
 			const gameSnap = await getDoc(gameRef);
 			if (gameSnap.exists()) {
-				showSnackbar(`Team ${this.teamNumber} match ${this.gameNumber} already has scouting data.`);
+				showSnackbar(`Team ${this.teamNumber} ${this.matchType === "practice" ? "practice " : ""}match ${this.gameNumber} already has scouting data.`);
 				return false;
 			}
 
@@ -91,6 +98,7 @@ class GameStore {
 				...this.data,
 				team_number: this.teamNumber,
 				game_number: this.gameNumber,
+				match_type: this.matchType,
 				scouter_id: userStore.user?.uid,
 				timestamp: serverTimestamp()
 			});
@@ -101,6 +109,7 @@ class GameStore {
 			await OfflineQueue.saveUnsentGameData({
 				...this.data,
 				type: 'game',
+				match_type: this.matchType,
 				team_number: +this.teamNumber,
 				game_number: +this.gameNumber,
 				scouter_id: userStore.user?.uid,

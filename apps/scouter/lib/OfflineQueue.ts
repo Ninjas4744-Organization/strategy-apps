@@ -14,6 +14,7 @@ type BaseQueuedData = {
 type QueuedGameData = BaseQueuedData & {
 	type: 'game';
 	game_number: number;
+	match_type?: 'qualification' | 'practice';
 };
 
 type QueuedPitData = BaseQueuedData & {
@@ -58,7 +59,8 @@ export class OfflineQueue {
 				try {
 					if (item.type === 'game') {
 						const teamDoc = doc(collection(db, 'events', item.eventId, 'teams'), item.team_number.toString());
-						const gameDoc = doc(collection(teamDoc, 'games'), item.game_number.toString());
+						const gamesCollection = item.match_type === 'practice' ? 'practiceGames' : 'games';
+						const gameDoc = doc(collection(teamDoc, gamesCollection), item.game_number.toString());
 						const gameSnap = await getDoc(gameDoc);
 						const firestoreData = toFirestoreData(item);
 

@@ -23,7 +23,7 @@ export default observer(function TeleopPage() {
 	const {eventId: eventIdParam, pageNum: pageNumParam} = useGlobalSearchParams();
 	const eventId = Array.isArray(eventIdParam) ? eventIdParam[0] : eventIdParam;
 	const pageNum = Array.isArray(pageNumParam) ? pageNumParam[0] : pageNumParam;
-	const {data, updateValue} = gameStore;
+	const {data, updateValue, matchType} = gameStore;
 	const {events} = eventsStore;
 
 	useDisableGestures();
@@ -51,7 +51,7 @@ export default observer(function TeleopPage() {
 		style={{ flexGrow: 1, flex: 1 }}>
 		<Container>
 			<PageTitle
-				title={page.title}
+				title={matchType === "practice" ? `Practice ${page.title}` : page.title}
 				subtitle={page.description}
 				icon={page.icon}/>
 			<KeyboardAwareScrollView ScrollViewComponent={BodyScroll}>
@@ -63,7 +63,7 @@ export default observer(function TeleopPage() {
 				{isLastPage && (
 					<BottomSafeArea>
 						<BeautifulButton
-							label="Submit to Firebase"
+							label={matchType === "practice" ? "Submit Practice Report" : "Submit to Firebase"}
 							icon="cloud-upload"
 							onPress={() => gameStore.submitToFirebase(eventId).then(sent => sent && router.push('/scouter'))} />
 					</BottomSafeArea>
