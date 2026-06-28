@@ -7,6 +7,7 @@ import messagingTokensStore from "@/lib/stores/messagingTokensStore";
 import userStore from "@/lib/stores/userStore";
 
 const NOTIFICATION_CHANNEL_ID = "messages";
+const NOTIFICATION_CHANNEL_NAME = "Queue alerts";
 const isAndroidExpoGo = Platform.OS === "android" && isRunningInExpoGo();
 const supportsNativeNotifications = Platform.OS !== "web" && !isAndroidExpoGo;
 type NotificationsModule = typeof import("expo-notifications");
@@ -36,9 +37,11 @@ async function getExpoPushToken() {
 
 	if (Platform.OS === "android") {
 		await Notifications.setNotificationChannelAsync(NOTIFICATION_CHANNEL_ID, {
-			name: "Messages",
-			importance: Notifications.AndroidImportance.DEFAULT,
+			name: NOTIFICATION_CHANNEL_NAME,
+			description: "Scouting assignment queue notifications",
+			importance: Notifications.AndroidImportance.HIGH,
 			showBadge: true,
+			sound: "default",
 		});
 	}
 
@@ -129,7 +132,13 @@ export const NotificationTokenRegistrar = observer(function NotificationTokenReg
 					'expo',
 				);
 			} catch (error) {
-				console.warn("Could not register push notifications", error);
+				console.warn('[NotificationTokenRegistrar] Could not register push notifications', {
+					platform: Platform.OS,
+					projectId: getProjectId(),
+					userType,
+					userTeam,
+					error,
+				});
 			}
 		})();
 

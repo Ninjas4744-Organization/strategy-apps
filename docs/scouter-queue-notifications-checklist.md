@@ -25,7 +25,7 @@ This checklist tracks the plan for notifying assigned scouters when their assign
 ## App Notification Setup
 
 - [x] Add notification client dependency and configuration.
-- [ ] Configure Android Firebase file: `google-services.json`.
+- [x] Configure Android Firebase file: `google-services.json`.
 - [ ] Configure iOS Firebase/APNs setup if students will use iPhones.
 - [x] Request notification permission after sign-in or onboarding.
 - [x] Fetch an Expo push token in Expo Go for iOS testing.
@@ -71,6 +71,7 @@ This checklist tracks the plan for notifying assigned scouters when their assign
 - [x] Implement Firestore REST helpers for reads, queries, and updates.
 - [ ] Implement FCM HTTP v1 send helper for native tokens.
 - [x] Implement Expo Push API send helper for Expo Go test tokens.
+- [ ] Upload Android FCM V1 service account key to EAS credentials for Expo Push delivery.
 - [x] Route notification sends by stored token `provider`.
 - [x] Add `POST /nexus/live-event` webhook endpoint.
 - [x] Verify the `Nexus-Token` header before doing any work.

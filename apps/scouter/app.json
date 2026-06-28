@@ -21,6 +21,7 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
+      "googleServicesFile": "./google-services.json",
       "predictiveBackGestureEnabled": false,
       "package": "com.ninjas4744.scouter"
     },

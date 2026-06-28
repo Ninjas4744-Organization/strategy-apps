@@ -50,6 +50,36 @@ bunx wrangler secret put NEXUS_WEBHOOK_TOKEN --cwd apps/queue-notifier
 
 Use a long random value for `NEXUS_WEBHOOK_TOKEN`, then give that same value to Nexus as the webhook token.
 
+## Android Expo Push Credentials
+
+Android notification delivery through Expo Push requires two Firebase pieces:
+
+1. `apps/scouter/google-services.json`, referenced by `apps/scouter/app.json` as `expo.android.googleServicesFile`.
+2. A private FCM V1 Google service account key uploaded to EAS credentials for the Android production profile.
+
+The checked-in `google-services.json` is the public Firebase Android app config for package:
+
+```text
+com.ninjas4744.scouter
+```
+
+The FCM V1 key is private and must not be committed. If creating it manually, use Firebase Console or Google Cloud IAM to create/download a JSON key for a service account with the `Firebase Cloud Messaging API Admin` role.
+
+Store the temporary local file as:
+
+```text
+apps/scouter/fcm-v1-service-account.json
+```
+
+That filename is ignored by git. Upload it with:
+
+```bash
+cd apps/scouter
+eas credentials -p android
+```
+
+Choose the production build profile, then configure the FCM V1 Google service account key. Delete the local JSON file after EAS confirms it is uploaded.
+
 ## Deploy
 
 Run the checks first:
