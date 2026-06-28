@@ -18,6 +18,7 @@ type RouteParams = {
 	eventId?: string | string[];
 	pageNum?: string | string[];
 	teamNum?: string | string[];
+	matchType?: string | string[];
 };
 
 const HeaderContainer = styled.View<{insets: EdgeInsets}>`
@@ -44,10 +45,11 @@ const NextPageIconContainer = styled.TouchableOpacity`
 export const Header = observer(({route}: HeaderProps) => {
 	const router = useRouter();
 	const insets = useSafeAreaInsets();
-	const {eventId: eventIdParam, pageNum: pageNumParam, teamNum: teamNumParam} = (route.params ?? {}) as RouteParams;
+	const {eventId: eventIdParam, pageNum: pageNumParam, teamNum: teamNumParam, matchType: matchTypeParam} = (route.params ?? {}) as RouteParams;
 	const eventId = Array.isArray(eventIdParam) ? eventIdParam[0] : eventIdParam;
 	const pageNum = Array.isArray(pageNumParam) ? pageNumParam[0] : pageNumParam;
 	const teamNum = Array.isArray(teamNumParam) ? teamNumParam[0] : teamNumParam;
+	const matchType = Array.isArray(matchTypeParam) ? matchTypeParam[0] : matchTypeParam;
 	const {teamNumber} = gameStore;
 	const event = eventId ? eventsStore.events[eventId] : undefined;
 
@@ -83,5 +85,14 @@ export const Header = observer(({route}: HeaderProps) => {
 			<Title>Now Scouting Team {teamNum}</Title>
 			<Subtitle>{event.name}</Subtitle>
 		</TextSection>}
+		{route.name.startsWith('matches') && <>
+			<PageIconContainer onPress={() => router.back()}>
+				<PageIcon name="arrow-back"/>
+			</PageIconContainer>
+			<TextSection>
+				<Title>{matchType === "practice" ? "Practice Matches" : "Qualification Matches"}</Title>
+				<Subtitle>{event.name}</Subtitle>
+			</TextSection>
+		</>}
 	</HeaderContainer>;
 });

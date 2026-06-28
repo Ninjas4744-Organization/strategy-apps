@@ -1,14 +1,15 @@
 import {observer} from "mobx-react-lite";
 import {Card, CardSurface, FormDialog, Row, IconContainer, Icon, Title, FlexGrow, Subtitle, showSnackbar} from "@ninjas-strategy/ui";
-import {useEffect, useState} from "react";
+import {useCallback, useState} from "react";
 import gameStore, {MAX_QUALIFICATION_MATCH_NUMBER} from "@/lib/stores/gameStore";
 import eventsStore from "@/lib/stores/eventsStore";
-import {Href, useGlobalSearchParams, useRouter} from "expo-router";
-import {TouchableOpacity} from "react-native";
+import {Href, useFocusEffect, useGlobalSearchParams, useRouter} from "expo-router";
+import {ScrollView, TouchableOpacity} from "react-native";
 import {games} from "@ninjas-strategy/frc-games";
 import pitStore from "@/lib/stores/pitStore";
 import assignmentsStore from "@/lib/stores/assignmentsStore";
 import eventActiveUsersStore from "@/lib/stores/eventActiveUsersStore";
+import eventMatchesStore from "@/lib/stores/eventMatchesStore";
 import userStore from "@/lib/stores/userStore";
 import styled from "styled-components/native";
 
@@ -27,6 +28,8 @@ const isEventTeam = (teamNumber: number, teams: string[]) => teams.includes(`frc
 
 const isPositiveInteger = (value: number) => Number.isInteger(value) && value > 0;
 
+const scrollContentStyle = {paddingBottom: 24};
+
 export default observer(function ScouterIndex() {
 	const router = useRouter();
 	const {eventId: eventIdParam} = useGlobalSearchParams();
@@ -34,25 +37,30 @@ export default observer(function ScouterIndex() {
 	const {startGame} = gameStore;
 	const {startPit} = pitStore;
 	const [showGameDialog, setShowGameDialog] = useState<boolean>(false);
+	const [showPracticeDialog, setShowPracticeDialog] = useState<boolean>(false);
 	const [showPitDialog, setShowPitDialog] = useState<boolean>(false);
 
 	const event = eventId ? eventsStore.events[eventId] : undefined;
 	const hasTeams = !!event?.teams?.length;
 	const hasPitScouting = !!(event && games[event.year]?.pitScoutingAttributes);
 	const canSubmitReports = !!userStore.user?.isAnonymous || (event?.active !== false && eventActiveUsersStore.isCurrentUserActive);
+	const hasQualificationSchedule = eventMatchesStore.qualificationMatchesList.length > 0;
+	const hasPracticeSchedule = eventMatchesStore.practiceMatchesList.length > 0;
 
-	useEffect(() => {
+	useFocusEffect(useCallback(() => {
 		if (!eventId || eventId === 'undefined') {
 			return;
 		}
 
 		assignmentsStore.subscribeForScouter(eventId);
 		eventActiveUsersStore.subscribeForEvent(eventId);
+		eventMatchesStore.subscribeForEvent(eventId);
 		return () => {
 			assignmentsStore.unsubscribe();
 			eventActiveUsersStore.unsubscribe();
+			eventMatchesStore.unsubscribe();
 		};
-	}, [eventId]);
+	}, [eventId]));
 
 	const showReportsUnavailable = () => {
 		if (event?.active === false) {
@@ -65,7 +73,7 @@ export default observer(function ScouterIndex() {
 		}
 	};
 
-	const scoutGame = (data: GameInputFormData) => {
+	const scoutGame = (data: GameInputFormData, matchType: "qualification" | "practice" = "qualification") => {
 		if (!eventId || eventId === 'undefined' || !event)
 			return;
 		if (!canSubmitReports) {
@@ -88,12 +96,13 @@ export default observer(function ScouterIndex() {
 			return;
 		}
 
-		startGame(teamNumber.toString(), gameNumber.toString(), event.year);
+		startGame(teamNumber.toString(), gameNumber.toString(), event.year, matchType);
 		setShowGameDialog(false);
+		setShowPracticeDialog(false);
 		router.push(`/scouter/${eventId}/game/0`);
 	};
 
-	const scoutAssignedGame = (teamNumber: string, gameNumber: string) => {
+	const scoutAssignedGame = (teamNumber: string, gameNumber: string, matchType: "qualification" | "practice" = "qualification") => {
 		if (!eventId || eventId === 'undefined' || !event || !gameNumber)
 			return;
 		if (!canSubmitReports) {
@@ -101,8 +110,53 @@ export default observer(function ScouterIndex() {
 			return;
 		}
 
-		startGame(teamNumber, gameNumber, event.year);
+		startGame(teamNumber, gameNumber, event.year, matchType);
 		router.push(`/scouter/${eventId}/game/0`);
+	};
+
+	const openMatchSelector = (matchType: "qualification" | "practice") => {
+		if (!eventId || eventId === 'undefined')
+			return;
+		if (!canSubmitReports) {
+			showReportsUnavailable();
+			return;
+		}
+
+		router.push(`/scouter/${eventId}/matches/${matchType}` as Href);
+	};
+
+	const openGameScouting = () => {
+		if (!canSubmitReports) {
+			showReportsUnavailable();
+			return;
+		}
+		if (!hasTeams) {
+			showSnackbar('This event does not have teams loaded yet.');
+			return;
+		}
+		if (hasQualificationSchedule) {
+			openMatchSelector("qualification");
+			return;
+		}
+
+		setShowGameDialog(true);
+	};
+
+	const openPracticeScouting = () => {
+		if (!canSubmitReports) {
+			showReportsUnavailable();
+			return;
+		}
+		if (!hasTeams) {
+			showSnackbar('This event does not have teams loaded yet.');
+			return;
+		}
+		if (hasPracticeSchedule) {
+			openMatchSelector("practice");
+			return;
+		}
+
+		setShowPracticeDialog(true);
 	};
 
 	const scoutPit = (data: PitInputFormData) => {
@@ -129,92 +183,106 @@ export default observer(function ScouterIndex() {
 	};
 
 	return <>
-		{!canSubmitReports && (
-			<MessageCard>
-				<Row>
-					<IconContainer>
-						<Icon name={event?.active === false ? "lock" : "person-off"} size={28} />
-					</IconContainer>
-					<AssignmentText>
-						<Title>{event?.active === false ? "Reports closed" : "You are inactive for this event"}</Title>
-						<Subtitle>{event?.active === false ? "Admins can still review stats, but new reports are disabled." : "Ask your team admin to activate you before scouting this event."}</Subtitle>
-					</AssignmentText>
-				</Row>
-			</MessageCard>
-		)}
-		{!hasTeams && (
-			<MessageCard>
-				<Row>
-					<IconContainer>
-						<Icon name="groups" size={28} />
-					</IconContainer>
-					<AssignmentText>
-						<Title>No teams available</Title>
-						<Subtitle>This event does not have a team list yet.</Subtitle>
-					</AssignmentText>
-				</Row>
-			</MessageCard>
-		)}
-		{assignmentsStore.assignmentsList.length > 0 && (
-			<AssignmentsSection>
-				<Title>Your Assigned Games</Title>
-				{assignmentsStore.assignmentsList.map(assignment => (
-					<TouchableOpacity
-						key={assignment.id}
-						onPress={() => scoutAssignedGame(assignment.teamNumber, assignment.matchNumber)}>
-						<AssignmentCard>
-							<Row>
-								<IconContainer>
-									<Icon name="assignment" size={28} />
-								</IconContainer>
-								<AssignmentText>
-									<Title>{assignment.matchTitle}</Title>
-									<Subtitle>Team {assignment.teamNumber}</Subtitle>
-								</AssignmentText>
-								<FlexGrow />
-								<Icon name="chevron-right" size={24} />
-							</Row>
-						</AssignmentCard>
-					</TouchableOpacity>
-				))}
-			</AssignmentsSection>
-		)}
-		<TouchableOpacity onPress={() => canSubmitReports ? hasTeams ? setShowGameDialog(true) : showSnackbar('This event does not have teams loaded yet.') : showReportsUnavailable()}>
-			<Card>
-				<Row>
-					<IconContainer>
-						<Icon name="sports-esports" size={32} />
-					</IconContainer>
-					<Title>Game Scouting</Title>
-					<FlexGrow />
-					<Icon name="chevron-right" size={24} />
-				</Row>
-			</Card>
-		</TouchableOpacity>
-		{hasPitScouting ? <TouchableOpacity onPress={() => canSubmitReports ? hasTeams ? setShowPitDialog(true) : showSnackbar('This event does not have teams loaded yet.') : showReportsUnavailable()}>
-			<Card>
-				<Row>
-					<IconContainer>
-						<Icon name="checklist" size={32}/>
-					</IconContainer>
-					<Title>Pit Scouting</Title>
-					<FlexGrow/>
-					<Icon name="chevron-right" size={24}/>
-				</Row>
-			</Card>
-		</TouchableOpacity> : (
-			<MessageCard>
-				<Row>
-					<IconContainer>
-						<Icon name="info" size={28} />
-					</IconContainer>
-					<AssignmentText>
-						<Title>Pit scouting unavailable</Title>
-						<Subtitle>This game definition does not include a pit scouting form.</Subtitle>
-					</AssignmentText>
-				</Row>
-			</MessageCard>
-		)}
+		<ScrollView contentContainerStyle={scrollContentStyle}>
+			{!canSubmitReports && (
+				<MessageCard>
+					<Row>
+						<IconContainer>
+							<Icon name={event?.active === false ? "lock" : "person-off"} size={28} />
+						</IconContainer>
+						<AssignmentText>
+							<Title>{event?.active === false ? "Reports closed" : "You are inactive for this event"}</Title>
+							<Subtitle>{event?.active === false ? "Admins can still review stats, but new reports are disabled." : "Ask your team admin to activate you before scouting this event."}</Subtitle>
+						</AssignmentText>
+					</Row>
+				</MessageCard>
+			)}
+			{!hasTeams && (
+				<MessageCard>
+					<Row>
+						<IconContainer>
+							<Icon name="groups" size={28} />
+						</IconContainer>
+						<AssignmentText>
+							<Title>No teams available</Title>
+							<Subtitle>This event does not have a team list yet.</Subtitle>
+						</AssignmentText>
+					</Row>
+				</MessageCard>
+			)}
+			{assignmentsStore.assignmentsList.length > 0 && (
+				<AssignmentsSection>
+					<Title>Your Assigned Games</Title>
+					{assignmentsStore.assignmentsList.map(assignment => (
+						<TouchableOpacity
+							key={assignment.id}
+							onPress={() => scoutAssignedGame(assignment.teamNumber, assignment.matchNumber)}>
+							<AssignmentCard>
+								<Row>
+									<IconContainer>
+										<Icon name="assignment" size={28} />
+									</IconContainer>
+									<AssignmentText>
+										<Title>{assignment.matchTitle}</Title>
+										<Subtitle>Team {assignment.teamNumber}</Subtitle>
+									</AssignmentText>
+									<FlexGrow />
+									<Icon name="chevron-right" size={24} />
+								</Row>
+							</AssignmentCard>
+						</TouchableOpacity>
+					))}
+				</AssignmentsSection>
+			)}
+			<TouchableOpacity onPress={openGameScouting}>
+				<Card>
+					<Row>
+						<IconContainer>
+							<Icon name="sports-esports" size={32} />
+						</IconContainer>
+						<Title>Game Scouting</Title>
+						<FlexGrow />
+						<Icon name="chevron-right" size={24} />
+					</Row>
+				</Card>
+			</TouchableOpacity>
+			<TouchableOpacity onPress={openPracticeScouting}>
+				<Card>
+					<Row>
+						<IconContainer>
+							<Icon name="science" size={32} />
+						</IconContainer>
+						<Title>Practice Scouting</Title>
+						<FlexGrow />
+						<Icon name="chevron-right" size={24} />
+					</Row>
+				</Card>
+			</TouchableOpacity>
+			{hasPitScouting ? <TouchableOpacity onPress={() => canSubmitReports ? hasTeams ? setShowPitDialog(true) : showSnackbar('This event does not have teams loaded yet.') : showReportsUnavailable()}>
+				<Card>
+					<Row>
+						<IconContainer>
+							<Icon name="checklist" size={32}/>
+						</IconContainer>
+						<Title>Pit Scouting</Title>
+						<FlexGrow/>
+						<Icon name="chevron-right" size={24}/>
+					</Row>
+				</Card>
+			</TouchableOpacity> : (
+				<MessageCard>
+					<Row>
+						<IconContainer>
+							<Icon name="info" size={28} />
+						</IconContainer>
+						<AssignmentText>
+							<Title>Pit scouting unavailable</Title>
+							<Subtitle>This game definition does not include a pit scouting form.</Subtitle>
+						</AssignmentText>
+					</Row>
+				</MessageCard>
+			)}
+		</ScrollView>
 		<FormDialog<GameInputFormData>
 			visible={showGameDialog}
 			onDismiss={() => setShowGameDialog(false)}
@@ -244,6 +312,39 @@ export default observer(function ScouterIndex() {
 						validate: value => {
 							const gameNumber = normalizeNumberInput(value);
 							return isPositiveInteger(gameNumber) && gameNumber <= MAX_QUALIFICATION_MATCH_NUMBER ? true : 'Enter a valid qualification match number.';
+						},
+					},
+				}
+			]} />
+		<FormDialog<GameInputFormData>
+			visible={showPracticeDialog}
+			onDismiss={() => setShowPracticeDialog(false)}
+			title="Scout a practice match"
+			onSubmit={data => scoutGame(data, "practice")}
+			fields={[
+				{
+					name: "teamNumber",
+					label: "Team Number",
+					type: 'team',
+					rules: {
+						required: 'Choose a team.',
+						validate: value => {
+							const teamNumber = normalizeNumberInput(value);
+							return isPositiveInteger(teamNumber) && isEventTeam(teamNumber, event?.teams ?? []) ? true : 'Choose a valid team from this event.';
+						},
+					},
+					teams: event?.teams || [],
+				},
+				{
+					name: "gameNumber",
+					label: 'Practice Match Number',
+					type: 'number',
+					iconLeft: 'science',
+					rules: {
+						required: 'Enter a practice match number.',
+						validate: value => {
+							const gameNumber = normalizeNumberInput(value);
+							return isPositiveInteger(gameNumber) && gameNumber <= MAX_QUALIFICATION_MATCH_NUMBER ? true : 'Enter a valid practice match number.';
 						},
 					},
 				}

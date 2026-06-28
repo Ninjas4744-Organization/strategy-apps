@@ -70,7 +70,7 @@ const assignmentStatusDetail = (assignment: Assignment) => {
 export default observer(function AssignmentsPage() {
 	const eventStore = useContext(EventContext) as EventStore;
 	const eventId = eventStore.eventId;
-	const qualificationMatches = eventMatchesStore.matchesList;
+	const qualificationMatches = eventMatchesStore.qualificationMatchesList;
 	const isScheduleLoading = eventMatchesStore.isLoading;
 	const scheduleError = eventMatchesStore.error;
 
@@ -174,7 +174,6 @@ export default observer(function AssignmentsPage() {
 							<Icon name={active ? "person" : "person-off"} size={22} />
 							<UserCopy>
 								<Title>{scouter.name}</Title>
-								<Subtitle>{scouter.id}</Subtitle>
 							</UserCopy>
 							<Switch
 								value={active}
@@ -331,13 +330,12 @@ const AssignmentCard = styled(CardSurface)`
 `;
 
 const UserRow = styled(Row)`
-	min-height: 58px;
+	min-height: 48px;
 `;
 
 const UserCopy = styled.View`
 	flex: 1;
 	min-width: 0;
-	gap: 2px;
 `;
 
 const ErrorText = styled(Subtitle)`

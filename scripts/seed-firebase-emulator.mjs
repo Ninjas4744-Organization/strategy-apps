@@ -103,18 +103,28 @@ const gameTemplates = [
 	{team: 1943, matches: [[3, 3, 2, 6, 4, "shallow"], [7, 3, 2, 7, 3, "park"], [10, 4, 2, 7, 4, "shallow"]]},
 ];
 
-function qualificationMatchesForEvent(event, matchCount = 10) {
+function scheduledMatchesForEvent(event, matchType, matchCount) {
 	const teamNumbers = event.data.teams.map(team => team.replace(/^frc/i, ""));
+	const labelPrefix = matchType === "practice" ? "Practice" : "Qualification";
+	const statuses = [
+		{status: "finished", nexusStatus: "Match complete"},
+		{status: "playing", nexusStatus: "On field"},
+		{status: "queued", nexusStatus: "Now queuing"},
+	];
 
 	return Array.from({length: matchCount}, (_, index) => {
 		const rotatedTeams = Array.from({length: 6}, (__, offset) => teamNumbers[(index + offset) % teamNumbers.length]);
 		const matchNumber = String(index + 1);
+		const matchStatus = statuses[index] ?? {status: "unknown", nexusStatus: null};
 
 		return {
-			id: matchNumber,
+			id: `${matchType}-${matchNumber}`,
 			data: {
-				label: `Qualification ${matchNumber}`,
+				label: `${labelPrefix} ${matchNumber}`,
 				match_number: matchNumber,
+				match_type: matchType,
+				status: matchStatus.status,
+				nexus_status: matchStatus.nexusStatus,
 				red_teams: rotatedTeams.slice(0, 3),
 				blue_teams: rotatedTeams.slice(3, 6),
 				source: "seed",
@@ -124,10 +134,19 @@ function qualificationMatchesForEvent(event, matchCount = 10) {
 	});
 }
 
+function qualificationMatchesForEvent(event, matchCount = 10) {
+	return scheduledMatchesForEvent(event, "qualification", matchCount);
+}
+
+function practiceMatchesForEvent(event, matchCount = 4) {
+	return scheduledMatchesForEvent(event, "practice", matchCount);
+}
+
 function gameData(teamNumber, [match, autoL4, autoNet, teleL4, teleNet, cageLevel]) {
 	return {
 		team_number: String(teamNumber),
 		game_number: String(match),
+		match_type: "qualification",
 		autonomous_algae_net: autoNet,
 		autonomous_algae_processed: 1,
 		autonomous_net_missed: 1,
@@ -192,7 +211,7 @@ await setDoc(doc(db, "registration_codes", "1690"), {
 for (const event of events) {
 	await setDoc(doc(db, "events", event.id), event.data);
 
-	for (const match of qualificationMatchesForEvent(event)) {
+	for (const match of [...practiceMatchesForEvent(event), ...qualificationMatchesForEvent(event)]) {
 		await setDoc(doc(db, "events", event.id, "matches", match.id), match.data);
 	}
 

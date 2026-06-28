@@ -27,6 +27,8 @@ class EventMatchesStore {
 			reset: action.bound,
 			applyMatches: action.bound,
 			matchesList: computed,
+			qualificationMatchesList: computed,
+			practiceMatchesList: computed,
 		});
 	}
 
@@ -88,8 +90,23 @@ class EventMatchesStore {
 
 	get matchesList() {
 		return Object.values(this.matches)
-			.sort((a, b) => Number(a.matchNumber) - Number(b.matchNumber));
+			.sort((a, b) => {
+				const typeCompare = matchTypeSortValue(a) - matchTypeSortValue(b);
+				return typeCompare || Number(a.matchNumber) - Number(b.matchNumber);
+			});
 	}
+
+	get qualificationMatchesList() {
+		return this.matchesList.filter(match => match.matchType === "qualification");
+	}
+
+	get practiceMatchesList() {
+		return this.matchesList.filter(match => match.matchType === "practice");
+	}
+}
+
+function matchTypeSortValue(match: EventMatch) {
+	return match.matchType === "practice" ? 0 : 1;
 }
 
 const eventMatchesStore = new EventMatchesStore();
