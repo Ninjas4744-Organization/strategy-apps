@@ -23,11 +23,15 @@
 			"autoIncrement": true,
 			"channel": "master",
 			"android": {
-				"buildType": "apk"
+				"buildType": "app-bundle"
 			}
 		}
 	},
 	"submit": {
-		"production": {}
+		"production": {
+			"ios": {
+				"ascAppId": "6753592050"
+			}
+		}
 	}
 }

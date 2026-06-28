@@ -2,7 +2,7 @@
   "expo": {
     "name": "The Ninja Scouter",
     "slug": "scouting",
-    "version": "0.4",
+    "version": "0.5",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "ninjascouter",
@@ -55,16 +55,9 @@
       "forceRTL": false,
       "supportsRTL": false
     },
-    "runtimeVersion": "0.4",
+    "runtimeVersion": "0.5",
     "updates": {
       "url": "https://u.expo.dev/ab6c91a9-4edc-4b9a-b50f-032b69ac1395"
-    }
-  },
-  "submit": {
-    "production": {
-      "ios": {
-        "ascAppId": "6753592050"
-      }
     }
   }
 }

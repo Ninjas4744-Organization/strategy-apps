@@ -1,5 +1,5 @@
 import type {FRCGame} from "../types";
-import {MD2Colors} from "react-native-paper";
+import {MD2Colors} from "../colors";
 import {Game} from "../calculations";
 
 enum StageResult {

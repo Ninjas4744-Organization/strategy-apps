@@ -1,5 +1,5 @@
 import type {FRCGame} from "../types.ts";
-import {MD2Colors} from "react-native-paper";
+import {MD2Colors} from "../colors";
 
 enum TraversalLevel {
 	NONE = 'None',
