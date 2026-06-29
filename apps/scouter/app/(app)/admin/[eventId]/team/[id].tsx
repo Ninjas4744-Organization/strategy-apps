@@ -81,7 +81,7 @@ export default observer(function () {
 				<Row>
 					<StatItem icon="sports-esports" value={team.games.length} title="Games"/>
 					<StatItem icon="trending-up" value={team.averageTotalScore.toFixed(1)} title="Avg Score"/>
-					<StatItem icon="emoji-events" value={bestGame?.totalScore ?? 0} title="Best Score"/>
+					<StatItem icon="emoji-events" value={bestGame?.totalScore.toFixed(2) ?? 0} title="Best Score"/>
 					<StatItem icon="speed" value={(team.consistencyScore * 100).toFixed(1) + '%'} title="Consistency"/>
 				</Row>
 				<BeautifulButton label="Click here to view insights" icon="lightbulb" onPress={() => router.push(`/admin/${eventId}/breakdown/${id}` as Href)} />
