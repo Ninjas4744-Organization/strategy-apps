@@ -20,6 +20,7 @@
 		"emulators:stop": "bun tools/scripts/stop-emulators.mjs",
 		"emulators:export": "firebase emulators:export .firebase/emulator-data --project scouting-app-3e18a --force",
 		"emulators:import": "bun run emulators:stop && firebase emulators:start --project scouting-app-3e18a --import .firebase/emulator-data --export-on-exit .firebase/emulator-data",
+		"firebase:update-user-email": "node scripts/update-firebase-user-email.mjs",
 		"sandbox:seed:emulator": "bun tools/scripts/with-firebase-emulator-env.mjs node scripts/seed-firebase-emulator.mjs",
 		"graph": "nx graph"
 	},
@@ -31,6 +32,7 @@
 		"@nx/expo": "^22.0.2",
 		"@nx/js": "^22.0.2",
 		"@nx/react": "^22.0.2",
+		"firebase-admin": "^14.1.0",
 		"nx": "^22.0.2"
 	}
 }
