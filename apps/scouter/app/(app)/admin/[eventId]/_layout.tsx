@@ -6,8 +6,9 @@ import {EventContext, EventStore} from "@/lib/stores/eventStore";
 import eventsStore from "@/lib/stores/eventsStore";
 
 export default observer(function EventLayout() {
-	const {eventId, id} = useGlobalSearchParams();
+	const {eventId, id, teamNum} = useGlobalSearchParams();
 	const eventIdString = Array.isArray(eventId) ? eventId[0] : eventId;
+	const teamNumString = Array.isArray(teamNum) ? teamNum[0] : teamNum;
 	const {events, isLoading: areEventsLoading} = eventsStore;
 	const event = eventIdString ? events[eventIdString] : undefined;
 	const eventStore = useMemo(() => new EventStore(eventIdString ?? ''), [eventIdString]);
@@ -57,6 +58,12 @@ export default observer(function EventLayout() {
 						name="opponents"
 						options={{
 							headerTitle: 'Next Opponents',
+						}}
+					/>
+					<Stack.Screen
+						name="pit/[teamNum]"
+						options={{
+							headerTitle: `Team ${teamNumString} Pit`,
 						}}
 					/>
 					<Stack.Screen

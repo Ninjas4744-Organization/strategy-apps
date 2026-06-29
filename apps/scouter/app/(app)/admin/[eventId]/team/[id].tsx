@@ -85,6 +85,7 @@ export default observer(function () {
 					<StatItem icon="speed" value={(team.consistencyScore * 100).toFixed(1) + '%'} title="Consistency"/>
 				</Row>
 				<BeautifulButton label="Click here to view insights" icon="lightbulb" onPress={() => router.push(`/admin/${eventId}/breakdown/${id}` as Href)} />
+				<BeautifulButton label="Update pit scouting report" icon="assignment" onPress={() => router.push(`/admin/${eventId}/pit/${id}` as Href)} />
 			</PageHeader>
 			{game.mainPageSections.map((section, index) => (
 				<PageHeader key={`${id}-inside-${index}`}>

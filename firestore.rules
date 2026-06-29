@@ -68,6 +68,18 @@ service cloud.firestore {
 				);
 		}
 
+		function canWritePitReports(eventId) {
+			return isActiveEvent(eventId)
+				&& (
+					isAppAdmin()
+					|| isTeamAdmin()
+					|| (
+						isNonAnonymous()
+						&& isActiveForEvent(eventId)
+					)
+				);
+		}
+
 		function isAssignmentOwner() {
 			return isRegisteredUser()
 				&& resource.data.keys().hasAll(['scouter_id'])
@@ -249,7 +261,7 @@ service cloud.firestore {
       // Allow reading and writing to the "pit" collection
       match /pit/{teamId} {
 				allow read: if true;
-        allow write: if canWriteReports(eventId);
+        allow write: if canWritePitReports(eventId);
       }
     }
   }

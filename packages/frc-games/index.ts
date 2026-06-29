@@ -45,10 +45,11 @@ export const initPitData = (year: number) => {
 	let data: Record<string, any> = {};
 	for (const attributeKey in game.pitScoutingAttributes) {
 		const attribute = game.pitScoutingAttributes[attributeKey];
+		const dataKey = attribute?.id ?? attributeKey;
 		if (attribute?.type === 'enum') {
-			data[attributeKey] = attribute.defaultValue;
+			data[dataKey] = attribute.defaultValue;
 		} else {
-			data[attributeKey] = false;
+			data[dataKey] = false;
 		}
 	}
 	return data;
