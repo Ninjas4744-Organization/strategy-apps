@@ -235,6 +235,11 @@ export const REBUILT: FRCGame = {
 			title: 'Can your robot go over the bump?',
 			type: 'bool',
 		},
+		hasAuto: {
+			id: 'has_auto',
+			title: 'Does your robot have autonomous?',
+			type: 'bool',
+		},
 		whereDoesItCollectBallsInAuto: {
 			id: 'where_does_it_collect_balls_in_auto',
 			title: 'Where does it collect balls in auto?',
@@ -249,12 +254,6 @@ export const REBUILT: FRCGame = {
 		autoTypesDescription: {
 			id: 'auto_types_description',
 			title: 'Describe the different types of auto your robot has',
-			type: 'text',
-		},
-		autonomousNotes: {
-			id: 'autonomous_notes',
-			title: "Describe this team's autonomous",
-			description: 'Routes, scoring plan, reliability, and starting preferences',
 			type: 'text',
 		},
 		defenseNotes: {
