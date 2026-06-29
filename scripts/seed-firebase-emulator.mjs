@@ -81,17 +81,133 @@ const events = [
 			teams: ["frc4744", "frc1690", "frc1574", "frc2630", "frc3339", "frc1943"],
 		},
 	},
+	{
+		id: "2026opponents",
+		data: {
+			key: "2026opponents",
+			event_code: "opponents",
+			year: 2026,
+			name: "Next Opponents REBUILT Demo",
+			start_date: "2026-03-28",
+			end_date: "2026-03-30",
+			country: "Israel",
+			active: true,
+			teams: ["frc4744", "frc1690", "frc1574", "frc2630", "frc3339", "frc1943"],
+		},
+	},
 ];
 
 const teams = [4744, 1690, 1574, 2630, 3339, 1943];
 
 const pitDataByTeam = {
-	4744: {team_number: 4744, drivetrain: "swerve", can_climb: true, has_processor: true},
-	1690: {team_number: 1690, drivetrain: "swerve", can_climb: true, has_processor: false},
-	1574: {team_number: 1574, drivetrain: "tank", can_climb: false, has_processor: true},
-	2630: {team_number: 2630, drivetrain: "swerve", can_climb: true, has_processor: true},
-	3339: {team_number: 3339, drivetrain: "tank", can_climb: false, has_processor: false},
-	1943: {team_number: 1943, drivetrain: "swerve", can_climb: true, has_processor: false},
+	4744: {
+		team_number: 4744,
+		max_ball_capacity: 5,
+		hopper_filling_efficiency: 1.8,
+		goes_under_the_trench: true,
+		goes_over_the_bump: true,
+		where_does_it_collect_balls_in_auto: "Depot lane and center line",
+		how_many_auto_types: 3,
+		auto_types_description: "Two-ball score, trench pickup, and fast traversal auto",
+		autonomous_notes: "Starts center, scores preload, collects from depot lane, then usually climbs if the lane is clear.",
+		defense_notes: "Strong positional defender. Uses frame perimeter well, cuts passing lanes, and rarely draws contact fouls.",
+		can_climb_in_auto: true,
+		can_climb_to_level_3: true,
+		climb_to_level_3_time: 8,
+		can_climb_at_all: true,
+		climb_time: 4,
+		where_do_you_climb: "center",
+	},
+	1690: {
+		team_number: 1690,
+		max_ball_capacity: 6,
+		hopper_filling_efficiency: 2.1,
+		goes_under_the_trench: true,
+		goes_over_the_bump: false,
+		where_does_it_collect_balls_in_auto: "Outpost side",
+		how_many_auto_types: 4,
+		auto_types_description: "High-volume auto with center pickup fallback",
+		autonomous_notes: "Very reliable high-volume auto. Prefers outpost-side pickup and can switch to a center fallback path.",
+		defense_notes: "Fast enough to chase but usually avoids defense unless asked. Most effective as a counter-defender late.",
+		can_climb_in_auto: false,
+		can_climb_to_level_3: true,
+		climb_to_level_3_time: 7,
+		can_climb_at_all: true,
+		climb_time: 3,
+		where_do_you_climb: "right",
+	},
+	1574: {
+		team_number: 1574,
+		max_ball_capacity: 4,
+		hopper_filling_efficiency: 1.4,
+		goes_under_the_trench: false,
+		goes_over_the_bump: true,
+		where_does_it_collect_balls_in_auto: "Near-side depot",
+		how_many_auto_types: 2,
+		auto_types_description: "Simple taxi and one scoring auto",
+		autonomous_notes: "Simple and consistent. Usually taxis, scores one preload, then parks near the protected lane.",
+		defense_notes: "Heavy drivetrain and good at holding space. Slower recovery if they get turned around.",
+		can_climb_in_auto: false,
+		can_climb_to_level_3: false,
+		climb_to_level_3_time: 0,
+		can_climb_at_all: true,
+		climb_time: 6,
+		where_do_you_climb: "left",
+	},
+	2630: {
+		team_number: 2630,
+		max_ball_capacity: 5,
+		hopper_filling_efficiency: 1.9,
+		goes_under_the_trench: true,
+		goes_over_the_bump: true,
+		where_does_it_collect_balls_in_auto: "Middle field",
+		how_many_auto_types: 3,
+		auto_types_description: "Center pickup, protected-zone auto, and climb setup",
+		autonomous_notes: "Aggressive middle-field auto with a climb setup option. Can interfere with nearby starting paths.",
+		defense_notes: "Physical defender with quick lateral bumps. Watch for pinning near the hub entrance.",
+		can_climb_in_auto: true,
+		can_climb_to_level_3: true,
+		climb_to_level_3_time: 9,
+		can_climb_at_all: true,
+		climb_time: 5,
+		where_do_you_climb: "center",
+	},
+	3339: {
+		team_number: 3339,
+		max_ball_capacity: 3,
+		hopper_filling_efficiency: 1.2,
+		goes_under_the_trench: false,
+		goes_over_the_bump: true,
+		where_does_it_collect_balls_in_auto: "Depot only",
+		how_many_auto_types: 1,
+		auto_types_description: "Taxi and preload score",
+		autonomous_notes: "Low-risk depot auto. Scores preload when aligned, otherwise prioritizes safe taxi points.",
+		defense_notes: "Mostly passive defense. Blocks lanes when parked but struggles to keep up with faster cycles.",
+		can_climb_in_auto: false,
+		can_climb_to_level_3: false,
+		climb_to_level_3_time: 0,
+		can_climb_at_all: false,
+		climb_time: 0,
+		where_do_you_climb: "left",
+	},
+	1943: {
+		team_number: 1943,
+		max_ball_capacity: 5,
+		hopper_filling_efficiency: 1.6,
+		goes_under_the_trench: true,
+		goes_over_the_bump: false,
+		where_does_it_collect_balls_in_auto: "Outpost and wall-side line",
+		how_many_auto_types: 2,
+		auto_types_description: "Reliable two-ball and pass-heavy auto",
+		autonomous_notes: "Reliable two-ball routine from the wall side. Often ends in a clean passing position.",
+		defense_notes: "Smart shadow defender. Forces wide routes without overcommitting, especially against midfield cycles.",
+		can_climb_in_auto: false,
+		can_climb_to_level_3: true,
+		climb_to_level_3_time: 10,
+		can_climb_at_all: true,
+		climb_time: 5,
+		where_do_you_climb: "right",
+	},
 };
 
 const gameTemplates = [
@@ -103,14 +219,27 @@ const gameTemplates = [
 	{team: 1943, matches: [[3, 3, 2, 6, 4, "shallow"], [7, 3, 2, 7, 3, "park"], [10, 4, 2, 7, 4, "shallow"]]},
 ];
 
+const rebuiltGameTemplates = [
+	{team: 4744, matches: [[1, 82, 1, 76, 2, 64, 1, true, true, "Level 3"], [2, 78, 2, 72, 1, 61, 2, true, false, "Level 2"], [3, 86, 1, 80, 2, 67, 1, true, true, "Level 3"]]},
+	{team: 1690, matches: [[1, 88, 0, 83, 1, 70, 1, false, true, "Level 3"], [2, 84, 1, 86, 1, 72, 0, false, true, "Level 3"], [3, 90, 1, 88, 1, 74, 1, false, true, "Level 3"]]},
+	{team: 1574, matches: [[1, 60, 3, 58, 3, 42, 2, false, false, "Level 1"], [2, 64, 2, 55, 4, 44, 2, false, true, "Level 1"], [3, 61, 3, 57, 3, 40, 3, false, false, "None"]]},
+	{team: 2630, matches: [[1, 75, 2, 73, 2, 58, 1, true, true, "Level 2"], [2, 80, 1, 77, 1, 62, 2, true, true, "Level 3"], [3, 79, 2, 75, 2, 60, 1, true, false, "Level 2"]]},
+	{team: 3339, matches: [[1, 52, 4, 48, 4, 36, 3, false, false, "None"], [2, 55, 3, 50, 3, 38, 2, false, false, "Level 1"], [3, 50, 4, 46, 4, 34, 4, false, false, "None"]]},
+	{team: 1943, matches: [[1, 68, 2, 64, 2, 52, 2, false, true, "Level 2"], [2, 70, 2, 66, 2, 55, 1, false, false, "Level 1"], [3, 72, 1, 68, 2, 56, 2, false, true, "Level 2"]]},
+];
+
 function scheduledMatchesForEvent(event, matchType, matchCount) {
 	const teamNumbers = event.data.teams.map(team => team.replace(/^frc/i, ""));
 	const labelPrefix = matchType === "practice" ? "Practice" : "Qualification";
-	const statuses = [
-		{status: "finished", nexusStatus: "Match complete"},
-		{status: "playing", nexusStatus: "On field"},
-		{status: "queued", nexusStatus: "Now queuing"},
-	];
+	const statuses = matchType === "practice"
+		? Array.from({length: matchCount}, () => ({status: "finished", nexusStatus: "Practice complete"}))
+		: [
+			{status: "finished", nexusStatus: "Match complete"},
+			{status: "finished", nexusStatus: "Match complete"},
+			{status: "finished", nexusStatus: "Match complete"},
+			{status: "playing", nexusStatus: "On field"},
+			{status: "queued", nexusStatus: "Now queuing"},
+		];
 
 	return Array.from({length: matchCount}, (_, index) => {
 		const rotatedTeams = Array.from({length: 6}, (__, offset) => teamNumbers[(index + offset) % teamNumbers.length]);
@@ -177,6 +306,32 @@ function gameData(teamNumber, [match, autoL4, autoNet, teleL4, teleNet, cageLeve
 	};
 }
 
+function shotBatch(shotPct, missCount) {
+	return [{shotPct, missCount}];
+}
+
+function rebuiltGameData(teamNumber, [match, autoPct, autoMisses, telePct, teleMisses, endgamePct, endgameMisses, autonomousClimb, wonAuto, traversalLevel]) {
+	return {
+		team_number: String(teamNumber),
+		game_number: String(match),
+		match_type: "qualification",
+		autonomous_fuel_scored: shotBatch(autoPct, autoMisses),
+		autonomous_fuel_passed: wonAuto ? 5 : 3,
+		autonomous_climb: autonomousClimb,
+		won_auto: wonAuto,
+		teleop_fuel_scored: shotBatch(telePct, teleMisses),
+		teleop_fuel_passed: wonAuto ? 15 : 10,
+		teleop_fuel_passed_inactive: wonAuto ? 4 : 8,
+		endgame_fuel_scored: shotBatch(endgamePct, endgameMisses),
+		endgame_fuel_passed: 5,
+		traversal_level: traversalLevel,
+		cage_level: traversalLevel,
+		scouter_id: "seed",
+		report_type: "seeded_match_report",
+		timestamp: Timestamp.fromDate(new Date(`2026-03-${14 + match}T10:00:00Z`)),
+	};
+}
+
 async function upsertUser({email, password, profile}) {
 	let credential;
 	try {
@@ -231,7 +386,10 @@ for (const event of events) {
 		});
 	}
 
-	for (const template of gameTemplates) {
+	const eventGameTemplates = event.data.year === 2026 ? rebuiltGameTemplates : gameTemplates;
+	const eventGameData = event.data.year === 2026 ? rebuiltGameData : gameData;
+
+	for (const template of eventGameTemplates) {
 		if (!event.data.teams.includes(`frc${template.team}`)) {
 			continue;
 		}
@@ -239,7 +397,7 @@ for (const event of events) {
 		for (const match of template.matches) {
 			await setDoc(
 				doc(db, "events", event.id, "teams", String(template.team), "games", String(match[0])),
-				gameData(template.team, match),
+				eventGameData(template.team, match),
 			);
 		}
 	}

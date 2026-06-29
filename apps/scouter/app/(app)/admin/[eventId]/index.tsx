@@ -36,6 +36,10 @@ export default observer(function AdminIndex() {
 					label="Assign scouters"
 					icon="person-add"
 					onPress={() => router.push(`/admin/${eventId}/assignments` as Href)} />
+				<BeautifulButton
+					label="Next opponents"
+					icon="flag"
+					onPress={() => router.push(`/admin/${eventId}/opponents` as Href)} />
 				{isAppAdmin && event ? (
 					<EventStatusCard>
 						<Row>

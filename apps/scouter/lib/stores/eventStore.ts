@@ -62,7 +62,7 @@ export class EventStore {
 			return;
 		}
 
-		if (userStore.userData?.type !== UserType.APP_ADMIN && !userStore.user?.isAnonymous) {
+		if (userStore.userData?.type === UserType.SCOUTER && !userStore.user?.isAnonymous) {
 			this.fail('You do not have permission to view this event.');
 			return;
 		}

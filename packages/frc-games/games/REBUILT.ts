@@ -251,6 +251,18 @@ export const REBUILT: FRCGame = {
 			title: 'Describe the different types of auto your robot has',
 			type: 'text',
 		},
+		autonomousNotes: {
+			id: 'autonomous_notes',
+			title: "Describe this team's autonomous",
+			description: 'Routes, scoring plan, reliability, and starting preferences',
+			type: 'text',
+		},
+		defenseNotes: {
+			id: 'defense_notes',
+			title: "Describe this team's defense",
+			description: 'Driving style, blocking ability, fouls, and how they react under pressure',
+			type: 'text',
+		},
 		canClimbInAuto: {
 			id: 'can_climb_in_auto',
 			title: 'Can your robot climb in auto?',
@@ -421,7 +433,23 @@ export const REBUILT: FRCGame = {
 	weaknesses: [],
 	breakdownGraph: [],
 	gameCard: [],
-	performance: [],
+	performance: [
+		{
+			label: 'Autonomous Performance',
+			val: team => team.getAverageScore('autonomousScore'),
+			color: MD2Colors.orange500,
+		},
+		{
+			label: 'Teleop Performance',
+			val: team => team.getAverageScore('teleopScore'),
+			color: MD2Colors.green500,
+		},
+		{
+			label: 'Endgame Performance',
+			val: team => team.getAverageScore('endgameScore'),
+			color: MD2Colors.blue500,
+		},
+	],
 	scoreSummary: [],
 	gameDetailedBreakdowns: [],
 	teamDetailedBreakdowns: [],

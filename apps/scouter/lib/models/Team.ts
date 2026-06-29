@@ -10,7 +10,8 @@ import {showSnackbar} from "@ninjas-strategy/ui";
 
 export class Team extends TeamCalculation implements Model {
 	games: Game[] = [];
-	isLoading: boolean = true;
+	pitData: Record<string, any> = {};
+	isLoading: boolean = false;
 	private subscription: Subscription | null = null;
 
 	constructor(
@@ -22,6 +23,7 @@ export class Team extends TeamCalculation implements Model {
 		super(games[eventYear]);
 		makeObservable(this, {
 			games: observable.ref,
+			pitData: observable.ref,
 			isLoading: observable,
 			subscribe: action.bound,
 			unsubscribe: action.bound,
@@ -66,6 +68,7 @@ export class Team extends TeamCalculation implements Model {
 		this.subscription = listener.subscribe(([gamesSnapshot, pitSnapshot]) => {
 			const pitData = pitSnapshot.data() || {};
 			runInAction(() => {
+				this.pitData = pitData;
 				this.games = gamesSnapshot.map(game =>
 				{
 					try {

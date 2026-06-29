@@ -54,6 +54,12 @@ export default observer(function EventLayout() {
 						}}
 					/>
 					<Stack.Screen
+						name="opponents"
+						options={{
+							headerTitle: 'Next Opponents',
+						}}
+					/>
+					<Stack.Screen
 						name="detailed/[id]"
 						options={{
 							headerTitle: `Team ${id} Games`,
