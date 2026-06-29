@@ -11,11 +11,11 @@ enum TraversalLevel {
 const calculateBatchScore = (game: Record<string, any>, field: string) => {
 	let score = 0;
 	const maxBallCapacity = game.max_ball_capacity || 0;
-	for (let batch of game[field] ?? []) {
-		score += ((maxBallCapacity * batch.shotPct / 100) - batch.missCount);
+	for (const batch of game[field] || []) {
+		score += ((maxBallCapacity * batch?.shotPct / 100) - batch?.missCount);
 	}
 	return score;
-}
+};
 
 export const REBUILT: FRCGame = {
 	sections: {
