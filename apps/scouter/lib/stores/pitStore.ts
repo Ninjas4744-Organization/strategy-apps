@@ -6,6 +6,7 @@ import {db} from "@/lib/firebase/firestore";
 import userStore from "@/lib/stores/userStore";
 import {OfflineQueue} from "@/lib/OfflineQueue";
 import {UserType} from "@/lib/interfaces/UserType";
+import {ensureEventTeamDoc} from "@/lib/firebase/eventTeams";
 
 class PitStore {
 	data: Record<string, any> = {};
@@ -83,6 +84,11 @@ class PitStore {
 			}
 
 			const teamRef = doc(db, 'events', eventId, 'pit', teamNumber);
+			try {
+				await ensureEventTeamDoc(eventId, teamNumber);
+			} catch (e) {
+				console.warn('Failed to ensure event team document for pit report', e);
+			}
 			const data = Object.fromEntries(Object.entries(this.data).filter(([, value]) => value !== undefined && value !== null && value !== ''));
 			await setDoc(teamRef, {
 				...data,

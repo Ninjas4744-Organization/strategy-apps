@@ -5,6 +5,7 @@ import {OfflineQueue} from "@/lib/OfflineQueue";
 import {showSnackbar} from "@ninjas-strategy/ui";
 import userStore from "@/lib/stores/userStore";
 import {initGameData} from "@ninjas-strategy/frc-games";
+import {ensureEventTeamDoc} from "@/lib/firebase/eventTeams";
 
 export const MAX_TEAM_NUMBER = 20000;
 export const MAX_QUALIFICATION_MATCH_NUMBER = 150;
@@ -82,11 +83,7 @@ class GameStore {
 			}
 
 			const teamRef = doc(db, 'events', eventId, 'teams', this.teamNumber);
-			const teamSnap = await getDoc(teamRef);
-			if (!teamSnap.exists())
-				await setDoc(teamRef, {
-					team_number: +this.teamNumber
-				});
+			await ensureEventTeamDoc(eventId, this.teamNumber);
 			const gameRef = doc(teamRef, gamesCollectionForMatchType(this.matchType), this.gameNumber);
 			const gameSnap = await getDoc(gameRef);
 			if (gameSnap.exists()) {

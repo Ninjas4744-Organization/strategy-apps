@@ -3,6 +3,7 @@ import NetInfo from '@react-native-community/netinfo';
 import {doc, setDoc, collection, serverTimestamp, getDoc} from 'firebase/firestore';
 import {db} from "@/lib/firebase/firestore";
 import {showSnackbar} from "@ninjas-strategy/ui";
+import {ensureEventTeamDoc} from "@/lib/firebase/eventTeams";
 
 type BaseQueuedData = {
 	team_number: number;
@@ -69,6 +70,7 @@ export class OfflineQueue {
 							continue;
 						}
 
+						await ensureEventTeamDoc(item.eventId, item.team_number);
 						await setDoc(gameDoc, {
 							...firestoreData,
 							timestamp: serverTimestamp()
@@ -77,6 +79,11 @@ export class OfflineQueue {
 					} else if (item.type === 'pit') {
 						const teamRef = doc(db, 'events', item.eventId, 'pit', item.team_number.toString());
 						const firestoreData = toFirestoreData(item);
+						try {
+							await ensureEventTeamDoc(item.eventId, item.team_number);
+						} catch (e) {
+							console.warn('Failed to ensure event team document for queued pit report', e);
+						}
 						await setDoc(teamRef, {
 							...firestoreData,
 							timestamp: serverTimestamp(),
