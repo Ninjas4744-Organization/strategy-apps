@@ -1,7 +1,7 @@
 import {BottomSheet as ExpoBottomSheet, RNHostView} from "@expo/ui";
 import type {SnapPoint} from "@expo/ui";
 import type {ReactNode} from "react";
-import {Dimensions, Platform, useWindowDimensions} from "react-native";
+import {Dimensions, KeyboardAvoidingView, Modal, Platform, Pressable, useWindowDimensions} from "react-native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import styled from "styled-components/native";
 import {IconButton} from "./IconButton";
@@ -51,6 +51,24 @@ const SheetTitle = styled(Text).attrs({
 	line-height: 24px;
 `;
 
+const AndroidBackdrop = styled(Pressable)`
+	flex: 1;
+	justify-content: flex-end;
+	background-color: rgba(0, 0, 0, 0.42);
+`;
+
+const AndroidPanel = styled.View`
+	max-height: 92%;
+	border-top-left-radius: 24px;
+	border-top-right-radius: 24px;
+	background-color: ${({theme}) => theme.surface};
+	overflow: hidden;
+`;
+
+const AndroidPanelInner = styled.View`
+	width: 100%;
+`;
+
 export function BottomSheet({
 	children,
 	closeAccessibilityLabel,
@@ -69,6 +87,40 @@ export function BottomSheet({
 	const screenWidth = Dimensions.get("screen").width;
 	const defaultWidth = Platform.OS === "web" ? windowWidth : Math.max(windowWidth, screenWidth);
 	const sheetWidth = contentWidth ?? Math.max(320, defaultWidth);
+
+	if (Platform.OS === "android") {
+		return (
+			<Modal
+				animationType="slide"
+				transparent
+				visible={isPresented}
+				onRequestClose={onDismiss}
+				statusBarTranslucent
+				testID={testID}>
+				<KeyboardAvoidingView behavior="height" style={{flex: 1}}>
+					<AndroidBackdrop onPress={onDismiss}>
+						<Pressable onPress={event => event.stopPropagation()}>
+							<AndroidPanel>
+								<AndroidPanelInner style={{width: sheetWidth}}>
+									<SheetContent $bottomInset={insets.bottom} style={{width: sheetWidth}}>
+										<SheetHeader>
+											<SheetTitle>{title}</SheetTitle>
+											<IconButton
+												icon="x"
+												onPress={onClosePress ?? onDismiss}
+												accessibilityLabel={closeAccessibilityLabel ?? `Close ${title}`}
+											/>
+										</SheetHeader>
+										{children}
+									</SheetContent>
+								</AndroidPanelInner>
+							</AndroidPanel>
+						</Pressable>
+					</AndroidBackdrop>
+				</KeyboardAvoidingView>
+			</Modal>
+		);
+	}
 
 	return (
 		<ExpoBottomSheet

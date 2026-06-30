@@ -1,6 +1,6 @@
 import {Host, TextInput as ExpoTextInput, useNativeState} from "@expo/ui";
 import {useEffect, useState, type ReactNode} from "react";
-import type {KeyboardTypeOptions} from "react-native";
+import {Platform, type KeyboardTypeOptions} from "react-native";
 import Animated, {
 	Easing,
 	interpolate,
@@ -10,6 +10,7 @@ import Animated, {
 	withTiming,
 } from "react-native-reanimated";
 import styled, {useTheme} from "styled-components/native";
+import {TextInput} from "../styles/TextInput";
 
 type NativeTextFieldProps = {
 	disabled?: boolean;
@@ -28,6 +29,60 @@ type NativeTextFieldProps = {
 };
 
 export const NativeTextField = ({
+	disabled,
+	error,
+	keyboardType,
+	label,
+	left,
+	multiline,
+	numberOfLines,
+	onBlur,
+	onChangeText,
+	onFocus,
+	placeholder,
+	secureTextEntry,
+	value = "",
+}: NativeTextFieldProps) => {
+	if (Platform.OS === "android") {
+		return (
+			<TextInput
+				label={label}
+				left={left}
+				value={value}
+				onChangeText={onChangeText}
+				onBlur={onBlur}
+				onFocus={onFocus}
+				placeholder={placeholder}
+				disabled={disabled}
+				error={error}
+				secureTextEntry={secureTextEntry}
+				multiline={multiline}
+				numberOfLines={numberOfLines}
+				keyboardType={keyboardType}
+			/>
+		);
+	}
+
+	return (
+		<ExpoNativeTextField
+			disabled={disabled}
+			error={error}
+			keyboardType={keyboardType}
+			label={label}
+			left={left}
+			multiline={multiline}
+			numberOfLines={numberOfLines}
+			onBlur={onBlur}
+			onChangeText={onChangeText}
+			onFocus={onFocus}
+			placeholder={placeholder}
+			secureTextEntry={secureTextEntry}
+			value={value}
+		/>
+	);
+};
+
+const ExpoNativeTextField = ({
 	disabled,
 	error,
 	keyboardType,
