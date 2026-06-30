@@ -35,7 +35,6 @@ export default observer(function ScouterMatchSelector() {
 	const matchType: MatchType = matchTypeParamString === "practice" ? "practice" : "qualification";
 	const event = eventId ? eventsStore.events[eventId] : undefined;
 	const matches = matchType === "practice" ? eventMatchesStore.practiceMatchesList : eventMatchesStore.qualificationMatchesList;
-	const visibleMatches = matches.filter(match => match.status !== "finished");
 	const canSubmitReports = !!userStore.user?.isAnonymous || (event?.active !== false && eventActiveUsersStore.isCurrentUserActive);
 
 	useFocusEffect(useCallback(() => {
@@ -132,19 +131,19 @@ export default observer(function ScouterMatchSelector() {
 					</Row>
 				</Card>
 			</TouchableOpacity>
-			{visibleMatches.length === 0 ? (
+			{matches.length === 0 ? (
 				<MessageCard>
 					<Row>
 						<IconContainer>
 							<Icon name="event-busy" size={28} />
 						</IconContainer>
 						<MessageText>
-							<Title>No open matches available</Title>
-							<Subtitle>{matches.length === 0 ? "This schedule has not been loaded yet." : "All loaded matches are finished."}</Subtitle>
+							<Title>No matches available</Title>
+							<Subtitle>This schedule has not been loaded yet.</Subtitle>
 						</MessageText>
 					</Row>
 				</MessageCard>
-			) : visibleMatches.map(match => (
+			) : matches.map(match => (
 				<MatchCard key={match.id}>
 					<Row>
 						<IconContainer>
